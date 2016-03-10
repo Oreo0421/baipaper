@@ -6,15 +6,27 @@
 \usepackage[ngerman]{babel}
 \usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot]{geometry}
 \usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{lmodern}
 \usepackage{pxfonts}
 \usepackage{parskip}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{listingsutf8}
 \usepackage{units}
 \usepackage{layouts}
 \usepackage{todonotes}
 
 
 
+\input{latex/lara}
+\input{latex/listings}
+
+
+
+
 \begin{document}
+
 
 \input{inhalt/intro}
 
@@ -38,7 +50,7 @@
 % Buchveröffentlichung
 
 \subsection{Satzspiegel}
-\input{inhalt/template_layout}
+\input{inhalt/tpl_layout}
 % A4, A5
 % Rand
 % Bindekorrektur
@@ -48,7 +60,7 @@
 % Beispiele
 
 \subsection{Zeilenabstand}
-\input{inhalt/template_linespace}
+\input{inhalt/tpl_linespace}
 
 
 \subsection{Kopf- und Fußzeilen}

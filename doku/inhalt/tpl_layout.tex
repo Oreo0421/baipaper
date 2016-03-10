@@ -53,20 +53,35 @@ einfügen. Bei der Klasse \texttt{report} ist hierfür die Option
 
 \subsubsection{Bindekorrektur}
 
-Für ein ordentliches Erscheinugsbild werden Studienabschlussarbeiten in der
-Regel in einem Hardcover-Einband eingereicht. Zur Anwendung kommt meist eine
-Kamm- oder Klebebindung. Da ein Teil des Innenrandes von der Bindung verdeckt
-wird, muss der Satzspiegel entsprechend ein klein wenig enger gestaltet werden,
-um ein optisch stimmiges Erscheinungsbild zu erzielen. Diese Bindekorrektur
-bestimmt sich wie folgt \dots
+Studienabschlussarbeiten sind in aller Regel gebunden einzureichen. Meist
+kommt eine Kamm- oder Klebebindung zur Anwendung. Da ein Teil des Innenrandes
+von der Bindung und vom gebogenen Papier verdeckt wird, muss der Satzspiegel
+entsprechend ein klein wenig enger gestaltet werden. Dies führt zu einem
+optisch stimmigerem Erscheinungsbild. Dieser als Bindekorrektur bezeichnete
+Abstand~$K$ bestimmt sich dabei aus der Dicke des Buchblocks~$d$ und der
+Breite der Bindung~$b$.
+%
+\begin{equation}
+K = \dfrac{1}{2} \cdot \max(d, b)
+\end{equation}
+%
+Die Papierdicke lässt sich anhand der Grammatur~$G$ und der Anzahl der
+Blätter~$n$. Dabei ist die Grammatur in der Einheit $\unit{g / m^2}$ in die
+Größengleichung einzusetzen. Das Ergebnis der Formel entspricht der Dicke
+in Millimetern.
+%
+\begin{equation}
+d = \dfrac{n \cdot G}{1000}
+\end{equation}
+%
+Ein Buchblock aus 100~Seiten (das sind 50~Blätter) hat demnach bei Papier der
+Stärke $\unit[80]{g / m^2}$ eine Dicke von \unit[4]{mm}.
 
-\todo[inline]{Formeln}
+Die Bindekorrektur lässt sich über das Paket \texttt{geometry} einstellen.
+Listing~\ref{lst:tpl:bcor} zeigt die entsprechende Konfigurationsoption.
 
-
-\todo[inline]{Code-Beispiel, Formeln}
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,caption={Einstellung der Bindekorrektur},label={lst:tpl:bcor}]{code/tpl_bcor}
 
 Bei Ringbindungen muss keine Bindekorrektur erfolgen.
 
 % DTK 2004/1
-
-% Bindekorrektur bei Klebe- und Kammbindung: 1mm pro 10 Blatt bei 80g/m^2
