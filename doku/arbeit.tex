@@ -1,12 +1,15 @@
-\documentclass[twoside,a4paper,11pt]{report}
+\documentclass[twoside,a4paper,11pt,openright]{report}
 
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
+\usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot]{geometry}
 \usepackage{microtype}
 \usepackage{pxfonts}
 \usepackage{parskip}
+\usepackage{units}
+\usepackage{layouts}
 \usepackage{todonotes}
 
 
@@ -35,6 +38,7 @@
 % Buchveröffentlichung
 
 \subsection{Satzspiegel}
+\input{inhalt/template_layout}
 % A4, A5
 % Rand
 % Bindekorrektur
@@ -44,6 +48,7 @@
 % Beispiele
 
 \subsection{Zeilenabstand}
+\input{inhalt/template_linespace}
 
 
 \subsection{Kopf- und Fußzeilen}
@@ -63,16 +68,16 @@
 
 
 
-\chapter{}
-
-
 \chapter{Gestaltungsmittel}
 
 % Gliederung
 % Quellenangaben
 % Literaturverzeichnisse
 % Abbildungen
+% Unterabbildungen (subfloat, subfig)
 % Quellcode-Abschnitte
+% Eigene Gleitumgebungen
+% Physikalische Größen und Einheiten
 
 
 

@@ -1,0 +1,72 @@
+% Seitenrand: Innen mind. 25mm
+% Außenrand: Korrekturrand 50mm,
+%   Randnotizen können in den 50mm-Rand hineinragen
+
+\subsubsection{Papierformat}
+
+
+\subsubsection{Ränder}
+
+Die Seitenränder sollten gemäß DIN~5008 mind. \unit[2,5]{cm} betragen. Bei
+Arbeiten, die auf der Außenseite einen Korrekturrand erfordern, sollte der
+Korrekturrand \unit[5]{cm} breit sein.
+
+Die Einstellung des Satzspiegels erfolgt mit dem Paket \texttt{geometry}.
+
+\newpage
+\setlayoutscale{0.29}
+\printheadingsfalse
+\printparametersfalse
+%\drawdimensionstrue
+\currentpage
+\begin{minipage}{0.5\linewidth}
+\oddpagelayoutfalse
+\pagedesign
+\end{minipage}%
+\begin{minipage}{0.5\linewidth}
+\oddpagelayouttrue
+\pagedesign
+\end{minipage}
+
+
+\subsubsection{Duplexdruck}
+
+Sofern nicht explizit anders gefordert, sollten Arbeiten beidseitig gedruckt
+werden, um Papier zu sparen. Hierzu ist die Klassenoption \texttt{twoside} zu
+setzen.
+
+\todo[inline]{Code-Beispiel}
+
+Für kürzere Haus- oder Seminararbeiten ist im Zweifel auch einseitiger Druck
+statthaft.
+
+In umfangereicheren Arbeiten (ab Bachelorarbeit aufwärts), sollten neue
+Kapitel stets auf einer rechten Seiten beginnen. Die Klasse \texttt{book} wird
+vor Beginn eines neuen Kapitels im Bedarfsfall automatisch eine Leerseite
+einfügen. Bei der Klasse \texttt{report} ist hierfür die Option
+\texttt{openright} notwendig.
+
+\todo[inline]{Code-Beispiel}
+
+
+
+
+\subsubsection{Bindekorrektur}
+
+Für ein ordentliches Erscheinugsbild werden Studienabschlussarbeiten in der
+Regel in einem Hardcover-Einband eingereicht. Zur Anwendung kommt meist eine
+Kamm- oder Klebebindung. Da ein Teil des Innenrandes von der Bindung verdeckt
+wird, muss der Satzspiegel entsprechend ein klein wenig enger gestaltet werden,
+um ein optisch stimmiges Erscheinungsbild zu erzielen. Diese Bindekorrektur
+bestimmt sich wie folgt \dots
+
+\todo[inline]{Formeln}
+
+
+\todo[inline]{Code-Beispiel, Formeln}
+
+Bei Ringbindungen muss keine Bindekorrektur erfolgen.
+
+% DTK 2004/1
+
+% Bindekorrektur bei Klebe- und Kammbindung: 1mm pro 10 Blatt bei 80g/m^2

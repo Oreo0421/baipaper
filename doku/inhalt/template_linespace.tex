@@ -1,0 +1,50 @@
+Grundsätzlich sollte einfacher Zeilenabstand zu Anwendung kommen. Um Platz
+für Anmekrungen des Gutachters zu bieten, kann der Zeilenabstand auch auf
+1\nicefrac{1}{2}-fachen Zeilenabstand vergrößert werden. Bei noch größerem
+Zeilenabstand könnte der Eindruck entstehen, Sie wollen die Arbeit
+umfangreicher erscheinen lassen, als sie ist.
+
+\todo[inline]{Code-Beispiel, Paket \texttt{setspace}. Normaler Zeilenabstand in Fußnoten, Minipages, Gleitumgebungen}
+
+
+
+%\setstretch{1.25}
+
+%% setspace benutzt in Gleitumgebungen den normalen Zeilenabstand. Das wollen wir nicht.
+%\makeatletter
+%\let\@xfloat=\latex@xfloat
+%\makeatother
+%
+%% Auch in den Fußnoten beim größeren Zeilenabstand bleiben.
+%\makeatletter
+%\long\def\@footnotetext#1{%
+%  \insert\footins{%
+%    \reset@font\footnotesize
+%    \interlinepenalty\interfootnotelinepenalty
+%    \splittopskip\footnotesep
+%    \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
+%    \hsize\columnwidth
+%    \@parboxrestore
+%    \protected@edef\@currentlabel{%
+%      \csname p@footnote\endcsname\@thefnmark
+%    }%    
+%    \color@begingroup
+%      \@makefntext{%
+%        \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
+%    \color@endgroup}}
+%\makeatother
+%
+%\makeatletter
+%\long\def\@mpfootnotetext#1{%
+%  \global\setbox\@mpfootins\vbox{%
+%    \unvbox \@mpfootins
+%    \reset@font\footnotesize
+%    \hsize\columnwidth
+%    \@parboxrestore
+%    \protected@edef\@currentlabel{%
+%      \csname p@mpfootnote\endcsname\@thefnmark}%
+%    \color@begingroup
+%      \@makefntext{%
+%       \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
+%   \color@endgroup}}
+%\makeatother
