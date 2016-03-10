@@ -7,10 +7,12 @@
 \usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot]{geometry}
 \usepackage{microtype}
 \usepackage{amsmath}
-\usepackage{lmodern}
+%\usepackage{lmodern}
 \usepackage{pxfonts}
-\usepackage{parskip}
+%\usepackage[sc]{mathpazo}
 \usepackage{textcomp}
+\usepackage{parskip}
+\usepackage{graphicx}
 \usepackage{listings}
 \usepackage{listingsutf8}
 \usepackage{units}
@@ -24,8 +26,11 @@
 
 
 
-
 \begin{document}
+
+
+\tableofcontents
+\newpage
 
 
 \input{inhalt/intro}
@@ -57,7 +62,7 @@
 % Einseitig zweiseitig
 
 \subsection{Schriften}
-% Beispiele
+\input{inhalt/tpl_font}
 
 \subsection{Zeilenabstand}
 \input{inhalt/tpl_linespace}
