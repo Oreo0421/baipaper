@@ -1,14 +1,56 @@
-%\subsubsection{Serifenschriften}
-%
-%\subsubsection{Serifenlose Schriften}
-%
-%\subsubsection{Festbreitenschriften}
-%
-%\subsubsection{Mathematische Schriften}
+Das Schriftbild wirkt sich wesentlich auf die Lesbarkeit eines Textes aus. In
+\LaTeX\ kommen für Text drei verschiedene Schriftfamilien zur Anwendung.
 
-\[\int \dfrac{\partial}{\partial x} \sin (f(x) - x) \,\mathrm{d}x =
-\sum_{i=1}^n \left(1 - \dfrac{1}{x^i}\right) \nabla \times \alpha \]
+\begin{itemize}
+\item {\rmfamily Serifenschriften haben kleine Querstriche an den Enden der
+      Schriftstriche und betonen somit die Grundlinie einer Textzeile. Für das
+      Auge sind Textzeilen somit besser wahrnehmbar.}
+\item {\sffamily Serifenlose Schriften haben diese Querstriche nicht und sind
+      somit plakativer. Sie sollen deshalb auf Titelblättern, Plakaten und in
+      Präsentationen zur Anwendung kommen.}
+\item {\ttfamily\raggedright Die Zeichen von dicktengleichen Schriften haben
+      alle die selbe Breite. Solche Schriften kommen bei mechanischen
+      Schreibmaschinen zur Anwendung. Sie eignen sich z.B. aufgrund der
+      einheitlichen Zeichengröße zur formatierten Ausgaben von Programmcode.\par}
+\end{itemize}
+
+Ferner gibt es noch mathematische Schriften, die Zeichen für den Formelsatz
+beinhalten.
+%
+\begin{itemize}
+\item Operatoren: $\cdot$, $\oplus$, $\sum$, $\prod$, $\int$, $\nabla$, $\partial$
+%\item Auslassungszeichen: $\ldots$, $\cdots$, $\ddots$, $\vdots$
+\item Relationen: $<$, $\ge$, $\ne$, $\succ$
+\item Klammern: $\big($, $\big<$, $\big[$, $\big\{$, $\big\lfloor$, $\big|$
+\item Pfeile: $\mapsto$, $\to$, $\Leftrightarrow$
+\item griechische Buchstaben: $\alpha$, $\beta$, $\gamma$, $\delta$, \dots,
+                              $\mathrm{A}$, $\mathrm{B}$, $\Gamma$, $\Delta$, \dots
+\item Mengen: $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$, $\mathbb{C}$, \dots,
+              $\mathcal{A}$, $\mathcal{B}$, $\mathcal{C}$, \dots,
+              $\mathfrak{A}$, $\mathfrak{B}$, $\mathfrak{C}$, \dots
+\end{itemize}
+
+Standardmäßig kommt in allen vier Fällen die Schriftfamilie "`Computer
+Modern"' bzw. ihr Pendant "`Latin Modern"', die einen größeren Zeichenvorrat
+aufweist, zur Anwendung. Diese Schriften sind jedoch recht brüchig und Verlage
+empfehlen daher auf andere Schriftfamilien auszuweichen.
+
+\begin{figure}
+\centering
+\fbox{\includegraphics{bilder/schriften/font_lm}}
+\caption{Schriftmuster "`Latin Modern"'}
+\end{figure}
 
 
-%{\fontfamily{lmr}\selectfont\scalebox{2}{abcdefghijklmnopqrstuvwxyz}}\par
-%\scalebox{2}{abcdefghijklmnopqrstuvwxyz}\par
+\newcommand{\fontsample}[2]{
+\begin{figure}
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!]{code/schriften/header_#1}
+\centering
+\fbox{\includegraphics{bilder/schriften/font_#1}}
+\caption{Schriftmuster "`#2"'}
+\end{figure}}
+
+
+\fontsample{pxfonts}{Palatino}
+
+\fontsample{txfonts}{Times Roman}
