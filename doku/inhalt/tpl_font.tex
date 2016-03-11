@@ -1,3 +1,14 @@
+\newcommand{\fontsample}[2]{
+\begin{figure}
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!]{code/schriften/header_#1}
+\centering
+\fbox{\includegraphics{bilder/schriften/font_#1}}
+\caption{Schriftmuster "`#2"'}
+\end{figure}}
+
+
+
+
 Das Schriftbild wirkt sich wesentlich auf die Lesbarkeit eines Textes aus. In
 \LaTeX\ kommen für Text drei verschiedene Schriftfamilien zur Anwendung.
 
@@ -30,25 +41,19 @@ beinhalten.
               $\mathfrak{A}$, $\mathfrak{B}$, $\mathfrak{C}$, \dots
 \end{itemize}
 
-Standardmäßig kommt in allen vier Fällen die Schriftfamilie "`Computer
-Modern"' bzw. ihr Pendant "`Latin Modern"', die einen größeren Zeichenvorrat
-aufweist, zur Anwendung. Diese Schriften sind jedoch recht brüchig und Verlage
-empfehlen daher auf andere Schriftfamilien auszuweichen.
+Standardmäßig kommt für alle vier Fälle die Schriftfamilie "`Computer Modern"'
+bzw. ihr Pendant "`Latin Modern"', die einen größeren Zeichenvorrat aufweist,
+zur Anwendung (siehe Abb.~\ref{fig:tpl:font:lm}). Diese Schriften sind jedoch
+recht brüchig und Verlage empfehlen daher auf andere Schriftfamilien
+auszuweichen.
 
 \begin{figure}
 \centering
 \fbox{\includegraphics{bilder/schriften/font_lm}}
 \caption{Schriftmuster "`Latin Modern"'}
+\label{fig:tpl:font:lm}
 \end{figure}
 
-
-\newcommand{\fontsample}[2]{
-\begin{figure}
-\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!]{code/schriften/header_#1}
-\centering
-\fbox{\includegraphics{bilder/schriften/font_#1}}
-\caption{Schriftmuster "`#2"'}
-\end{figure}}
 
 
 \fontsample{pxfonts}{Palatino}
