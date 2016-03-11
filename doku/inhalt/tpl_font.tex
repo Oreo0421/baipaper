@@ -1,5 +1,5 @@
 \newcommand{\fontsample}[2]{
-\begin{figure}
+\begin{figure}[H]
 \lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!]{code/schriften/header_#1}
 \centering
 \fbox{\includegraphics{bilder/schriften/font_#1}}
@@ -25,35 +25,38 @@ Das Schriftbild wirkt sich wesentlich auf die Lesbarkeit eines Textes aus. In
       einheitlichen Zeichengröße zur formatierten Ausgaben von Programmcode.\par}
 \end{itemize}
 
-Ferner gibt es noch mathematische Schriften, die Zeichen für den Formelsatz
-beinhalten.
-%
-\begin{itemize}
-\item Operatoren: $\cdot$, $\oplus$, $\sum$, $\prod$, $\int$, $\nabla$, $\partial$
-%\item Auslassungszeichen: $\ldots$, $\cdots$, $\ddots$, $\vdots$
-\item Relationen: $<$, $\ge$, $\ne$, $\succ$
-\item Klammern: $\big($, $\big<$, $\big[$, $\big\{$, $\big\lfloor$, $\big|$
-\item Pfeile: $\mapsto$, $\to$, $\Leftrightarrow$
-\item griechische Buchstaben: $\alpha$, $\beta$, $\gamma$, $\delta$, \dots,
-                              $\mathrm{A}$, $\mathrm{B}$, $\Gamma$, $\Delta$, \dots
-\item Mengen: $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$, $\mathbb{C}$, \dots,
-              $\mathcal{A}$, $\mathcal{B}$, $\mathcal{C}$, \dots,
-              $\mathfrak{A}$, $\mathfrak{B}$, $\mathfrak{C}$, \dots
-\end{itemize}
+Ferner ergänzen mathematische Schriften, die Zeichen für den Formelsatz.
+%%
+%\begin{itemize}
+%\item Operatoren: $\cdot$, $\oplus$, $\sum$, $\prod$, $\int$, $\nabla$, $\partial$
+%%\item Auslassungszeichen: $\ldots$, $\cdots$, $\ddots$, $\vdots$
+%\item Relationen: $<$, $\ge$, $\ne$, $\succ$
+%\item Klammern: $\big($, $\big<$, $\big[$, $\big\{$, $\big\lfloor$, $\big|$
+%\item Pfeile: $\mapsto$, $\to$, $\Leftrightarrow$
+%\item griechische Buchstaben: $\alpha$, $\beta$, $\gamma$, $\delta$, \dots,
+%                              $\mathrm{A}$, $\mathrm{B}$, $\Gamma$, $\Delta$, \dots
+%\item Mengen: $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$, $\mathbb{C}$, \dots,
+%              $\mathcal{A}$, $\mathcal{B}$, $\mathcal{C}$, \dots,
+%              $\mathfrak{A}$, $\mathfrak{B}$, $\mathfrak{C}$, \dots
+%\end{itemize}
 
 Standardmäßig kommt für alle vier Fälle die Schriftfamilie "`Computer Modern"'
-bzw. ihr Pendant "`Latin Modern"', die einen größeren Zeichenvorrat aufweist,
-zur Anwendung (siehe Abb.~\ref{fig:tpl:font:lm}). Diese Schriften sind jedoch
-recht brüchig und Verlage empfehlen daher auf andere Schriftfamilien
+bzw. ihr Pendant "`Latin Modern"' (siehe Abb.~\ref{fig:tpl:font:lm}) zur
+Anwendung. Letztere weist einen größeren Zeichenvorrat auf. Allerdings sind
+diese Schriften jedoch recht brüchig und wirken beim Druck auf einem
+Laserdrucker sehr mager. Verlage empfehlen daher oft auf andere Schriftfamilien
 auszuweichen.
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \fbox{\includegraphics{bilder/schriften/font_lm}}
 \caption{Schriftmuster "`Latin Modern"'}
 \label{fig:tpl:font:lm}
 \end{figure}
 
+Durch das Laden von Zusatzpaketen werden diese Standardschriftfamilien
+umdefiniert. Manche Pakete definieren alle Familien um. Andere wirken sich nur
+auf einzelnen Familien und lassen die anderen Schriftfamilien unverändert.
 
 
 \fontsample{pxfonts}{Palatino}
