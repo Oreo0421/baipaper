@@ -53,27 +53,29 @@ einfügen. Bei der Klasse \texttt{report} ist hierfür die Option
 
 Studienabschlussarbeiten sind in aller Regel gebunden einzureichen. Meist
 kommt eine Kamm- oder Klebebindung zur Anwendung. Da ein Teil des Innenrandes
-von der Bindung und vom gebogenen Papier verdeckt wird, muss der Satzspiegel
-entsprechend ein klein wenig enger gestaltet werden. Dies führt zu einem
-optisch stimmigerem Erscheinungsbild. Dieser als Bindekorrektur bezeichnete
-Abstand~$K$ bestimmt sich dabei aus der Dicke des Buchblocks~$d$ und der
-Breite der Bindung~$b$.
+von der Bindung und dem gebogenen Papier verdeckt wird, muss der Satzspiegel
+ein klein wenig enger gestaltet werden. Somit sind die Proportionen der
+aufgeschlagenen Arbeit wieder optisch stimmig. Dieser als Bindekorrektur
+bezeichnete Abstand~$K$ bestimmt sich dabei aus der Dicke des Buchblocks~$d$
+und der Breite der Bindung~$b$.
 %
 \begin{equation}
 K = \dfrac{1}{2} \cdot \max(d, b)
 \end{equation}
 %
-Die Papierdicke lässt sich anhand der Grammatur~$G$ und der Anzahl der
-Blätter~$n$. Dabei ist die Grammatur in der Einheit $\unit{g / m^2}$ in die
-Größengleichung einzusetzen. Das Ergebnis der Formel entspricht der Dicke
-in Millimetern.
+Die Buchblockdicke lässt sich anhand der Grammatur~$G$ und der Anzahl der
+Blätter~$n$ berechnen. Dabei ist die Grammatur in der Einheit $\unit{g / m^2}$
+in die Größengleichung einzusetzen. Das Ergebnis der Formel entspricht der
+Dicke in Millimetern.
 %
 \begin{equation}
 d = \dfrac{n \cdot G}{1000}
 \end{equation}
 %
 Ein Buchblock aus 100~Seiten (das sind 50~Blätter) hat demnach bei Papier der
-Stärke $\unit[80]{g / m^2}$ eine Dicke von \unit[4]{mm}.
+Stärke $\unit[80]{g / m^2}$ eine Dicke von \unit[4]{mm}. Eine übliche
+Kammbindung hat jedoch eine Breite von \unit[6]{mm}, sodass die Bindekorrektur
+auf diesen Wert zu vergrößern ist.
 
 Die Bindekorrektur lässt sich über das Paket \texttt{geometry} einstellen.
 Listing~\ref{lst:tpl:bcor} zeigt die entsprechende Konfigurationsoption.
