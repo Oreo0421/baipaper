@@ -5,50 +5,9 @@ Zeilenabstand entsteht aber schnell der Eindruck entstehen, dass auf diese
 Weise "`Platz geschunden"' werden soll. Die Einstellung des Zeilenabstands
 erfolgt durch das Paket \texttt{setspace} gemäß Listing~\ref{lst:tpl:linespace}.
 
-\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,caption={Einstellung des Zeilenabstands},label={lst:tpl:linespace}]{code/tpl_linespace}
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,float,caption={Einstellung des Zeilenabstands},label={lst:tpl:linespace}]{code/tpl_linespace}
 
 Das Paket \texttt{setspace} trägt dafür Sorge, dass in Fußnoten und
-Gleitumgebungen der einfach Zeilenabstand zur Anwendung kommt.
-
-\todo[inline]{Normaler Zeilenabstand in Fußnoten, Minipages, Gleitumgebungen}
-
-
-
-%% setspace benutzt in Gleitumgebungen den normalen Zeilenabstand. Das wollen wir nicht.
-%\makeatletter
-%\let\@xfloat=\latex@xfloat
-%\makeatother
-%
-%% Auch in den Fußnoten beim größeren Zeilenabstand bleiben.
-%\makeatletter
-%\long\def\@footnotetext#1{%
-%  \insert\footins{%
-%    \reset@font\footnotesize
-%    \interlinepenalty\interfootnotelinepenalty
-%    \splittopskip\footnotesep
-%    \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
-%    \hsize\columnwidth
-%    \@parboxrestore
-%    \protected@edef\@currentlabel{%
-%      \csname p@footnote\endcsname\@thefnmark
-%    }%    
-%    \color@begingroup
-%      \@makefntext{%
-%        \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
-%    \color@endgroup}}
-%\makeatother
-%
-%\makeatletter
-%\long\def\@mpfootnotetext#1{%
-%  \global\setbox\@mpfootins\vbox{%
-%    \unvbox \@mpfootins
-%    \reset@font\footnotesize
-%    \hsize\columnwidth
-%    \@parboxrestore
-%    \protected@edef\@currentlabel{%
-%      \csname p@mpfootnote\endcsname\@thefnmark}%
-%    \color@begingroup
-%      \@makefntext{%
-%       \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
-%   \color@endgroup}}
-%\makeatother
+Gleitumgebungen der einfach Zeilenabstand zur Anwendung kommt. Soll auch hier
+ein erweiterter Zeilenabstand genutzt werden, hält die Vorlage unter
+\texttt{latex/linespace\_mod} entsprechenden \TeX-Code bereit.
