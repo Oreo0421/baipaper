@@ -1,14 +1,14 @@
-\newcommand{\fontsample}[2]{
-\begin{figure}[p]
+\newcommand{\fontsample}[3][p]{
+\begin{figure}[#1]
 \centering
 \fbox{\begin{minipage}{14.2cm}
 \centering
 \begin{minipage}{14cm}
-\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!]{code/schriften/header_#1}
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!]{code/schriften/header_#2}
 \end{minipage}
-\includegraphics{bilder/schriften/font_#1}
+\includegraphics{bilder/schriften/font_#2}
 \end{minipage}}
-\caption{Schriftmuster "`#2"'}
+\caption{Schriftmuster "`#3"'}
 \end{figure}}
 
 
@@ -52,12 +52,14 @@ diese Schriften jedoch recht brüchig und wirken beim Druck auf einem
 Laserdrucker sehr mager. Verlage empfehlen daher oft auf andere Schriftfamilien
 auszuweichen.
 
-\begin{figure}[H]
-\centering
-\fbox{\includegraphics{bilder/schriften/font_lm}}
-\caption{Schriftmuster "`Latin Modern"'}
-\label{fig:tpl:font:lm}
-\end{figure}
+\fontsample[H]{lm}{Latin Modern}
+
+%\begin{figure}[H]
+%\centering
+%\fbox{\includegraphics{bilder/schriften/font_lm}}
+%\caption{Schriftmuster "`Latin Modern"'}
+%\label{fig:tpl:font:lm}
+%\end{figure}
 
 Durch das Laden von Zusatzpaketen werden diese Standardschriftfamilien
 umdefiniert. Manche Pakete definieren alle Familien um. Andere wirken sich nur
