@@ -1,8 +1,13 @@
 \newcommand{\fontsample}[2]{
 \begin{figure}[H]
-\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!]{code/schriften/header_#1}
 \centering
-\fbox{\includegraphics{bilder/schriften/font_#1}}
+\fbox{\begin{minipage}{14.2cm}
+\centering
+\begin{minipage}{14cm}
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!]{code/schriften/header_#1}
+\end{minipage}
+\includegraphics{bilder/schriften/font_#1}
+\end{minipage}}
 \caption{Schriftmuster "`#2"'}
 \end{figure}}
 
