@@ -12,3 +12,11 @@ einfügen. Bei der Klasse \texttt{report} ist hierfür die Option
 \texttt{openright} notwendig.
 
 \lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,caption={Kapitelbeginn auf rechter Seite},label={lst:tpl:openright}]{code/tpl_openright}
+
+Eingefügte Leerseiten werden nicht mit Seitennummern versehen. Das Paket
+\texttt{emptypage} stellt dieses Verhalten sicher und ist in der Vorlage
+standardmäßig eingebunden (siehe Listing~\ref{lst:tpl:emptypage}).
+
+\begin{lstlisting}[language={[LaTeX]{TeX}},style=block,escapechar=\!,caption={Seitennummern auf Leerseiten abschalten},label={lst:tpl:emptypage}]
+\usepackage{emptypage}
+\end{lstlisting}
