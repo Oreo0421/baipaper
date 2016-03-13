@@ -32,19 +32,6 @@ Das Schriftbild wirkt sich wesentlich auf die Lesbarkeit eines Textes aus. In
 \end{itemize}
 
 Ferner ergänzen mathematische Schriften, die Zeichen für den Formelsatz.
-%%
-%\begin{itemize}
-%\item Operatoren: $\cdot$, $\oplus$, $\sum$, $\prod$, $\int$, $\nabla$, $\partial$
-%%\item Auslassungszeichen: $\ldots$, $\cdots$, $\ddots$, $\vdots$
-%\item Relationen: $<$, $\ge$, $\ne$, $\succ$
-%\item Klammern: $\big($, $\big<$, $\big[$, $\big\{$, $\big\lfloor$, $\big|$
-%\item Pfeile: $\mapsto$, $\to$, $\Leftrightarrow$
-%\item griechische Buchstaben: $\alpha$, $\beta$, $\gamma$, $\delta$, \dots,
-%                              $\mathrm{A}$, $\mathrm{B}$, $\Gamma$, $\Delta$, \dots
-%\item Mengen: $\mathbb{N}$, $\mathbb{Z}$, $\mathbb{Q}$, $\mathbb{R}$, $\mathbb{C}$, \dots,
-%              $\mathcal{A}$, $\mathcal{B}$, $\mathcal{C}$, \dots,
-%              $\mathfrak{A}$, $\mathfrak{B}$, $\mathfrak{C}$, \dots
-%\end{itemize}
 
 Standardmäßig kommt für alle vier Fälle die Schriftfamilie "`Computer Modern"'
 bzw. ihr Pendant "`Latin Modern"' (siehe Abb.~\ref{fig:tpl:font:lm}) zur
@@ -55,18 +42,20 @@ auszuweichen.
 
 \fontsample[H]{lm}{Latin Modern}
 
-%\begin{figure}[H]
-%\centering
-%\fbox{\includegraphics{bilder/schriften/font_lm}}
-%\caption{Schriftmuster "`Latin Modern"'}
-%\label{fig:tpl:font:lm}
-%\end{figure}
-
 Durch das Laden von Zusatzpaketen werden diese Standardschriftfamilien
 umdefiniert. Manche Pakete definieren alle Familien um. Andere wirken sich nur
 auf einzelnen Familien und lassen die anderen Schriftfamilien unverändert.
 
-
 \fontsample{newpx}{Palatino}
 
 \fontsample{newtx}{Times Roman}
+
+Abbildung~\ref{fig:tpl:font:newpx} zeigt, mit welchen \LaTeX-Paketen sich die
+Standardschrift auf "`Palatino"' umstellen lässt. Als serifenlose Schrift kommt
+"`Helvetica"' zum Einsatz. Außerdem werden auf Palatino angepasst
+Mathematikschriften geladen. Die Schrift hat ein größeres Gewicht und eigenet
+sich daher besser für hochauflösende Druckverfahren. Palatino kommt in diesem
+Dokument zur Anwendung. Die Schriftfamilie "`Times"' stellt eine weitere
+Alternative dar. Abbildung~\ref{fig:tpl:font:newtx} zeigt eine Schriftprobe
+und die entsprechenden Pakete. Die serifenlose und dicktengleiche Schrift sind
+identisch zu Palatino.
