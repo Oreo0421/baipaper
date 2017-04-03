@@ -2,32 +2,57 @@
 
 
 \usepackage[utf8]{inputenc}
+\usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot,marginparwidth=25mm]{geometry}
+\usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
-\usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot]{geometry}
 \usepackage{microtype}
 \usepackage{amsmath}
 \usepackage{newpxtext}
 \usepackage{newpxmath}
-\usepackage[T1]{fontenc}
-\usepackage{textcomp}
-\usepackage{xcolor}
-\usepackage{emptypage}
 \usepackage{parskip}
+\usepackage{emptypage}
+\usepackage{calc}
+\usepackage{array}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{listings}
-\usepackage{listingsutf8}
+%\usepackage{textcomp}
+%\usepackage{xcolor}
+%\usepackage{listings}
+%\usepackage{listingsutf8}
 %\usepackage{units}
-%\usepackage{layouts}
-%\usepackage{todonotes}
+\usepackage{layout}
+\usepackage{todonotes}
 
 
 
 \input{latex/float}
+\input{latex/titlepage}
 %\input{latex/lara}
 %\input{latex/listings}
 
 
 
 \begin{document}
+\input{inhalt/titlepage}
+
+\tableofcontents
+
+% TODO: Verzeichnisse
+% TODO: Abkürzungen
+% TODO: Seitennummern
+
+\chapter{Einleitung}
+
+\chapter{Grundlagen}
+
+\chapter{Hauptteil}
+
+\chapter{Zusammenfassung \& Ausblick}
+
+% TODO: Anhang
+% TODO: Index
+% TODO: Glossar
+
+\cleardoublepage
+\layout
 \end{document}

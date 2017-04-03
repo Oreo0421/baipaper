@@ -1,0 +1,8 @@
+*.aux
+*.toc
+*.log
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+arbeit.pdf
