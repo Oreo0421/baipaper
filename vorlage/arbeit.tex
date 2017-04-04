@@ -4,16 +4,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot,marginparwidth=25mm]{geometry}
-\usepackage[ngerman]{babel}
+\usepackage[ngerman]{babel}	% Deutsche Trennmuster
 \usepackage{microtype}
-\usepackage{amsmath}
-\usepackage{newpxtext}
+\usepackage{amsmath}		% Mathematik-Erweiterungen
+\usepackage{newpxtext}		% Schriftart Palatino
 \usepackage{newpxmath}
-\usepackage{parskip}
-\usepackage{emptypage}
+\usepackage{parskip}		% Kein Absatzeinzug
+\usepackage{emptypage}		% Keine Seitenzahlen auf Leerzeiten
 \usepackage{calc}
 \usepackage{array}
-\usepackage{graphicx}
+\usepackage{graphicx}		% Einbindung von Grafiken
 \usepackage{float}
 %\usepackage{textcomp}
 %\usepackage{xcolor}
@@ -37,6 +37,10 @@
 
 
 \begin{document}
+%
+% Vorspann und Verzechnisse
+%
+
 % Römische Seitenzahlen für den Vorspann.
 \pagenumbering{roman}
 \setcounter{page}{1}
@@ -47,6 +51,14 @@
 
 % TODO: Verzeichnisse
 % TODO: Abkürzungen
+% TODO: Aufgabenstellung
+% TODO: Abstract
+
+
+
+%
+% Textkörper
+%
 
 % Arabische Seitenzahlen für den Hauptteil.
 \cleardoublepage
@@ -62,8 +74,24 @@
 
 \chapter{Zusammenfassung \& Ausblick}
 
-% TODO: Anhang
+
+%
+% Anhänge
+%
+
+\appendix
+\part*{Anhänge}
+
+%% Separate Überschrift im Inhaltsverzeichnis, wenn gewünscht
+%\addcontentsline{toc}{part}{Anhänge}
+
+\chapter{Quelltexte}
+
+\chapter{Messwerte}
+
+
 % TODO: Index
+% TODO: Literaturverzeichnis
 % TODO: Glossar
 
 \cleardoublepage
