@@ -2,8 +2,8 @@
 
 
 \usepackage[utf8]{inputenc}
-\usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot,marginparwidth=25mm]{geometry}
 \usepackage[T1]{fontenc}
+\usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot,marginparwidth=25mm]{geometry}
 \usepackage[ngerman]{babel}
 \usepackage{microtype}
 \usepackage{amsmath}
@@ -20,9 +20,12 @@
 %\usepackage{listings}
 %\usepackage{listingsutf8}
 %\usepackage{units}
-\usepackage{layout}
-\usepackage{todonotes}
 
+% Pakete, die nur für den Entwurf wichtigt sind.
+% Sie können entfernt werden.
+\usepackage{todonotes}		% TODO-Anmerkungen
+\usepackage{lipsum}		% Blindtexte
+\usepackage{layout}		% Darstellung des Satzspiegels
 
 
 \input{latex/float}
@@ -54,6 +57,8 @@
 % TODO: Index
 % TODO: Glossar
 
+\cleardoublepage
+\input{inhalt/danksagung}
 \cleardoublepage
 \input{inhalt/erklaerung}
 
