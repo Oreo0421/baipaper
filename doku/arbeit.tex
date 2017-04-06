@@ -15,10 +15,19 @@
 \usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot,marginparwidth=25mm]{geometry}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{rotating}
+%%\usepackage{rotfloat}
+%%\usepackage{pdflscape}
+%\usepackage{etoolbox}
+%\usepackage{changepage}
+\usepackage{elocalloc}
+\usepackage{paralist}
 \usepackage{listings}
 \usepackage{listingsutf8}
+\usepackage{tikz}
 \usepackage{units}
 \usepackage{dirtree}[2012/12/11]
+\usepackage{hyperref}
 \usepackage{layouts}
 \usepackage{todonotes}
 
@@ -27,6 +36,8 @@
 \input{latex/float}
 \input{latex/lara}
 \input{latex/listings}
+%\input{latex/rotpage}
+\input{../vorlage/latex/titlepage}
 
 
 
@@ -34,10 +45,22 @@
 \begin{document}
 
 
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\input{inhalt/titlepage}
 \tableofcontents
-\newpage
+\listoffigures
+%\listoflistings
 
 
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+
+\chapter*{Vorwort}
+\addcontentsline{toc}{chapter}{Vorwort}
 \input{inhalt/intro}
 
 
@@ -46,9 +69,7 @@
 
 
 \section{Von der Vorlage zum PDF}
-% Anwendungsbeispiele für verschiedene Editoren
-\todo[inline]{Editoren, Übersetzungslauf}
-
+\input{inhalt/tpl_start}
 
 \section{Verzeichnisstruktur}
 \input{inhalt/tpl_dir}
@@ -59,21 +80,23 @@
 \subsection{Art der Arbeit}
 \input{inhalt/tpl_class}
 
+\clearpage
 \subsection{Schriften}
+\label{sec:tpl:font}
 \input{inhalt/tpl_font}
 
-% Mehrsprachigkeit, Sprachbesonderheiten
+\subsection{Duplexdruck}
+\input{inhalt/tpl_duplex}
 
+\clearpage
 \subsection{Papierformat}
 \input{inhalt/tpl_papersize}
 
 \subsection{Ränder}
 \input{inhalt/tpl_margin}
 
-\subsection{Duplexdruck}
-\input{inhalt/tpl_duplex}
-
 \subsection{Bindekorrektur}
+\label{sec:tpl:bcor}
 \input{inhalt/tpl_bcor}
 
 \subsection{Zeilenabstand}
@@ -84,11 +107,8 @@
 % Seitenzahl oben rechts/außen
 % Alternativ Seitenzahl unten außen
 
-\subsection{Seitennummern}
-% Art der Nummerierung
-% Beginnend bei Titelseite
-% Nummerierung i.d.R. erst ab erster Inhaltsseite
-% Anlagen erhalten eine gesonderte Nummerierung
+
+% Mehrsprachigkeit, Sprachbesonderheiten
 
 
 \section{Einbindung von Zusatzpaketen}
@@ -101,18 +121,22 @@
 
 
 \chapter{Gestaltungsmittel}
+\label{sec:latex}
 
 % Gliederung
 % Quellenangaben
 % Literaturverzeichnisse
 % Abbildungen
 % Unterabbildungen (subfloat, subfig)
+% querformatige Abbildungen
 % Quellcode-Abschnitte
 % Eigene Gleitumgebungen
 % Physikalische Größen und Einheiten
 % Abstract
 % Farbe
 % Hervorgehobene Boxen
+% landscape
+% Durchschuss
 
 
 
@@ -133,10 +157,18 @@
 
 \section{Formales}
 
-\subsection{Titelblatt}
+\subsection{Deckblatt}
 \input{inhalt/final_titlepage}
 
 \subsection{Verzeichnisse}
+
+\subsection{Seitennummern}
+% Art der Nummerierung
+% Beginnend bei Deckblatt
+% Nummerierung i.d.R. erst ab erster Inhaltsseite
+% Anlagen erhalten eine gesonderte Nummerierung
+
+\subsection{Aufgabenstellung / Thema der Arbeit}
 
 \subsection{Ehrenwörtliche Erklärung}
 
@@ -145,6 +177,12 @@
 
 
 \section{Textbild, Trennungen, Querverweise}
+
+
+\section{Platzierung von Gleitumgebungen}
+
+
+\section{Metadaten}
 
 
 \section{Druck}

@@ -17,5 +17,5 @@ $(BSAMPLES): bilder/samples/%:
 
 clean:
 	rm -f arbeit.pdf
-	rm -f *.{log,aux,toc,fls,fdb_latexmk}
+	rm -f *.{log,aux,toc,fls,fdb_latexmk,synctex.gz}
 	for d in $(SAMPLES); do make -C $$d clean; done

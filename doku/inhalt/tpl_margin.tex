@@ -6,19 +6,50 @@ Die Seitenränder sollten gemäß DIN~5008 mind. \unit[2,5]{cm} betragen. Bei
 Arbeiten, die auf der Außenseite einen Korrekturrand erfordern, sollte der
 Korrekturrand \unit[5]{cm} breit sein.
 
-Die Einstellung des Satzspiegels erfolgt mit dem Paket \texttt{geometry}.
+Die Festlegungen zur Seitengeometrie werden in der Drucksprache als
+"`Satzspiegel"' bezeichnet. Im Laufe der Geschichte des Buchdrucks haben sich
+viele Regeln zur Gestaltung eines guten Satzspiegels eingebürgert. Wenn Sie
+ein mal nach den Stichwörtern "`Satzspiegel"' und "`\LaTeX"' recherchieren,
+werden Sie viele Abhandlungen finden. Halten Sie sich im Zweifel aber eher
+an die Vorgaben des Dozenten, auch wenn diese den klassischen Regeln der
+Satzspiegelkonstruktion widersprechen.
 
-\newpage
-\setlayoutscale{0.29}
+Die Einstellung des Satzspiegels erfolgt mit dem Paket \texttt{geometry}.%
+\todo{CTAN-Verweis}\ 
+Listing~\ref{lst:tpl:margin} enthält ein Beispiel für die Anwendung des Pakets.
+Die Option \texttt{includeheadfoot} besagt, dass der obere bzw. untere Rand bis
+zur Oberkante der Kopfzeile bzw. bis zur Unterkante der Fußzeile gemessen wird.
+Andernfalls wird der Rand bis zum Textkörper gemessen.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={htb},caption={Einstellung der Seitenränder},label={lst:tpl:margin}]{code/tpl_margin.tex}
+
+Das Paket \texttt{geometry} bietet noch weitaus mehr Möglichkeiten, die den
+Rahmen dieser Einführung sprengen würden. Hierfür sei auf die
+Paketdokumentation verwiesen.
+
+
+\begingroup
+\locbox\evenlayout
+\locbox\oddlayout
+
 \printheadingsfalse
 \printparametersfalse
 %\drawdimensionstrue
 \currentpage
+\setlayoutscale{0.4}
+
+\meaning\drawpage
+\oddpagelayoutfalse\savebox{\evenlayout}{\pagedesign}
+\oddpagelayouttrue\savebox{\oddlayout}{\pagedesign}
+
+\begin{sidewaysfigure}[p]
 \begin{minipage}{0.5\linewidth}
-\oddpagelayoutfalse
-\pagedesign
+\fbox{\usebox{\evenlayout}}
 \end{minipage}%
 \begin{minipage}{0.5\linewidth}
-\oddpagelayouttrue
-\pagedesign
+\usebox{\oddlayout}
 \end{minipage}
+\end{sidewaysfigure}
+\endgroup
+
+% TODO: Mustersatzspiegel

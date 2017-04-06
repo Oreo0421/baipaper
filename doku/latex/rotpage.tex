@@ -1,0 +1,21 @@
+\makeatletter
+\newenvironment{rotatepage}
+{%
+  \if@twoside%
+    \checkoddpage%
+    \ifoddpage%
+      \pagebreak[4]\global\pdfpageattr\expandafter{\the\pdfpageattr/Rotate 90}%
+    \else%
+      \pagebreak[4]\global\pdfpageattr\expandafter{\the\pdfpageattr/Rotate 270}%
+    \fi%
+  \else%
+    \pagebreak[4]\global\pdfpageattr\expandafter{\the\pdfpageattr/Rotate 90}%
+  \fi%
+}%
+{\pagebreak[4]\global\pdfpageattr\expandafter{\the\pdfpageattr/Rotate 0}}%
+\makeatother
+
+\BeforeBeginEnvironment{sidewaysfigure}{\begin{rotatepage}}
+\AfterEndEnvironment{sidewaysfigure}{\end{rotatepage}}
+\BeforeBeginEnvironment{sidewaystable}{\begin{rotatepage}}
+\AfterEndEnvironment{sidewaystable}{\end{rotatepage}}
