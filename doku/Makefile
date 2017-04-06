@@ -13,7 +13,7 @@ arbeit.pdf: arbeit.tex $(DEPS)
 
 $(BSAMPLES): bilder/samples/%:
 	make -C samples/$(dir $*) $(notdir $*)
-	cp -a samples/$* $@
+	cp -up samples/$* $@
 
 clean:
 	rm -f arbeit.pdf

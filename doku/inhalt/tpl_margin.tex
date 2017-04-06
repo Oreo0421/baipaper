@@ -36,20 +36,22 @@ Paketdokumentation verwiesen.
 \printparametersfalse
 %\drawdimensionstrue
 \currentpage
-\setlayoutscale{0.4}
+\setlayoutscale{0.47}
 
-\meaning\drawpage
-\oddpagelayoutfalse\savebox{\evenlayout}{\pagedesign}
-\oddpagelayouttrue\savebox{\oddlayout}{\pagedesign}
+\oddpagelayoutfalse\savebox{\evenlayout}{{\hsize=0.48\paperwidth\vbox{\centering\footnotesize\pagedesign}}}
+\oddpagelayouttrue\savebox{\oddlayout}{{\hsize=0.48\paperwidth\vbox{\centering\footnotesize\pagedesign}}}
 
-\begin{sidewaysfigure}[p]
+\begin{sidewaysfigure*}[p]
 \begin{minipage}{0.5\linewidth}
+\centering
 \fbox{\usebox{\evenlayout}}
 \end{minipage}%
 \begin{minipage}{0.5\linewidth}
-\usebox{\oddlayout}
+\centering
+\fbox{\usebox{\oddlayout}}
 \end{minipage}
-\end{sidewaysfigure}
+\caption{Satzspiegel dieses Dokuments}
+\end{sidewaysfigure*}
 \endgroup
 
 % TODO: Mustersatzspiegel
