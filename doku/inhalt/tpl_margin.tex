@@ -36,22 +36,27 @@ Paketdokumentation verwiesen.
 \printparametersfalse
 %\drawdimensionstrue
 \currentpage
-\setlayoutscale{0.47}
+\setlayoutscale{0.45}
 
-\oddpagelayoutfalse\savebox{\evenlayout}{{\hsize=0.48\paperwidth\vbox{\centering\footnotesize\pagedesign}}}
-\oddpagelayouttrue\savebox{\oddlayout}{{\hsize=0.48\paperwidth\vbox{\centering\footnotesize\pagedesign}}}
+\oddpagelayoutfalse\savebox{\evenlayout}{{\hsize=0.46\paperwidth\vbox{\centering\footnotesize\pagedesign}}}
+\oddpagelayouttrue\savebox{\oddlayout}{{\hsize=0.46\paperwidth\vbox{\centering\footnotesize\pagedesign}}}
 
 \begin{sidewaysfigure*}[p]
 \begin{minipage}{0.5\linewidth}
 \centering
-\fbox{\usebox{\evenlayout}}
+\usebox{\evenlayout}
 \end{minipage}%
 \begin{minipage}{0.5\linewidth}
 \centering
-\fbox{\usebox{\oddlayout}}
+\usebox{\oddlayout}
 \end{minipage}
 \caption{Satzspiegel dieses Dokuments}
+\label{fig:tpl:margin_layout}
 \end{sidewaysfigure*}
 \endgroup
 
-% TODO: Mustersatzspiegel
+Durch Einfügen des Pakets \texttt{showframe} können Sie sich den Satzspiegel
+Ihres Dokuments in einer Form vergleichbar zu
+Abbildung~\ref{fig:tpl:margin_layout} anzeigen lassen.
+
+%\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={htb},caption={Anzeige des Satzspiegels},label={lst:tpl:margin_showframe}]{code/tpl_margin_showframe.tex}
