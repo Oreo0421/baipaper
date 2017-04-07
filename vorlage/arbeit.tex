@@ -1,38 +1,63 @@
 \documentclass[twoside,a4paper,11pt,openright]{report}
 
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[inner=25mm,outer=35mm,top=25mm,bottom=30mm,includeheadfoot,marginparwidth=25mm]{geometry}
+%
+% Grundpakete. Nur ändern, wenn Sie wissen, was Sie tun.
+%
+\usepackage[utf8]{inputenc}	% Einstellung der Eingabekodierung
 \usepackage[ngerman]{babel}	% Deutsche Trennmuster
-\usepackage{microtype}
-\usepackage{amsmath}		% Mathematik-Erweiterungen
 \usepackage{newpxtext}		% Schriftart Palatino
-\usepackage{newpxmath}
+\usepackage{newpxmath}		% passende Mathe-Schrift
+\usepackage[T1]{fontenc}	% Einstellung Schriftkodierung
+\usepackage{amsmath}		% Mathematik-Erweiterungen
+\usepackage{microtype}		% Verbesserte Mikrotypographie
+\usepackage{calc}		% Berechnung von TeX-Maßen
+\usepackage[%
+  inner=25mm,%
+  outer=35mm,%
+  top=25mm,%
+  bottom=30mm,%
+  includeheadfoot,%
+  headheight=14pt,%
+  marginparwidth=25mm%
+]{geometry}			% Anpassung Satzspiegel
 \usepackage{parskip}		% Kein Absatzeinzug
 \usepackage{emptypage}		% Keine Seitenzahlen auf Leerzeiten
-\usepackage{calc}
-\usepackage{array}
+\usepackage{array}		% Tabellen-Erweiterung
 \usepackage{graphicx}		% Einbindung von Grafiken
-\usepackage{float}
-%\usepackage{textcomp}
-%\usepackage{xcolor}
-%\usepackage{listings}
-%\usepackage{listingsutf8}
-%\usepackage{units}
+\usepackage{float}		% Anpassung von Gleitumgebungen
+\usepackage{fancyhdr}		% Anpassung von Kopf- und Fußzeilen
 
+
+%
+% Pakete, die bei Bedarf eingebunden werden können.
+%
+
+%\usepackage{textcomp}
+%\usepackage{xcolor}		% Farben
+%\usepackage{listings}		% Quelltextauszüge
+%\usepackage{listingsutf8}
+%\usepackage{units}		% Physikalische Einheiten
+% TODO: caption
+% TODO: subfig, subfloat
+% TODO: rotating
+% TODO: paralist
+% TODO: tikz
+
+
+%
 % Pakete, die nur für den Entwurf wichtigt sind.
-% Sie können entfernt werden.
+% Sie können nach der Fertigstellung entfernt werden.
+%
 \usepackage{todonotes}		% TODO-Anmerkungen
 \usepackage{lipsum}		% Blindtexte
 \usepackage{layout}		% Darstellung des Satzspiegels
 
 
-\input{latex/float}
-\input{latex/titlepage}
-\input{latex/erklaerung}
-%\input{latex/lara}
-%\input{latex/listings}
+\input{latex/float}		% Anpassungen für Gleitumgebungen
+\input{latex/titlepage}		% Formatvorlage für das Deckblatt
+\input{latex/fancyhdr}		% Einstellungen zu Kopf- und Fußzeilen
+\input{latex/erklaerung}	% Formatvorlage für die Selbstständigkeitserklärung
 
 
 
