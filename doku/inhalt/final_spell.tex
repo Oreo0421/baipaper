@@ -1,0 +1,83 @@
+Die Sprachliche Endkorrektur ist der aufwändigste Schritt bei der
+Fertigstellung einer Arbeit und wird sich vermutlich auch mehrere Durchgänge
+benötigen. Nichtsdestotrotz sollte dieser Schritt keinesfalls hlabherzig
+angegangen werden. Eine Häufung von Tippfehlern wirft beim Gutachter zurecht
+die Frage auf, ob der Autor auch in inhaltlichen Belangen die notwendige
+Gründlichkeit hat walten lassen. Es gibt mehrere Möglichkeiten die korrektur
+auf Rechtschreibung, Grammatik und Ausdruck zu bewerkstelligen. In der Regel
+führt eine Kombination aller Varianten zum Ziel.
+
+
+\paragraph{Automatische Rechtschreibprüfung}
+
+Die automatische Rechtschreibprüfung ist die einfachste Methode der
+Rechtschreibkorrektur. Mit ihr lassen sich am besten Tippfehler erkennen.
+Viele moderne \LaTeX-Editoren bieten entsprechende Funktionen an. Ein normaler
+Texteditor könnte u.\,U. von \LaTeX-Kommandos verwirrt werden. Einige Editoren
+erkennen nicht nicht Tippfehler, sondern auch grammatikalisch fragwürdige
+Konstruktionen und/oder heben Wiederholungen und die Verwendungen überflüssiger
+Füllwörter vor.
+
+Sollten Sie Ihre Arbeit mit der Kommandozeile unter UNIX-artigen Systemen
+verfassen, bietet die Software Aspell\footnote{\url{http://aspell.net/}} die
+Möglichkeit \TeX-Dateien zu überprüfen. Der Kommandozeilenaufruf dazu lautet:
+
+\begin{lstlisting}[escapechar=\!]
+$ aspell -t -c !\lara{Dateiname}!
+\end{lstlisting}
+
+Schlechten Ausdruck oder Satzbau erkennen solche Werkzeuge allerdings nicht.
+
+
+\paragraph{Manuelle Korrektur eines Probedrucks}
+
+Fertigen Sie frühzeitig einen Probedruck von Kapiteln an, die bereits (bis auf
+Kleinigkeiten) abgeschlossen sind. Mitunter versperren \LaTeX-Kommandos im
+Manuskript einen direkten Blick auf den fertigen Text, sodass der Blick auf das
+fertige Ergebnis hilft, die Texte nun auch auf Satzbau und Grammatik
+korrigieren zu können.
+
+Tipp- und Rechtschreibfehler erkennen Sie leichter, wenn Sie jede Seite
+rückwärts lesen. Sie vermeiden es so, Wörter beim Lesen zu überspringen oder
+aus dem Lesefluss heraus anders zu lesen, als sie auf Papier stehen.
+
+Streichen Sie erkannte Fehler sofort an. Streichen Sie die Fehlermarkierungen
+erst dann in einer anderen Farbe aus, wenn der Fehler im \TeX-File behoben
+wurde. Schmeißen Sie eine Seite des Probedrucks erst weg, wenn alle Fehler
+ausgestrichen sind.
+
+
+\paragraph{Korrektur durch unbeteiligte Bekannte}
+
+Fragen Sie in Ihrem Bekanntenkreis, ob jemand bereit wäre, die Arbeit korrektur
+zu lesen. Es gibt erfahrungsgemäß immer jemanden, der jemand kennt, der sich
+mit den noch so kleinsten Feinheiten der Deutschen Sprache auskennt. Es kann
+sogar von Hilfe sein, wenn der Korrekturleser nicht vom Fach ist. Er oder sie
+wird sich dann sogar unweigerlich auf die Rechtschreibung und weniger auf den
+Inhalt konzentrieren.
+
+Um Anmerkungen schneller in das Manuskript einpflegen zu können, empfiehlt es
+sich die Zeilen im Probedruck durchzunummierieren. Es ist viel leichter das
+fünfte~Wort in Zeile~256 zu korrigieren, als Wort~fünf in der vierten~Zeile
+von Absatz~3 im Abschnitt~2.3. \LaTeX\ fügt vollautomatisch Zeilennummern ein,
+indem Sie in der Vorlage die in Listing~\ref{lst:final:lineno} angegebenen
+Zeilen auskommentieren.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,float={htb},caption={Einschalten der Zeilennummerierung},label={lst:final:lineno}]{code/final_lineno.tex}
+
+Vergessen Sie nicht, die Kommentarzeichen vor Abgabe der Arbeit wieder
+einzufügen.
+
+
+\paragraph{Feedback des Betreuers}
+
+Wenn es sich um eine Abschlussarbeit handelt, wird ein guter Betreuer eine
+Vorabversion anfordert. Ja nach Arbeitsbelastung und Stellensituation können
+hier im realen Leben Abweichungen zu beobachten sein. Mit etwas
+Fingerspitzengefühl können Sie jedoch im Zweifel einen Betreuer dazu überreden
+Ihre Arbeit zu lesen. Bedenken Sie aber, dass die Mühlen an einer Universität
+langsam mahlen. Ihr Betreuer hat sicherlich parallel noch Anträge zu
+unterschreiben, Lehrveranstaltungen zu halten und Konferenzen zu besuchen. Der
+Betreuer ist aber nicht Ihr Sekretär. Tipp- und Ausdrucksfehler wird er Ihnen
+sicher mitteilen, Fragen zu Fachtermini und zur inhaltlichen Schlüssigkeit
+stehen hier klar im Vordergrund.
