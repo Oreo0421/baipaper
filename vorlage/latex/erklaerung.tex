@@ -2,7 +2,7 @@
 
 \newenvironment{tucerklaerung}[1][Selbstständigkeitserklärung]
 {
-  \cleardoublepage
+  \pagestyle{empty}
   \thispagestyle{empty}
   \newcommand{\tucsignature}[2][5cm]%
   {
@@ -14,7 +14,8 @@
     \end{minipage}
     \end{flushright}
   }
-  \par\centerline{\textbf{\Large #1}}\par
-  \bigskip
+  \tucsimplesection{#1}
 }
-{}
+{
+  \endtucsimplesection
+}

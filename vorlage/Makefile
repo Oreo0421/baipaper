@@ -6,4 +6,4 @@ arbeit.pdf: arbeit.tex $(wildcard inhalt/*.tex)
 
 clean:
 	rm -f arbeit.pdf
-	rm *.{log,aux,toc,fls,fdb_latexmk,synctex.gz}
+	rm -f *.{log,aux,toc,fls,fdb_latexmk,synctex.gz}
