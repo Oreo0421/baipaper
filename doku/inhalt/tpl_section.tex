@@ -1,0 +1,36 @@
+Die Gliederung der Arbeit erfolgt mit den gewöhnlichen
+\LaTeX-Gliederungsbefehlen \verb+\chapter+, \verb+\section+,
+\verb+\subsection+, usw. Vergleiche hierzu auch die
+Listings~\ref{lst:tpl:article} bis~\ref{lst:tpl:book}. Die \texttt{*}-Varianten
+werden nicht nummeriert und erscheinen standardmäßig nicht im
+Inhaltsverzeichnis. Soll ein unnummierierten Punkt dennoch ins
+Inhaltsverzeichnis aufgenommen werden, kann dies über den
+\verb+\addcontentsline+-Befehl erfolgen, wie in
+Listing~\ref{lst:tpl:addcontentsline} gezeigt.\todo{Bib\TeX}\ 
+Der Befehl muss immer nach dem entsprechenden Gliederungsbefehl aufgerufen
+werden. Sonst stimmen die Seitenverweise nicht.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,float={htb},caption={Aufnahme zusätzlicher Verzeichniseinträge},label={lst:tpl:addcontentsline},morekeywords={chapter,subsection}]{code/tpl_addcontentsline}
+
+Für die Gliederung ist folgendes Musterschema zweckmäßig. Je nach Art der
+Arbeit entfallen die nicht zutreffenden Punkte.
+
+\begin{compactitem}
+\item Deckblatt
+\item Widmung
+\item Kurzreferat
+\item Aufgabenstellung
+\item Inhaltsverzeichnis
+\item weitere Verzeichnisse
+      (ggf. auf am Ende der Arbeit möglich, siehe unten)
+\item Abkürzungsverzeichnis, Symbole und Bezeichner
+\item Textkörper
+\item Anhänge
+\item Literaturverzeichnis
+\item weitere Verzeichnisse
+      (Alternative, sofern nicht bereits am Anfang gesetzt)
+\item Glossar
+\item Index
+\item Danksagung
+\item Selbständigkeitserklärung
+\end{compactitem}
