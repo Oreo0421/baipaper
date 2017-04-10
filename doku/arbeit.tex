@@ -62,9 +62,9 @@
 
 \begin{document}
 \pagenumbering{roman}
-\setcounter{page}{1}
 
 \input{inhalt/titlepage}
+
 \tableofcontents
 \listoffigures
 \listoftables
@@ -73,7 +73,6 @@
 
 \cleardoublepage
 \pagenumbering{arabic}
-\setcounter{page}{1}
 
 
 \chapter*{Vorwort}
@@ -188,10 +187,7 @@
 \input{inhalt/final_erklaerung}
 
 \subsection{Seitennummern}
-% Art der Nummerierung
-% Beginnend bei Deckblatt
-% Nummerierung i.d.R. erst ab erster Inhaltsseite
-% Anlagen erhalten eine gesonderte Nummerierung
+\input{inhalt/final_pagenumber}
 
 \subsection{Kopf- und Fußzeilen}
 % Kolumnentitel oben links/innen
