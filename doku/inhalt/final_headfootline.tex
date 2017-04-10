@@ -1,0 +1,19 @@
+In den Dokumentklassen~\texttt{article} und \texttt{report} wird nur die
+Fußzeile genutzt. Dort steht mittig zentriert die Seitennummer. Die
+Dokumentklasse~\texttt{book} verwendet hingegen lebende Kolumnentitel.
+Dabei erscheint in der Kopfzeilen neben der Seitenzahl auch der aktuelle
+Gliederungspunkt. Mittels des Pakets~\texttt{fancyhdr} kann dieses Verhalten
+auch für andere Klassen aktiviert werden. In der Datei~\texttt{latex/fancyhdr.tex}
+der Vorlage ist bereits alles dafür vorbereitet. Sie müssen nur die
+Kommentarzeichen vor der Passage in Listing~\ref{lst:final:fancyhdr}
+entfernen.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,float={htb},caption={Aktivierung lebender Kolumnentitel},label={lst:final:fancyhdr}]{code/final_fancyhdr.tex}
+
+Die Einstellungen gelten für das gesamte Dokument. Auf der ersten Seite jedes
+Kapitels wird dennoch die einfache Form der Seitennummierung angewendet.
+Sollten Sie auch den Vorspann der Arbeit in der einfachen Variante nummierieren
+wollen, so schalten Sie mit dem Kommando \verb+\pagestyle+ auf den Seitenstil
+\texttt{plain} um, wie es in Listing~\ref{lst:final:fancyhdr2} gezeigt wird.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,float={htb},caption={Abweichende Nummierierung für den Vorspann},label={lst:final:fancyhdr2}]{code/final_fancyhdr2.tex}
