@@ -1,4 +1,6 @@
-default: arbeit.pdf
+default: all
+
+all: arbeit.pdf
 
 SAMPLES		:= $(wildcard samples/*)
 BSAMPLES	:= $(shell find bilder/samples -type f -name "*.pdf")
