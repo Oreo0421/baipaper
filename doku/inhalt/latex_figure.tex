@@ -1,0 +1,63 @@
+Abbildungen können durch das Kommand \lstinline+\includegraphics+ aus dem Paket
+\texttt{graphicx} eingebunden werden. Die Abbildung muss dafür als Grafikdatei
+vorliegen. Legen Sie Abbildungen in dem Unterverzeichnis \texttt{bilder} ab
+(siehe Abschnitt~\ref{sec:vorlage:dir}). Verwenden Sie je nach Anwendungsfall
+die folgenden Bildformate.
+
+\begin{description}
+\item[PDF] Technische Zeichnungen, Grafiken, Diagramme, etc. -- Im Allgemeinen
+  sind hier sog. Vektorgrafiken gemeint. Diese bestehen aus Punkten, Linien
+  und Flächen und können und Qualitätsverlust vergrößert oder Verkleinert
+  werden. Zudem nehmen sie weniger Speicherplatz ein.
+
+  Beachten Sie allerdings, dass Texte innerhalb von Vektorgrafiken dann
+  ebenfalls mit skaliert werden und das u.\,U. zu einem uneinheitlichen
+  Textbild führen kann.
+
+\item[PNG] Screenshots, computergenerierte Abbildungen (3D-Visualisierungen,
+  Simulationsergebnisse, \dots), Land- bzw. Wetterkarten, Heatmaps -- Hier
+  handelt es sich um sog. Rastergrafiken. Solche Bilder bestehen aus einer
+  schachbrettartigen Anfordnung kleinster Pixel, die unterschiedliche gefärbt
+  sind. Da die Pixel nicht einzeln wahrgenommen werden, entsteht ein
+  Bildeindruck. Die Vergrößerung oder Verkleinerung von Rasterbildern führt
+  allerdings zu Qualitätsverlusten (Unschärfe, Detailverlust). Rastergrafiken
+  beanspruchen mehr Speicherplatz als Vektorgrafiken.
+
+  Bei PNG-Dateien handelt es sich um ein verlustloses Bildformat, d.\,h. die
+  Bildinformationen werden bei der Speicherung nicht verändert. Es eigenet sich
+  daher für Abbildungen mit feinen Details (z.\,B. Linien) und kontrastreiche
+  Darstellungen (Schwarz-Weiß-Zeichnungen).
+
+\item[JPEG] Fotografien, eingescannte Bildvorlagen -- Hierbei handelt es sich
+  ebenfalls um Rastergrafiken. Es kommt jedoch ein verlustbehaftetes
+  Speicherverfahren zum Einsatz. Farbwerte werden hierdurch verändert. Bei
+  auf "`natürlichem Weg"' entstandenen Abbildungen wie Fotografien oder
+  gescannten Dokumenten fallen diese Veränderungen nicht auf. Unnatürliche
+  Abbildungen mit starke Kontrasten, feinen Linien oder stark gesättigten
+  Farben führen jedoch zu Darstellungsfehlern (sog. Artefakten), weshalb das
+  JPEG-Format in diesem Fall nicht verwendet werden sollte. Aufgrund der
+  Speichertechnik benötigen JPEG-Bilder i.\,A. weniger Speicher als PNG-Bilder.
+\end{description}
+
+Abbildungen sollten immer innerhalb einer \texttt{figure}-Umgebung platziert
+werden. Somit ist die Nummerierung der Abbildungen sichergestellt und eine
+Aufnahme in das Abbildungsverzeichnis gesichert. Ein Beispiel findet sich in
+Listing~\ref{lst:latex:figure}.
+
+\begin{lstlisting}[language={[LaTeX]{TeX}},style=block,escapechar=\!,float,caption={Eine Abbildung},label={lst:latex:figure}]
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{bilder/!\lara{Dateiname}!}
+\caption{!\lara{Bildunterschrift}!}
+\label{!\lara{Verweismarke}!}
+\end{figure}
+\end{lstlisting}
+
+Im Dateinamen muss -- und sollte -- keine Dateiendung angegeben werden. Die
+Verweismarke kann entfallen, wenn kein Querverweis auf die Abbildung geplant
+ist.
+
+Bei der \texttt{figure}-Umgebung handelt es sich um eine Gleitumgebungen. Die
+Abbildung kann automatisch an eine andere Stelle des Dokuments verschoben
+werden, wenn die Platzverhältnisse es erfordern. Weitere Hinweise hierzu finden
+Sie in Abschnitt~\ref{sec:final:float}.
