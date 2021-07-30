@@ -1,0 +1,8 @@
+build:
+  script:
+    - make all
+  artifacts:
+    paths:
+      - doku/arbeit.pdf
+      - vorlage.tar.bz2
+      - vorlage.zip
