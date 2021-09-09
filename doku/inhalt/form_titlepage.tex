@@ -8,19 +8,19 @@ folgende Angaben:
 
 \begin{compactitem}
 \item Name der Universität, Fakultät und Professur bzw. des Instituts
-\item Das Logo der TU~Chemnitz
-\item Die Art der Arbeit
-\item Bei Abschlussarbeiten den angestrebten Abschluss
-\item Bei Hausarbeiten den Namen der Lehrveranstaltung und das Semester
-\item Den Namen des Autors bzw. aller Autoren bei Gruppenarbeiten
-\item Ggf. weitere persönliche Angaben (Matrikelnummer, \dots)
-\item Den Titel der Arbeit
+\item das Logo der TU~Chemnitz
+\item die Art der Arbeit
+\item bei Abschlussarbeiten den angestrebten Abschluss
+\item bei Hausarbeiten den Namen der Lehrveranstaltung und das Semester
+\item den Namen des Autors bzw. aller Autoren bei Gruppenarbeiten
+\item ggf. weitere persönliche Angaben (Matrikelnummer, \dots)
+\item den Titel der Arbeit
 \item Namen der Betreuer und Gutachter%
-      \footnote{Vorsicht. Manche Prüfungsordnungen sehen vor, dass die
+      \footnote{Vorsicht: Manche Prüfungsordnungen sehen vor, dass die
                 Gutachter erst nach Einreichung der Arbeit bestellt werden.
 		Sollten bereits in der eingereichten Fassung Gutachter benannt
 		sein, kann dies einen formalen Mangel darstellen.}%
-      , inkl. akadmischer Grade und Titel
+      , inkl. akademischer Grade und Titel
 \item Datum und Ort
 \end{compactitem}
 
@@ -31,14 +31,14 @@ sich ein Deckblatt nach dem Baukastenprinzip zusammensetzen lässt. Das
 Deckblatt kann dabei auch durch Standard-\LaTeX-Befehle ergänzt werden.
 
 In der Datei \texttt{inhalt/titlepage.tex} sind bereits Deckblätter für diverse
-Anwendungsfälle sind vorbereitet. Suchen Sie sich die Variante heraus, der
+Anwendungsfälle vorbereitet. Suchen Sie sich die Variante heraus, die
 für Ihren Fall am besten passt und nehmen Sie ggf. Anpassungen vor. Ein
 Deckblatt wird durch die Umgebung \texttt{tuctitlepage} umrahmt. Die Umgebung
 sorgt dafür, dass das Deckblatt immer auf einer rechten Seite erscheint, alle
 Elemente zentriert ausgerichtet werden und keine Seitenzahl gedruckt wird.
 
 Die Diskussion der einzelnen Gestaltungselemente ist ziemlich technisch. Am
-besten schauen Sie sich zunächst die die Quelltext zu drei Beispieldeckblätten
+besten schauen Sie sich zunächst den Quelltext zu drei Beispieldeckblätten
 in den Listings~\ref{lst:final:titlepage_da} bis~\ref{lst:final:titlepage_prakt}
 an. Die zugehörigen Ergebnisse sind in den Abbildungen~\ref{fig:final:titlepage_da}
 bis~\ref{fig:final:titlepage_prakt} dargestellt. Dann lassen sich die folgenden
@@ -115,7 +115,7 @@ jeweiligen Professur bzw. Einrichtung durch. Zeilenumbrüche erzeugen Sie mit
 Das Logo der TU~Chemnitz wird durch \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlelogo[$\text{\lara{Breite}}$]+
 eingefügt. Sie können optional die Breite des Logos angeben. Wenn Sie nichts
 angeben, wird das Logo auf \verb+0.6\linewidth+ (\unit[60]{\%} der Zeilenbreite)
-skaliert. Als Dateinamen für das Logo ist "`\texttt{bilder/tuc\_green\_margin}"'
+skaliert. Als Dateiname für das Logo ist "`\texttt{bilder/tuc\_green\_margin}"'
 voreingestellt. Eine Änderung sollte nicht notwendig sein. Wenn Sie die Arbeit
 in schwarz-weiß drucken, setzen Sie bitte das schwarze TUC-Logo ein, indem Sie
 die Kommandosequenz \verb+\tuctitlelogoname+ auf
@@ -153,7 +153,7 @@ verwenden Sie stattdessen:
 Für die Angaben sind bereits passende Schriftgrößen und Hervorhebungen
 ausgewählt. Die Art der Arbeit wird in Fettschrift dargestellt, alle anderen
 Angaben in normaler Stärke. Sollten Anpassungen notwendig sein, verwenden Sie
-einfach die überlichen \LaTeX-Kommandos innerhalb der Kommandoarugmente.
+einfach die üblichen \LaTeX-Kommandos innerhalb der Kommandoarugmente.
 
 Die Bezeichnung der Überschriften ergeben sich aus den in
 Tabelle~\ref{tab:final:titelpage_headers} aufgeführten \LaTeX-Kommandos. Diese
@@ -182,7 +182,7 @@ Sie ggf. manuell per \verb+\\+ Zeilenumbrüche ein, da vor allem bei
 technischen Angaben ungewollte Umbrüche schnell zu Leseschwierigkeiten
 führen.
 
-Ort und Damit setzen Sie mittels
+Ort und Datum setzen Sie mittels
 \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitleplacedate{$\text{\lara{Ort, Datum}}$}+
 Mehr gibt es zu diesem Kommando nicht zu sagen.
 
@@ -211,10 +211,10 @@ Abbildung~\ref{fig:final:titlepage_sa} an. Die Trennung zwischen erster und
 zweiter Spalte befindet sich genau in der Seitenmitte (\verb+0.5\linewidth+).
 
 Zwischen den einzelnen Elementen eines Deckblatts muss vom Autor noch
-vertikaler Abstand eingefügt werden. Ds Logo der TU~Chemnitz bringt seinen
+vertikaler Abstand eingefügt werden. Das Logo der TU~Chemnitz bringt seinen
 Abstand gemäß Corporate Design bereits mit. Hier ist nichts zu tun. Zwischen
 den Angaben nach Tabelle~\ref{tab:final:titelpage_headers}, empfehlen wir als
-Abstand \verb+\bigskip+. Um die volle Seitenhöhe auszunutzen muss an mindestens
+Abstand \verb+\bigskip+. Um die volle Seitenhöhe auszunutzen, muss an mindestens
 einer Stelle dehnbarer Abstand eingesetzt werden. Vor der Ort- und Datumsangabe
 und um den Titel der Arbeit herum ist ein geeigneter Platz dafür. Dehnbaren
 Abstand fügen Sie mit \verb+\vspace+ ein. Die Listings~\ref{lst:final:titlepage_da}
