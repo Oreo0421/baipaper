@@ -1,11 +1,11 @@
-Grundsätzlich wird jede Seite einer Arbeit nummeriert. Die Nummierung beginnt
+Grundsätzlich wird jede Seite einer Arbeit nummeriert. Die Nummerierung beginnt
 mit dem Deckblatt, bei Buchveröffentlichungen mit der ersten Seite der Titelei.
-Der Buchumschlag wird nicht nummieriert. Auf bestimmten Seiten (z.\,B. dem
-Deckblatt oder auf leeren Seiten) wird keine Seitennummer gedruckt. Bei
+Der Buchumschlag wird nicht nummeriert. Auf bestimmten Seiten, z.\,B. dem
+Deckblatt oder auf leeren Seiten, wird keine Seitennummer gedruckt. Bei
 umfangreicheren Arbeiten, beginnt die Nummierierung ab dem ersten Kapitel bzw.
-dem Vorwort erneut bei~1. Die davor liegenden Seiten (Inhaltsverzeichnis etc.),
+dem Vorwort erneut bei~1. Die davorliegenden Seiten (Inhaltsverzeichnis etc.),
 werden dann der Unterscheidbarkeit halber mit römischen Zahlen nummieriert.
-Die Umschaltung der Nummierierung erfolgt mit dem \LaTeX-Befehl
+Die Umschaltung der Nummerierung erfolgt mit dem \LaTeX-Befehl
 \verb+\pagenumbering+, wie in Listing~\ref{lst:final:pagenumber} dargestellt.
 Der Seitenzähler wird automatisch auf~1 zurückgesetzt.
 
@@ -16,11 +16,11 @@ automatisch durch die Kommandos \verb+\frontmatter+, \verb+\mainmatter+ und
 \verb+\backmatter+.
 
 Ein separates Nummerierungsschema für Anhänge ist normalerweise unüblich.
-Sollen Anhänge in der Form A-1, A-2, \dots, B-1, B-2, \dots\ durchnummierert
+Sollen Anhänge in der Form A-1, A-2, \dots, B-1, B-2, \dots\ durchnummeriert
 werden, muss gemäß Listing~\ref{lst:final:pagenumber_appendix} verfahren werden.
 Das Konstrukt aus \verb+\pagenumbering+ und \verb+\renewcommand+ muss mit jedem
 Anhang wiederholt werden. Entsprechende Anpassungen sind dann auch für die
-folgenden Verzeichnisse, wie das Literaturverzeichnung, Glossar, etc.
+folgenden Verzeichnisse, wie das Literaturverzeichnis, Glossar, etc.
 vorzunehmen. Eine durchlaufende arabische Nummerierung ist hier die elegantere
 Lösung.
 
