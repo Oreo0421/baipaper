@@ -42,7 +42,7 @@
 \usepackage{tikz}
 \usepackage{units}
 \usepackage{dirtree}[2012/12/11]
-\usepackage{biblatex}
+\usepackage[style=alphabetic,labelnumber]{biblatex}
 \usepackage{hyperref}
 \usepackage{layouts}
 \usepackage{todonotes}
@@ -54,6 +54,7 @@
 \input{latex/fancyhdr}
 \input{latex/lara}
 \input{latex/listings}
+\input{latex/literatur}
 %\input{latex/rotpage}
 \input{../vorlage/latex/titlepage}
 \input{../vorlage/latex/simplesection}
@@ -191,6 +192,7 @@
 \input{inhalt/literatur}
 
 \section{Erstellung der Literaturdatenbank}
+\input{inhalt/literatur_datenbank}
 
 \section{Integration in \LaTeX}
 
@@ -264,7 +266,8 @@
 % Literaturverzeichnis
 % TODO: Eintrag TOC
 \printbibheading
-\printbibliography
+\printbibliography[heading=subbibliography,notkeyword={software},title={Allgemeine Literatur}]
+\printbibliography[heading=subbibliography,keyword=software,title={Software},env=software]
 
 % Anhänge
 % - Zusatzpakete
