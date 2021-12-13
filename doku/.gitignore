@@ -1,5 +1,11 @@
+# Ergebnis
 /arbeit.pdf
+
+# Temporäre Dateien
 /arbeit.aux
+/arbeit.bbl
+/arbeit.bcf
+/arbeit.blg
 /arbeit.fdb_latexmk
 /arbeit.fls
 /arbeit.lof
@@ -7,4 +13,5 @@
 /arbeit.lol
 /arbeit.lot
 /arbeit.out
+/arbeit.run.xml
 /arbeit.toc

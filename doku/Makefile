@@ -19,7 +19,7 @@ $(BSAMPLES): bilder/samples/%:
 
 clean:
 	rm -f arbeit.pdf
-	rm -f *.{log,aux,toc,lof,lot,lol,out,fls,fdb_latexmk,synctex.gz}
+	rm -f *.{log,aux,toc,lof,lot,lol,out,bbl,bcf,blg,fls,fdb_latexmk,synctex.gz,run.xml}
 
 deepclean: clean
 	for d in $(SAMPLES); do make -C $$d clean; done

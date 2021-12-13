@@ -42,6 +42,7 @@
 \usepackage{tikz}
 \usepackage{units}
 \usepackage{dirtree}[2012/12/11]
+\usepackage{biblatex}
 \usepackage{hyperref}
 \usepackage{layouts}
 \usepackage{todonotes}
@@ -58,6 +59,10 @@
 \input{../vorlage/latex/simplesection}
 \input{../vorlage/latex/erklaerung}
 
+
+
+\addbibresource{literatur/allgemein.bib}
+\addbibresource{literatur/software.bib}
 
 
 
@@ -168,8 +173,6 @@
 
 % Gliederung
 % Abstract
-% Quellenangaben
-% Literaturverzeichnisse
 % landscape
 % Quellcode-Abschnitte
 % Eigene Gleitumgebungen
@@ -180,6 +183,18 @@
 % Hervorgehobene Boxen
 % Durchschuss
 % Definitionen und Sätze
+
+
+
+\chapter{Bibliografien}
+\label{sec:literatur}
+\input{inhalt/literatur}
+
+\section{Erstellung der Literaturdatenbank}
+
+\section{Integration in \LaTeX}
+
+\section{Literatuverweise einfügen}
 
 
 
@@ -245,6 +260,11 @@
 
 \section{Druck}
 
+
+% Literaturverzeichnis
+% TODO: Eintrag TOC
+\printbibheading
+\printbibliography
 
 % Anhänge
 % - Zusatzpakete
