@@ -33,6 +33,7 @@
 % Pakete, die bei Bedarf eingebunden werden können.
 %
 
+%\usepackage{biblatex}		% Bibliografien
 %\usepackage{textcomp}
 %\usepackage{xcolor}		% Farben
 %\usepackage{subcaption}	% Unternummerierung für Abbildungen
@@ -64,6 +65,13 @@
 \input{latex/fancyhdr}		% Einstellungen zu Kopf- und Fußzeilen
 \input{latex/simplesection}	% Einfache Überschriften für Aufgabenstellung usw.
 \input{latex/erklaerung}	% Formatvorlage für die Selbstständigkeitserklärung
+
+
+
+%%
+%% Literaturdatenbank laden.
+%%
+%\addbibresource{literatur.bib}
 
 
 
@@ -126,8 +134,10 @@
 \chapter{Messwerte}
 
 
+%% Literaturverzeichnis
+%\printbibliography
+
 % TODO: Index
-% TODO: Literaturverzeichnis
 % TODO: Glossar
 
 \cleardoublepage
