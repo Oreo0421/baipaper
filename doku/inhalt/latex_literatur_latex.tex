@@ -1,0 +1,39 @@
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={Grundgerüst einer Bibliografie},label={lst:latex:literatur:template}]{code/latex_literatur_template.tex}
+
+Die Erstellung einer Bibliografie erfolgt in mehreren Schritten.
+Listing~\ref{lst:latex:literatur:template} zeigt den grundlegenden Aufbau.
+
+\begin{compactenum}
+\item Zunächst muss in der Präambel das Paket \texttt{biblatex} geladen werden.
+\item Anschließend werden noch im Vorspann mit
+      \lstinline[language={[LaTeX]{TeX}}]+\addbibresource+
+      die Literaturdatenbanken geladen. Die Vorlage verwendet hierfür
+      standardmäßig eine einzige Datei~\texttt{literatur.bib}. Für umfangreiche
+      Arbeiten oder komplexe Literaturstudien ist es auch möglich, die
+      Bibliografie aus mehreren \texttt{.bib}-Dateien zusammenzusetzen.
+      Zweckmäßiger Weise legt man diese Dateien dann in einem separaten
+      Unterverzeichnis ab. Jede Datei mit einem entsprechenden
+      \lstinline[language={[LaTeX]{TeX}}]+\addbibresource+-Befehl
+      geladen werden.
+\item Die eigentliche Bibliografie wird innerhalb des Dokuments mit
+      \lstinline[language={[LaTeX]{TeX}}]+\printbibliography+
+      ausgegeben.
+\end{compactenum}
+
+Das Paket sowohl die oben genannten Befehle lassen sich durch eine Vielzahl von
+Optionen angepassen. Hierfür sei auf die entsprechende Dokumentation in
+\cite{pkgmanual_biblatex} verwiesen.
+
+Die Quellenverweis ist mit dem
+\lstinline[language={[LaTeX]{TeX}}]+\cite+-Befehl. Das Schlüsselwort für die
+Fundstelle entspricht dem Schlüsselwort, welches in der \hologo{BibTeX}-Datei
+vergeben wurde. Daneben gibt es noch eine Vielzahl weiterer Zitierbefehle, die
+für verschiedene Anweungsfälle gedacht sind. Der folgende Absatz listet einige
+Varianten beispielhaft auf. Der \LaTeX-Code hierzu ist in
+Listing~\ref{lst:latex:literatur:cite} abgedruckt. Eine genaue Beschreibung
+jeder Variante würde den Rahmen dieser Anleitung sprengen. Hierfür sei auf
+\cite{pkgmanual_biblatex,rees_biblatex_cheat} verwiesen.
+
+\input{code/latex_literatur_cite.tex}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={Literaturverweise},label={lst:latex:literatur:cite},morekeywords={footcite,citeauthor,citetitle,fullcite,footfullcite}]{code/latex_literatur_cite.tex}

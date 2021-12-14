@@ -8,6 +8,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{amsmath}
 \usepackage{microtype}
+\usepackage{csquotes}
 \usepackage{calc}
 \usepackage[%
   inner=25mm,%
@@ -45,6 +46,7 @@
 \usepackage[style=alphabetic,labelnumber]{biblatex}
 \usepackage{hyperref}
 \usepackage{layouts}
+\usepackage{hologo}
 \usepackage{todonotes}
 \usepackage{lipsum}
 
@@ -156,6 +158,17 @@
 \label{sec:latex}
 
 
+\section{Bibliografien}
+\label{sec:latex:literatur}
+\input{inhalt/latex_literatur}
+
+\subsection{Erstellung der Literaturdatenbank}
+\input{inhalt/latex_literatur_datenbank}
+
+\subsection{Integration in \LaTeX}
+\input{inhalt/latex_literatur_latex}
+
+
 \section{Abbildungen}
 
 \subsection{Allgmeines}
@@ -171,21 +184,7 @@
 \input{inhalt/latex_booktabs}
 
 
-\section{Bibliografien}
-\label{sec:latex:literatur}
-\input{inhalt/latex_literatur}
-
-\subsection{Erstellung der Literaturdatenbank}
-\input{inhalt/latex_literatur_datenbank}
-
-\subsection{Integration in \LaTeX}
-
-\subsection{Literaturverweise einfügen}
-
-
-
 % Gliederung
-% Abstract
 % landscape
 % Quellcode-Abschnitte
 % Eigene Gleitumgebungen
