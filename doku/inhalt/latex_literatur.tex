@@ -1,0 +1,40 @@
+Die sorgfältige Arbeit mit Literatur ist in allen Wissenschaftszweigen die
+Basis für jede Veröffentlichung. Hierbei ist es nicht nur mit der Erstellung
+eines Literaturverzeichnisses getan. Die eigentliche Arbeit beginnt bereits
+bevor man mit dem Schreiben der eigenen Veröffentlichung beginnt. Folgende
+Arbeitsschritte sind für die Erstellung der Bibliografien notwendig.
+%
+\begin{compactenum}
+\item Literaturrecherche und Erstellung einer bzw. mehrerer
+      Literaturdatenbanken; Dieser Schritt ist unabhängig vom \LaTeX-Workflow.
+\item Einbindung der Litaturdatenbanken in das \LaTeX-Dokument
+\item Erstellung von Literaturverweisen im \LaTeX-Dokument
+\item Ggf. Anpassung der Gestaltung des Literaturverzeichnisses
+\end{compactenum}
+
+\LaTeX\ bietet vielfältige Wege eine Bibliografie zu erstellen. Im einfachsten
+Fall wird die Bibliografie manuell durch die \texttt{thebibliography}-Umgebung
+erstellt. Dieser Ansatz führt schnell zu Ergebnissen und ist für kleinere
+Seminararbeiten durchaus praktikabel. Für umfangreichere Arbeit nimmt der
+Aufwand hierfür aber schnell überhand. Im Rahmen dieser Vorlag benutzen wir
+deshalb das Zusatzpaket~\texttt{biblatex}, welches folgende Vorteile bietet.
+%
+\begin{compactitem}
+\item Eine einmal erstellte Literaturdatenbank kann in späteren
+      Veröffentlichungen wiederverwendet werden.
+\item Literaturmarken werden automatisch anhand vorgegebener Schemata erstellt.
+\item Die Formatierung des Literaturverzeichnisses erfolgt einheitlich gemäß
+      einschlägiger Vorgaben.
+\item Es werden stets nur die Literaturstellen aus der Datenbank in das
+      Verzeichnis übernommen, auf die auch im Dokument verwiesen wird.
+\end{compactitem}
+
+Die Gestaltung von Bibliografien ist ein komplexes Thema. Im Rahmen dieser
+Anleitung werden wir nur darauf eingehen, wie sich das Literaturverzeichnis
+technisch in die Vorlage einfügt. Für Detailfragen oder weitergehende
+Informationen zur Gestaltung sei auf \cite{voss_bibliografien} und
+\cite[Kapitel~13]{voss_wissenschaftliche_arbeit} verwiesen. Das
+Paket~\texttt{biblatex} verfügt über vielfältige Einstellmöglichkeiten, die im
+Handbuch \cite{pkgmanual_biblatex} beschrieben sind. Eine Kurzübersicht zum
+Paket und zum Aufbau der Literaturdatenbank findet sich unter
+\cite{rees_biblatex_cheat}.
