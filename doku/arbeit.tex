@@ -163,6 +163,7 @@
 \input{inhalt/inhalt_literatur_latex}
 
 
+\clearpage
 \section{Formalien}
 
 \subsection{Deckblatt}
@@ -274,9 +275,17 @@
 
 
 % Literaturverzeichnis
-% TODO: Eintrag TOC
-\printbibheading
-\printbibliography[heading=subbibliography,notkeyword={software},title={Allgemeine Literatur}]
+\defbibfilter{ctan}{keyword=pkg or keyword=pkgmanual}
+\defbibfilter{general}{%
+  not (
+    keyword=pkg
+    or keyword=pkgmanual
+  )
+}
+
+\printbibheading[heading=bibintoc]
+\printbibliography[heading=subbibintoc,filter=general,title={Allgemeine Literatur}]
+\printbibliography[heading=subbibintoc,filter=ctan,title={\LaTeX-Pakete}]
 
 % Anhänge
 % - Zusatzpakete
