@@ -90,13 +90,13 @@
 
 
 \chapter{Über diese Vorlage}
-\label{sec:vorlage}
+\label{sec:tpl}
 
 \section{Von der Vorlage zum PDF}
 \input{inhalt/tpl_start}
 
 \section{Verzeichnisstruktur}
-\label{sec:vorlage:dir}
+\label{sec:tpl:dir}
 \input{inhalt/tpl_dir}
 
 \section{Anpassung der Vorlage}
@@ -138,87 +138,58 @@
 
 
 
-\chapter{Sprache, Ausdruck, Form}
+\chapter{Inhaltliche Gestaltung}
 \label{sec:inhalt}
+\input{inhalt/inhalt}
+
 
 \section{Gliederungsschema}
 \label{sec:inhalt:section}
 \input{inhalt/inhalt_section}
-% Wir/Ich-Form
-% Fremdwörter
-% Fülsel
+
 % Vorwärtsreferenzen
 % Leerseiten explizit auszeichnen
 % Mehrsprachigkeit, Sprachbesonderheiten
 % Trennmuster
 
 
-
-\chapter{Gestaltungsmittel}
-\label{sec:latex}
-\input{inhalt/latex}
-
-
 \section{Bibliografien}
-\label{sec:latex:literatur}
-\input{inhalt/latex_literatur}
+\label{sec:inhalt:literatur}
+\input{inhalt/inhalt_literatur}
 
 \subsection{Erstellung der Literaturdatenbank}
-\input{inhalt/latex_literatur_datenbank}
+\input{inhalt/inhalt_literatur_datenbank}
 
 \subsection{Integration in \LaTeX}
-\input{inhalt/latex_literatur_latex}
-
-
-\section{Abbildungen}
-
-\subsection{Allgmeines}
-\input{inhalt/latex_figure}
-
-\subsection{Mehrteilige Abbildungen}
-\input{inhalt/latex_subcaption}
-
-
-\section{Tabellen}
-
-\subsection{Trennlinien}
-\input{inhalt/latex_booktabs}
-
-
-% Gliederung
-% landscape
-% Quellcode-Abschnitte
-% Eigene Gleitumgebungen
-% querformatige Abbildungen
-% Physikalische Größen und Einheiten
-% Algorithmen
-% Farbe
-% Hervorgehobene Boxen
-% Durchschuss
-% Definitionen und Sätze
+\input{inhalt/inhalt_literatur_latex}
 
 
 \section{Formalien}
-\label{sec:latex:form}
 
 \subsection{Deckblatt}
-\input{inhalt/latex_form_titlepage}
+\input{inhalt/inhalt_form_titlepage}
 
 \subsection{Verzeichnisse}
-\label{sec:latex:form:toclists}
-\input{inhalt/latex_form_toclists}
+\label{sec:inhalt:form:toclists}
+\input{inhalt/inhalt_form_toclists}
 
 \subsection{Kurzreferat, Aufgabenstellung, Danksagung}
-\input{inhalt/latex_form_simplesection}
+\input{inhalt/inhalt_form_simplesection}
 
 \subsection{Ehrenwörtliche Erklärung}
-\input{inhalt/latex_form_erklaerung}
+\input{inhalt/inhalt_form_erklaerung}
 
 \subsection{Seitennummern}
-\input{inhalt/latex_form_pagenumber}
+\input{inhalt/inhalt_form_pagenumber}
 
 \subsection{Kopf- und Fußzeilen}
-\input{inhalt/latex_form_headfootline}
+\input{inhalt/inhalt_form_headfootline}
+
+
+\section{Sprache und Ausdruck}
+% Wir/Ich-Form
+% Fremdwörter
+% Fülsel
 
 
 
@@ -232,6 +203,7 @@
 %  - Korrekte Vereinfachungen
 %  - Klammern richtig aufgelöst
 %  - ...
+
 
 \section{Textbild, Trennungen, Querverweise}
 \input{inhalt/final_tex}
@@ -261,6 +233,47 @@
 \section{Druck}
 
 
+
+\appendix
+\chapter{Gestaltungsmittel}
+\label{app:latex}
+\input{inhalt/latex}
+
+\section{Abbildungen}
+
+\subsection{Allgmeines}
+\input{inhalt/latex_figure}
+
+\subsection{Mehrteilige Abbildungen}
+\input{inhalt/latex_subcaption}
+
+
+\section{Tabellen}
+
+\subsection{Trennlinien}
+\input{inhalt/latex_booktabs}
+
+
+% Gliederung
+% landscape
+% Quellcode-Abschnitte
+% Eigene Gleitumgebungen
+% querformatige Abbildungen
+% Physikalische Größen und Einheiten
+% Algorithmen
+% Farbe
+% Hervorgehobene Boxen
+% Durchschuss
+% Definitionen und Sätze
+
+
+
+
+
+
+
+
+
 % Literaturverzeichnis
 % TODO: Eintrag TOC
 \printbibheading
@@ -269,5 +282,6 @@
 % Anhänge
 % - Zusatzpakete
 % - Schriftproben
+
 
 \end{document}
