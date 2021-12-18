@@ -1,0 +1,23 @@
+Tabelle sollten grundsätzlich so wenig Trennlinien wie möglich enthalten. Auf
+vertikale Linien sollte man komplett verzichten. Horizontale Linien sollte man
+nur zur Trennung des Tabellenkopfs oder -fußes einziehen. Die
+\LaTeX-Standardkommandos sind dahingehend nicht optimal. Wir raten zur
+Verwendung des Pakets~\ctanref{booktabs}.
+
+\begin{table}
+\centering
+\input{code/latex_tab_booktabs}
+\caption{Tabelle mit \ctanpkg{booktabs}}
+\label{tab:latex:tab:booktabs}
+\end{table}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={Tabelle mit \ctanpkg{booktabs}},label={tab:latex:tab:booktabs}]{code/latex_tab_booktabs}
+
+Die Trennlinien in Tabelle~\ref{tab:latex:tab:booktabs} wurden mit dem
+Paket~\ctanpkg{booktabs} gesetzt. Der Code dafür ist in
+Listing~\ref{tab:latex:tab:booktabs} abgedruckt. Neben den Befehlen
+\lstinline[language={[LaTeX]{TeX}}]+\toprule+,
+\lstinline[language={[LaTeX]{TeX}}]+\midrule+ und
+\lstinline[language={[LaTeX]{TeX}}]+\bottomrule+ gibt es noch weitere Kommandos
+zu Trennlinien, die sich nur über bestimmte Spalten erstrecken, oder den
+Zeilenabstands anpassen. Hierfür sei auf die Paketdokumentation verwiesen.
