@@ -3,7 +3,7 @@ werden, um Papier zu sparen. Hierzu ist die Klassenoption \texttt{twoside} zu
 setzen. Für kürzere Haus- oder Seminararbeiten ist im Zweifel auch einseitiger
 Druck statthaft.
 
-\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,caption={Doppelseitiger Textsatz},label={lst:tpl:twoside}]{code/tpl_twoside}
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,caption={Doppelseitiger Textsatz},label={lst:tpl:twoside}]{code/tpl_twoside.tex}
 
 In umfangreicheren Arbeiten (ab Bachelorarbeit aufwärts), sollten neue
 Kapitel stets auf einer rechten Seiten beginnen. Die Klasse \texttt{book} wird
@@ -11,12 +11,12 @@ vor Beginn eines neuen Kapitels im Bedarfsfall automatisch eine Leerseite
 einfügen. Bei der Klasse \texttt{report} ist hierfür die Option
 \texttt{openright} notwendig.
 
-\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,caption={Kapitelbeginn auf rechter Seite},label={lst:tpl:openright}]{code/tpl_openright}
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,caption={Kapitelbeginn auf rechter Seite},label={lst:tpl:openright}]{code/tpl_openright.tex}
 
 Eingefügte Leerseiten werden nicht mit Seitennummern versehen. Das
 Paket~\ctanref{emptypage} stellt dieses Verhalten sicher und ist in der Vorlage
 standardmäßig eingebunden (siehe Listing~\ref{lst:tpl:emptypage}).
 
-\begin{lstlisting}[language={[LaTeX]{TeX}},style=block,escapechar=\!,caption={Seitennummern auf Leerseiten abschalten},label={lst:tpl:emptypage}]
+\begin{lstlisting}[language={[LaTeX]{TeX}},style=block,caption={Seitennummern auf Leerseiten abschalten},label={lst:tpl:emptypage}]
 \usepackage{emptypage}
 \end{lstlisting}
