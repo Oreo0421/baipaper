@@ -1,0 +1,20 @@
+As a rule, tables should contain as few dividing lines as possible. You should
+completely avoid vertical lines should be avoided completely. Horizontal lines
+should only be used to separate the table header or footer. The \LaTeX standard
+commands are not optimal in this respect. We recommend the use the package~\ctanref{booktabs}.
+
+\begin{table}
+\centering
+\input{code/latex_tab_booktabs}
+\caption{Table with \ctanpkg{booktabs}}
+\label{tab:latex:tab:booktabs}
+\end{table}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={table with \ctanpkg{booktabs}},label={lst:latex:tab:booktabs}]{code/latex_tab_booktabs.tex}
+
+The separators in table~\ref{tab:latex:tab:booktabs} were created with the
+package~\ctanpkg{booktabs}. The code for this is in Listing~\ref{tab:latex:tab:booktabs}.
+Besides the commands \lstinline[language={[LaTeX]{TeX}}]+\toprule+, \lstinline[language={[LaTeX]{TeX}}]+\midrule+
+and \lstinline[language={[LaTeX]{TeX}}]+\bottomrule+ there are further commands
+for dividing lines that only extend over certain columns, or to adjust the line
+spacing. Please refer to the package documentation.

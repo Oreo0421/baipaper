@@ -1,0 +1,223 @@
+Jede Arbeit beginnt mit einer Titelei. Bei größeren Arbeiten
+(Hausarbeiten, Berichten, Abschlussarbeiten) ist dafür eine eigene Seite
+vorzusehen. Für Versuchsprotokolle reicht u.\,U. schon eine
+Standard-\LaTeX-Titelei.
+
+Das Deckblatt enthält -- soweit für die Art der Arbeit zutreffend --
+folgende Angaben:
+
+\begin{compactitem}
+\item Name der Universität, Fakultät und Professur bzw. des Instituts
+\item das Logo der TU~Chemnitz
+\item die Art der Arbeit
+\item bei Abschlussarbeiten den angestrebten Abschluss
+\item bei Hausarbeiten den Namen der Lehrveranstaltung und das Semester
+\item den Namen des Autors bzw. aller Autoren bei Gruppenarbeiten
+\item ggf. weitere persönliche Angaben (Matrikelnummer, \dots)
+\item den Titel der Arbeit
+\item Namen der Betreuer und Gutachter%
+      \footnote{Vorsicht: Manche Prüfungsordnungen sehen vor, dass die
+                Gutachter erst nach Einreichung der Arbeit bestellt werden.
+		Sollten bereits in der eingereichten Fassung Gutachter benannt
+		sein, kann dies einen formalen Mangel darstellen.}%
+      , inkl. akademischer Grade und Titel
+\item Datum und Ort
+\end{compactitem}
+
+Das es je nach Fachrichtung unterschiedliche Vorstellungen gibt, wie ein
+Deckblatt auzusehen hat, legt diese \LaTeX-Vorlage kein einheitliches Aussehen
+fest. Vielmehr stellt sie eine Menge von \LaTeX-Kommandos bereit, mit denen
+sich ein Deckblatt nach dem Baukastenprinzip zusammensetzen lässt. Das
+Deckblatt kann dabei auch durch Standard-\LaTeX-Befehle ergänzt werden.
+
+In der Datei \texttt{inhalt/titlepage.tex} sind bereits Deckblätter für diverse
+Anwendungsfälle vorbereitet. Suchen Sie sich die Variante heraus, die
+für Ihren Fall am besten passt und nehmen Sie ggf. Anpassungen vor. Ein
+Deckblatt wird durch die Umgebung \texttt{tuctitlepage} umrahmt. Die Umgebung
+sorgt dafür, dass das Deckblatt immer auf einer rechten Seite erscheint, alle
+Elemente zentriert ausgerichtet werden und keine Seitenzahl gedruckt wird.
+
+Die Diskussion der einzelnen Gestaltungselemente ist ziemlich technisch. Am
+besten schauen Sie sich zunächst den Quelltext zu drei Beispieldeckblätten
+in den Listings~\ref{lst:final:titlepage_da} bis~\ref{lst:final:titlepage_prakt}
+an. Die zugehörigen Ergebnisse sind in den Abbildungen~\ref{fig:final:titlepage_da}
+bis~\ref{fig:final:titlepage_prakt} dargestellt. Dann lassen sich die folgenden
+Ausführungen sicherlich besser verstehen.
+
+
+%
+% Erzwingen, dass die Gleitumgebungen auf einer linken Seite beginnen, sodass
+% der Quelltext immer links steht und das fertige Beispiel gleich rechts
+% daneben.
+%
+\afterpage{%
+  \clearpage%
+  \ifodd\value{page}\expandafter\afterpage\fi%
+  {
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={[Deckblatt einer Abschlussarbeit]{Quelltext für das Deckblatt einer Abschlussarbeit}},label={lst:final:titlepage_da}]{\langfilesuffix{samples/titlepage/titlepage_da}{.tex}}
+\clearpage
+
+\begin{figure}[p]
+\centering
+\fboxsep=0pt
+\fbox{\includegraphics[scale=0.7]{\langfile{figures/samples/titlepage/titlepage_da}}}
+\caption{Deckblatt einer Abschlussarbeit}
+\label{fig:final:titlepage_da}
+\end{figure}
+\clearpage
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={[Deckblatt einer Studienarbeit]{Quelltext für das Deckblatt einer Studienarbeit}},label={lst:final:titlepage_sa}]{\langfilesuffix{samples/titlepage/titlepage_sa}{.tex}}
+\clearpage
+
+\begin{figure}[p]
+\centering
+\fboxsep=0pt
+\fbox{%
+\begin{tikzpicture}[every node/.style={anchor=south west,inner sep=0pt}]
+%
+% Einzug von links
+% 0.7 [Skalierung] * (25mm [linker Rand] + 1/2 * (210mm [Seitenbreite] - (25mm + 35mm) [Rand]))
+% = 70mm (skaliert)
+% = 100mm (unskaliert)
+\draw [listingcolor!75!white] (70mm, 29mm) -- (70mm, 181mm);
+\draw [listingcolor!75!white] (17.5mm, 29mm) rectangle (122.5mm, 181mm);
+\draw [listingcolor!75!white,latex-latex]
+      (17.5mm, 0.17\paperheight)
+      -- node [above] {\footnotesize\texttt{0.5\textbackslash linewidth}}
+      (70mm, 0.17\paperheight);
+\node at (0, 0) {\includegraphics[scale=0.7]{\langfile{figures/samples/titlepage/titlepage_sa}}};
+\end{tikzpicture}}
+\caption{Deckblatt einer Studienarbeit}
+\label{fig:final:titlepage_sa}
+\end{figure}
+\clearpage
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={[Deckblatt einer Seminar- bzw. Hausarbeit]{Quelltext für das Deckblatt einer Seminar- bzw. Hausarbeit}},label={lst:final:titlepage_prakt}]{\langfilesuffix{samples/titlepage/titlepage_prakt}{.tex}}
+\clearpage
+
+\begin{figure}[p]
+\centering
+\fboxsep=0pt
+\fbox{\includegraphics[scale=0.7]{\langfile{figures/samples/titlepage/titlepage_prakt}}}
+\caption{Deckblatt einer Seminar- bzw. Hausarbeit}
+\label{fig:final:titlepage_prakt}
+\end{figure}
+\clearpage
+  }%
+}
+
+Die Einrichtung, an der die Arbeit entstanden ist bzw. eingereicht wird, geben
+Sie in der \texttt{tuctitleorgunit}-Umgebung an. Beginnen Sie mit "`Technische
+Universität Chemnitz"' und arbeiten Sie sich zeilenweise nach unten zur
+jeweiligen Professur bzw. Einrichtung durch. Zeilenumbrüche erzeugen Sie mit
+\verb+\\+.
+
+Das Logo der TU~Chemnitz wird durch \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlelogo[$\text{\lara{Breite}}$]+
+eingefügt. Sie können optional die Breite des Logos angeben. Wenn Sie nichts
+angeben, wird das Logo auf \verb+0.6\linewidth+ (\unit[60]{\%} der Zeilenbreite)
+skaliert. Als Dateiname für das Logo ist "`\texttt{figures/tuc\_green\_margin}"'
+voreingestellt. Eine Änderung sollte nicht notwendig sein. Wenn Sie die Arbeit
+in schwarz-weiß drucken, setzen Sie bitte das schwarze TUC-Logo ein, indem Sie
+die Kommandosequenz \verb+\tuctitlelogoname+ auf
+"`\texttt{figures/tuc\_black\_margin}"' umdefinieren:
+%
+\begin{lstlisting}[language={[LaTeX]{TeX}},style=block]
+\renewcommand{\tuctitlelogoname}{figures/tuc_black_margin}
+\end{lstlisting}
+
+Angaben zu Art der Arbeit, angestrebtem Abschluss, Autor, Lehrveranstaltung und
+Semester bewerkstelligen Sie mit:
+
+\begin{compactitem}
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlethesistype{$\text{\lara{Art der Arbeit}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitledegree[$\text{\lara{Abstand}}$]{$\text{\lara{Abschluss}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitleauthor[$\text{\lara{Abstand}}$]{$\text{\lara{Name}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlecourse[$\text{\lara{Abstand}}$]{$\text{\lara{Lehrveranstaltung}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitleterm[$\text{\lara{Abstand}}$]{$\text{\lara{Semester}}$}+
+\end{compactitem}
+
+Bis auf die Art der Arbeit werden alle anderen Angaben durch eine kleine
+Überschrift (siehe Tabelle~\ref{tab:final:titelpage_headers}) hervorgehoben.
+Der vertikale Abstand zwischen Überschrift und der jeweiligen Angabe kann mit
+dem optionalen Parameter eingestellt werden. Standardmäßig ist
+\verb+\medskipamount+ festgelegt. Wollen Sie auf die Überschrift verzichten,
+verwenden Sie stattdessen:
+
+\begin{compactitem}
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitledegreeline{$\text{\lara{Abschluss}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitleauthorline{$\text{\lara{Name}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlecourseline{$\text{\lara{Lehrveranstaltung}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitletermline{$\text{\lara{Semester}}$}+
+\end{compactitem}
+
+Für die Angaben sind bereits passende Schriftgrößen und Hervorhebungen
+ausgewählt. Die Art der Arbeit wird in Fettschrift dargestellt, alle anderen
+Angaben in normaler Stärke. Sollten Anpassungen notwendig sein, verwenden Sie
+einfach die üblichen \LaTeX-Kommandos innerhalb der Kommandoarugmente.
+
+Die Bezeichnung der Überschriften ergeben sich aus den in
+Tabelle~\ref{tab:final:titelpage_headers} aufgeführten \LaTeX-Kommandos. Diese
+können Sie zur Anpassung auch umdefinieren.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{lX}
+Einstellung                  & Standardwert                              \\
+\verb+\tuctitledegreephrase+ & "`zur Erlangung des akademischen Grades"' \\
+\verb+\tuctitleauthorphrase+ & "`vorgelegt von"'                         \\
+\verb+\tuctitlecoursephrase+ & "`zur Lehrveranstaltung"'                 \\
+\verb+\tuctitletermphrase+   & "`im"'                                    \\
+\end{tabularx}
+\caption{Voreinstellung für Deckblattblöcke}
+\label{tab:final:titelpage_headers}
+\end{table}
+
+Angaben, die sich nicht in dieses Schema pressen lassen, können wie folgt
+auch über eine spezielle Umgebung gesetzt werden.
+%
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,nolol]{\langfilesuffix{code/final_titlepage_block}{.tex}}
+
+Die Umgebung \texttt{tuctitletopic} nimmt den Titel der Arbeit auf. Fügen
+Sie ggf. manuell per \verb+\\+ Zeilenumbrüche ein, da vor allem bei
+technischen Angaben ungewollte Umbrüche schnell zu Leseschwierigkeiten
+führen.
+
+Ort und Datum setzen Sie mittels
+\lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitleplacedate{$\text{\lara{Ort, Datum}}$}+
+Mehr gibt es zu diesem Kommando nicht zu sagen.
+
+Die Umgebungen \texttt{tuctitletable} und \texttt{tuctitletableindent}
+stehen für tabellarische Angaben zur Verfügung. Diese eigenen sich z.\,B. zur
+Auflistung von Betreuern und Gutachtern oder zur Formatierung der
+prüfungsrechtlichen Daten wie Matrikelnummer, Studiengang, etc.
+%
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,nolol]{\langfilesuffix{code/final_titlepage_table}{.tex}}
+
+Die Tabellen haben in der ersten Spalte eine Reihe von Bezeichnern, die
+rechtsbündig ausgerichtet sind. Danach folgen durch \texttt{\&} getrennt die
+jeweiligen Daten. Die Anzahl der benötigten Zusatzspalten wird zu Beginn der
+Umgebung als Parameter angegeben. Außer bei Gruppenarbeiten, wo alle Angaben
+für jeden Autor angegeben werden müssen, wird dieser Wert 1 betragen. Das
+optionale Argument legt die Formatierung für die erste Spalte fest. Ein
+\verb+\bfseries+ würde dazu führen, dass die Bezeichner in Fettschrift
+erscheinen.
+
+Die zweite Variante akzeptiert einen optionalen Einzug. Der Einzug ist in
+diesem Fall der Abstand des Spaltentrenners zwischen erster und zweiter
+Zeile vom linken Zeilenrand aus gemessen. Hierdurch können Sie sicherstellen,
+dass alle Tabellen in einer Flucht erscheinen, wenn Sie mehrere
+Tabellenumgebungen verwenden. Schauen Sie sich als Beispiel einfach
+Abbildung~\ref{fig:final:titlepage_sa} an. Die Trennung zwischen erster und
+zweiter Spalte befindet sich genau in der Seitenmitte (\verb+0.5\linewidth+).
+
+Zwischen den einzelnen Elementen eines Deckblatts muss vom Autor noch
+vertikaler Abstand eingefügt werden. Das Logo der TU~Chemnitz bringt seinen
+Abstand gemäß Corporate Design bereits mit. Hier ist nichts zu tun. Zwischen
+den Angaben nach Tabelle~\ref{tab:final:titelpage_headers}, empfehlen wir als
+Abstand \verb+\bigskip+. Um die volle Seitenhöhe auszunutzen, muss an mindestens
+einer Stelle dehnbarer Abstand eingesetzt werden. Vor der Ort- und Datumsangabe
+und um den Titel der Arbeit herum ist ein geeigneter Platz dafür. Dehnbaren
+Abstand fügen Sie mit \verb+\vspace+ ein. Die Listings~\ref{lst:final:titlepage_da}
+bis~\ref{lst:final:titlepage_prakt} zeigen, wie man das am besten
+bewerkstelligt. Der Abstand um den Titel der Arbeit herum ist dabei stets doppelt
+so groß wie vor dem Datum. Dies ergibt optisch ein stimmigeres Bild.

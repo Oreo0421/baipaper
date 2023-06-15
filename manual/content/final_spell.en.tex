@@ -1,0 +1,76 @@
+The final linguistic correction is the most time-consuming step in the completion
+of a paper and will probably require several passes.
+Nevertheless, this step should not be approached half-heartedly.
+An accumulation of typing errors rightly raises the question of whether the
+author has exercised the necessary thoroughness in terms of content.
+There are several ways to check spelling, grammar and expression. As a rule
+a combination of all variants leads to the goal.
+
+
+\paragraph{Automatic spell check}
+
+The automatic spell checker is the simplest method of spelling correction.
+It is the best way to detect typing errors.
+Many modern \LaTeX editors offer corresponding functions. A normal text editor
+may be confused by \LaTeX commands. Some editors not only recognise typing
+errors, but also grammatically questionable constructions or highlight
+repetitions and the use of redundant filler words.
+
+If you are writing your work with the command line under UNIX-like systems
+the software Aspell\footnote{\url{http://aspell.net/}} offers the possibility of
+software offers the possibility to check \TeX files. The command line call for
+this is:
+
+\begin{lstlisting}[escapechar=\!]
+ aspell -t -c !\lara{filename}!
+\end{lstlisting}
+
+However, such tools do not detect bad expression or sentence structure.
+
+
+\paragraph{Manual correction of a proof}
+
+Make an early proof of chapters that have already been completed (except for
+minor details). Sometimes \LaTeX commands in the manuscript prevent a direct
+view of the final text. A look on the finished result helps to correct the
+text for sentence structure and grammar.
+
+It is easier to spot typing and spelling errors if you read each page
+backwards. In this way, you avoid skipping words while reading, or read
+differently from the way they appear on paper.
+
+Cross out errors you recognise immediately. Do not cross out the error marks
+in a different colour, but only after the error has been corrected in the \TeX
+file. Do not throw away a page of the test print until all errors have been
+crossed out.
+
+
+\paragraph{Correction by uninvolved acquaintances}
+
+Ask your acquaintances if someone would be willing to proofread your work. 
+It can even be helpful if the proofreader is not a specialist. He or she will
+then inevitably focus on the spelling and less on the content.
+
+In order to be able to add comments to the manuscript more quickly, it is
+advisable to number the lines in the proof copy. It is much easier to correct
+word~five in line~256 than to correct word~five in the fourth~line
+of paragraph~3 in section~2.3. \LaTeX\ inserts line numbers fully
+automatically, by commenting out the lines given in Listing~\ref{lst:final:lineno}
+in the template.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={turn on line numbering},label={lst:final:lineno}]{code/final_lineno.tex}
+
+Do not forget to reinsert the comment characters before handing in the work.
+
+
+\paragraph{Supervisor's feedback}
+
+If this is a final paper, a good supervisor will request a preliminary version.
+Depending on the workload and the job situation, the supervision in practice
+may vary in intensity. With a little tact, however, you can persuade a
+supervisor to read your work. However, please bear in mind that the mills of a
+university grind slowly. Your supervisor certainly still has applications to
+write in parallel, and conferences to attend at the same time. The supervisor
+is not your secretary. He or she will certainly not tell you about typing and
+questions about technical terms and the coherence of the content are clearly in
+the foreground here.

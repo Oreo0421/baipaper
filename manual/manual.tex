@@ -1,0 +1,416 @@
+\documentclass[twoside,a4paper,11pt,openright]{report}
+
+
+\usepackage{xifthen}
+\usepackage[utf8]{inputenc}
+\ifthenelse{\equal{de}{\tuclangprefix}}
+{\usepackage[ngerman]{babel}}
+{\ifthenelse{\equal{en}{\tuclangprefix}}
+{\usepackage[english]{babel}}{
+\relax}}
+\usepackage{iflang}
+\usepackage{newpxtext}
+\usepackage{newpxmath}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{microtype}
+\usepackage{csquotes}
+\usepackage{calc}
+\usepackage[%
+  inner=25mm,%
+  outer=35mm,%
+  top=25mm,%
+  bottom=30mm,%
+  includeheadfoot,%
+  headheight=14pt,%
+  marginparwidth=25mm%
+]{geometry}
+\usepackage{parskip}
+\usepackage{emptypage}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyhdr}
+
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{subcaption}
+\usepackage[figuresright]{rotating}
+%%\usepackage{rotfloat}
+%%\usepackage{pdflscape}
+%\usepackage{etoolbox}
+%\usepackage{changepage}
+\usepackage{elocalloc}
+\usepackage{afterpage}
+\usepackage{paralist}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{listingsutf8}
+\usepackage{tikz}
+\usepackage{units}
+\usepackage{siunitx}
+\usepackage{dirtree}[2012/12/11]
+\usepackage[style=alphabetic,labelnumber]{biblatex}
+\usepackage{hyperref}
+\usepackage{layouts}
+\usepackage{hologo}
+\usepackage{todonotes}
+\usepackage{lipsum}
+
+
+
+\input{latex/langinput}
+\input{latex/float}
+\input{latex/fancyhdr}
+\input{latex/lara}
+\input{latex/listings}
+%\input{latex/rotpage}
+\input{latex/ctan}
+\input{latex/titlepage}
+\input{latex/simplesection}
+\input{latex/declaration}
+
+
+
+\addbibresource{bibliography/allgemein.bib}
+\addbibresource{bibliography/ctan.bib}
+\addbibresource{bibliography/dtk-bibliography.bib}
+
+
+
+\begin{document}
+\pagenumbering{roman}
+
+\langinput{content/titlepage}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\lstlistoflistings
+
+
+\cleardoublepage
+\pagenumbering{arabic}
+
+
+\chapter*{%
+  \IfLanguageName{ngerman}{Vorwort}{%
+  \IfLanguageName{english}{Preface}{}}}
+\addcontentsline{toc}{chapter}{%
+  \IfLanguageName{ngerman}{Vorwort}{%
+  \IfLanguageName{english}{Preface}{}}}
+\langinput{content/intro}
+
+
+\chapter{%
+  \IfLanguageName{ngerman}{Über diese Vorlage}{%
+  \IfLanguageName{english}{About this template}{}}}
+\label{sec:tpl}
+
+\section{%
+  \IfLanguageName{ngerman}{Von der Vorlage zum PDF}{%
+  \IfLanguageName{english}{From Template to PDF}{}}}
+\langinput{content/tpl_start}
+
+\section{%
+  \IfLanguageName{ngerman}{Verzeichnisstruktur}{%
+  \IfLanguageName{english}{Directory Structure}{}}}
+\label{sec:tpl:dir}
+\langinput{content/tpl_dir}
+
+\section{%
+  \IfLanguageName{ngerman}{Anpassung der Vorlage}{%
+  \IfLanguageName{english}{Customization of the template}{}}}
+\subsection{%
+  \IfLanguageName{ngerman}{Art der Arbeit}{%
+  \IfLanguageName{english}{Type of Thesis}{}}}
+\langinput{content/tpl_class}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Schriften}{%
+  \IfLanguageName{english}{Fonts}{}}}
+\label{sec:tpl:font}
+\langinput{content/tpl_font}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Duplexdruck}{%
+  \IfLanguageName{english}{Duplex Printing}{}}}
+\langinput{content/tpl_duplex}
+
+\clearpage
+\subsection{%
+  \IfLanguageName{ngerman}{Papierformat}{%
+  \IfLanguageName{english}{Paper Format}{}}}
+\langinput{content/tpl_papersize}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Seitenränder}{%
+  \IfLanguageName{english}{Page Margins}{}}}
+\langinput{content/tpl_margin}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Bindekorrektur}{%
+  \IfLanguageName{english}{Binding Correction}{}}}
+\label{sec:tpl:bcor}
+\langinput{content/tpl_bcor}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Zeilenabstand}{%
+  \IfLanguageName{english}{Line Spacing}{}}}
+\langinput{content/tpl_linespace}
+
+\section{%
+  \IfLanguageName{ngerman}{Spracheinstellungen}{%
+  \IfLanguageName{english}{Language Settings}{}}}
+% Mehrsprachigkeit, Sprachbesonderheiten
+
+
+\section{%
+  \IfLanguageName{ngerman}{Einbindung von Zusatzpaketen}{%
+  \IfLanguageName{english}{Integration of additional Packages}{}}}
+% Standard LaTeX-Klassen
+
+
+\section{%
+  \IfLanguageName{ngerman}{Eigene Erweiterungen}{%
+  \IfLanguageName{english}{Custom Extensions}{}}}
+% latex-Verzeichnis
+
+
+
+\chapter{%
+  \IfLanguageName{ngerman}{Inhaltliche Gestaltung}{%
+  \IfLanguageName{english}{Content Design}{}}}
+\label{sec:content}
+\langinput{content/content}
+
+
+\section{%
+  \IfLanguageName{ngerman}{Gliederungsschema}{%
+  \IfLanguageName{english}{Outline Scheme}{}}}
+\label{sec:content:section}
+\langinput{content/content_section}
+
+% Vorwärtsreferenzen
+% Leerseiten explizit auszeichnen
+% Mehrsprachigkeit, Sprachbesonderheiten
+% Trennmuster
+
+
+\section{%
+  \IfLanguageName{ngerman}{Bibliografien}{%
+  \IfLanguageName{english}{Bibliographies}{}}}
+\label{sec:content:bibliography}
+\langinput{content/content_bibliography}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Erstellung der Literaturdatenbank}{%
+  \IfLanguageName{english}{Creation of the Bibliography Database}{}}}
+\langinput{content/content_bibliography_database}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Integration in \LaTeX}{%
+  \IfLanguageName{english}{Integration in \LaTeX}{}}}
+\langinput{content/content_bibliography_latex}
+
+
+\clearpage
+\section{%
+  \IfLanguageName{ngerman}{Formalien}{%
+  \IfLanguageName{english}{Formalities}{}}}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Deckblatt}{%
+  \IfLanguageName{english}{Cover Page}{}}}
+\langinput{content/content_form_titlepage}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Verzeichnisse}{%
+  \IfLanguageName{english}{Directories}{}}}
+\label{sec:content:form:toclists}
+\langinput{content/content_form_toclists}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Kurzreferat, Aufgabenstellung, Danksagung}{%
+  \IfLanguageName{english}{Abstract, Problem Definition, Acknowledgement}{}}}
+\langinput{content/content_form_simplesection}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Ehrenwörtliche Erklärung}{%
+  \IfLanguageName{english}{Declaration of honor}{}}}
+\langinput{content/content_form_statement}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Seitennummern}{%
+  \IfLanguageName{english}{Page Numbering}{}}}
+\langinput{content/content_form_pagenumber}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Kopf- und Fußzeilen}{%
+  \IfLanguageName{english}{Headers and Footers}{}}}
+\langinput{content/content_form_headfootline}
+
+
+\section{%
+  \IfLanguageName{ngerman}{Sprache und Ausdruck}{%
+  \IfLanguageName{english}{}{}}}
+\langinput{content/content_language}
+
+
+
+\chapter{%
+  \IfLanguageName{ngerman}{Fertigstellung der Arbeit}{%
+  \IfLanguageName{english}{Completion of the Project}{}}}
+\label{sec:final}
+
+\section{%
+  \IfLanguageName{ngerman}{Rechtschreibung und Ausdruck}{%
+  \IfLanguageName{english}{Spelling and Expression}{}}}
+\langinput{content/final_spell}
+
+% TODO: Mathe-Korrektur?
+%  - Korrekte Vereinfachungen
+%  - Klammern richtig aufgelöst
+%  - ...
+
+
+\section{%
+  \IfLanguageName{ngerman}{Textbild, Trennungen, Querverweise}{%
+  \IfLanguageName{english}{Text Appearance, Hyphenation, Cross References}{}}}
+\langinput{content/final_tex}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Fehlerhafte Boxen}{%
+  \IfLanguageName{english}{Over- and undeful Boxes}{}}}
+\langinput{content/final_tex_badbox}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Trennungen}{%
+  \IfLanguageName{english}{Hyphenations}{}}}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Querverweise}{%
+  \IfLanguageName{english}{Cross References}{}}}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Hurenkinder und Schusterjungen}{%
+  \IfLanguageName{english}{Widows and Orphans}{}}}
+
+% Hurenkinder, Schusterjungen
+% Overfull box
+% Underfull box
+% LaTeX Warning: There were undefined references.
+% LaTeX Warning: There were multiply-defined labels.
+
+\subsection{%
+  \IfLanguageName{ngerman}{Platzierung von Gleitumgebungen}{%
+  \IfLanguageName{english}{Placement of floating Environments}{}}}
+\label{sec:final:float}
+
+
+\section{%
+  \IfLanguageName{ngerman}{Metadaten}{%
+  \IfLanguageName{english}{Metadata}{}}}
+
+
+\section{%
+  \IfLanguageName{ngerman}{Druck}{%
+  \IfLanguageName{english}{Printing}{}}}
+
+
+
+\appendix
+\chapter{%
+  \IfLanguageName{ngerman}{Gestaltungsmittel}{%
+  \IfLanguageName{english}{Design Elements}{}}}
+\label{app:latex}
+\langinput{content/latex}
+
+\section{%
+  \IfLanguageName{ngerman}{Abbildungen}{%
+  \IfLanguageName{english}{Figures}{}}}
+\langinput{content/latex_fig}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Mehrteilige Abbildungen}{%
+  \IfLanguageName{english}{Multi-part Figures}{}}}
+\langinput{content/latex_fig_subcaption}
+
+
+\section{%
+  \IfLanguageName{ngerman}{Tabellen}{%
+  \IfLanguageName{english}{Tables}{}}}
+\langinput{content/latex_tab}
+
+% Variable Breite
+
+\subsection{%
+  \IfLanguageName{ngerman}{Trennlinien}{%
+  \IfLanguageName{english}{Division Rules}{}}}
+\langinput{content/latex_tab_rules}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Ausrichtung von Zahlen}{%
+  \IfLanguageName{english}{Aligment of Numbers}{}}}
+\langinput{content/latex_tab_numcol}
+
+
+\section{%
+  \IfLanguageName{ngerman}{Formeln}{%
+  \IfLanguageName{english}{Formulas}{}}}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Physikalische Größen und Einheiten}{%
+  \IfLanguageName{english}{Physical Quantities and Units}{}}}
+% Physikalische Größen und Einheiten
+
+\subsection{%
+  \IfLanguageName{ngerman}{Definitionen und Sätze}{%
+  \IfLanguageName{english}{Definitions and Theorems}{}}}
+% Definitionen und Sätze
+
+
+\section{%
+  \IfLanguageName{ngerman}{Programme}{%
+  \IfLanguageName{english}{Programs}{}}}
+
+\subsection{%
+  \IfLanguageName{ngerman}{Algorithmen}{%
+  \IfLanguageName{english}{Algorithms}{}}}
+% Algorithmen
+
+\subsection{%
+  \IfLanguageName{ngerman}{Quellcode, Programmausgaben}{%
+  \IfLanguageName{english}{Source Code, Program Outputs}{}}}
+% Quellcode-Abschnitte
+
+% Gliederung
+% landscape
+% Eigene Gleitumgebungen
+% querformatige Abbildungen
+% Farbe
+% Hervorgehobene Boxen
+% Durchschuss
+
+
+
+% Literaturverzeichnis
+\defbibfilter{ctan}{keyword=pkg or keyword=pkgmanual}
+\defbibfilter{general}{%
+  not (
+    keyword=pkg
+    or keyword=pkgmanual
+  )
+}
+
+\printbibheading[heading=bibintoc]
+\printbibliography[heading=subbibintoc,filter=general,title={Allgemeine Literatur}]
+\printbibliography[heading=subbibintoc,filter=ctan,title={\LaTeX-Pakete}]
+
+% Anhänge
+% - Zusatzpakete
+% - Schriftproben
+
+
+\end{document}

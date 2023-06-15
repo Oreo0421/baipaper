@@ -1,0 +1,29 @@
+Für die Erstellung von Verzeichnissen hält \LaTeX\ die Standardbefehle gemäß
+Tabelle~\ref{tab:final:toclists} bereit. Mehr ist für den Autor nicht zu tun.
+Die Einordnung der Verzeichnisse in die Gliederung der Arbeit wird im
+Abschnitt~\ref{sec:content:section} behandelt.
+
+\begin{table}
+\centering
+\begin{tabular}{ll}
+\verb+\tableofcentents+   & Inhaltsverzeichnis           \\
+\verb+\listoffigures+     & Abbildungsverzeichnis        \\
+\verb+\listoftables+      & Tabellenverzeichnis          \\
+\verb+\lstlistoflistings+ & Verzeichnis aller Quellcodes \\
+\end{tabular}
+\caption{Verzeichnisbefehle}
+\label{tab:final:toclists}
+\end{table}
+
+Für Definitionen, Sätze oder selbstdefinierte Gleitumgebungen existieren
+weitere Befehle. Hierzu sei auf die Dokumentation der entsprechenden Pakete
+verwiesen.\todo[inline]{Pakete heraussuchen und verlinken.}
+
+Normalerweise erscheinen nur nummerierte Abschnitt im Inhaltsverzeichnis.
+Soll ein unnummerierter Punkt dennoch ins Inhaltsverzeichnis aufgenommen
+werden, kann dies über den \verb+\addcontentsline+-Befehl erfolgen, wie in
+Listing~\ref{lst:final:addcontentsline} gezeigt. Der Befehl muss immer nach dem
+entsprechenden Gliederungsbefehl aufgerufen werden. Sonst stimmen die
+Seitenverweise nicht.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,float,caption={Aufnahme zusätzlicher Verzeichniseinträge},label={lst:final:addcontentsline},morekeywords={chapter,subsection}]{code/final_addcontentsline.de.tex}

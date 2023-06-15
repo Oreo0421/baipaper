@@ -1,0 +1,55 @@
+Haus- und Studienabschlussarbeiten werden im Format DIN~A4 angefertigt
+($\unit[210 \times 297]{mm}$). Das Papierformat ist durch die Klassenoption
+\texttt{a4paper} in der Vorlage bereits voreingestellt (siehe
+Listing~\ref{lst:tpl:thesis}).
+
+Ausnahmen gelten für Dissertationen und Habilitationen, die zugleich im
+Buchverlag veröffentlicht werden (müssen). Wenn Sie also keine Dissertation
+oder Habilitation verfassen, überspringen Sie den Rest dieses Abschnitts.
+
+Buchveröffentlichungen erscheinen in einem kleineren Format. Die genauen
+Abmessungen variieren je nach Verleger. Der Universitätsverlag benutzt für
+Schriftenreihen i.\,d.\,R. das Format DIN~A5 ($\unit[210 \times 297]{mm}$).
+Autoren von solcher Arbeiten stehen nun vor einem Problem. Gutachter verlangen
+die Arbeit meist im Format DIN~A4, die Veröffentlichung findet aber in einem
+anderen Format statt. Es gibt zwei Lösungsmöglichkeiten, die beide ihre Vor-
+und Nachteile aufweisen.
+
+\begin{enumerate}
+\item Sie legen die Arbeit für die Gutachter im Format DIN~A4 an, und im
+      Rahmen der Veröffentlichung wird das Manuskript auf das Buchformat
+      umgearbeitet. Dies bedeutet zusätzlichen Aufwand, geht aber gewissen
+      Problemen aus dem Weg, die sich beim Druck ergeben können.
+
+\item Sie reichen das Werk im Format DIN~A4 beim Drucker ein, der es für Sie
+      auf das korrekte Format herunterskaliert. Sie müssen Ihre Arbeit dann
+      nicht noch einmal überarbeiten. Es ist jedoch von großer Wichtigkeit,
+      diesen Weg bereits bei der Erstellung der A4-Vorlage (mit anderen Worten
+      von Anfang an) zu berücksichtigen.
+\end{enumerate}
+
+Entscheiden Sie sich für den ersten Weg, empfehlen wir Ihnen den Vorspann für
+die A5-Version wie in Listing~\ref{lst:tpl:papersize_a5} dargestellt
+anzupassen. Verständigen Sie sich vor dem Druck mit Ihrem Verlag bitte
+unbedingt über den Wert der Bindekorrektur (siehe Abschnitt~\ref{sec:tpl:bcor}).
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={Umstellung auf DIN~A5},label={lst:tpl:papersize_a5}]{code/tpl_papersize_a5.tex}
+
+Wollen Sie den weniger aufwendigen zweiten Weg beschreiten, wählen Sie für die
+A4~Vorlage mindestens die Basisschriftgröße~\unit[12]{pt}. Bei der Skalierung
+von A4 auf A5 wird das Dokument auf ca.~\unit[71]{\%} seiner Ursprungsgröße
+verkleinert. Ein Schriftzeichen der Größe~\unit[12]{pt} ist dann nur noch knapp
+\unit[9]{pt} groß. \LaTeX\ verwendet bei vielen Schriftfamilien jedoch für
+jede Schriftgröße eine eigene Schrift. Ein von \unit[12]{pt} auf \unit[9]{pt}
+verkleinertes Zeichen hat damit ein anderes Erscheinungsbild als ein Zeichen,
+welches für \unit[9]{pt} entworfen wurden. Beim Herunterskalieren sind die
+Linien oft dünner als in der jeweiligen Entwurfsgröße. Die Schriftart
+"`Latin Modern"' ist hierfür besonders anfällig (siehe
+Abschnitt~\ref{sec:tpl:font}).
+
+Ist die Basisgröße in der DIN~A4-Vorlage zu klein gewählt, werden die
+Schriftzeichen in der A5-Variante zu mager, und dünnere Linien können u.\,U.
+sogar ganz verschwinden. Der Verlag wird Sie beim Probedruck sicher darauf
+hinweisen, dass Sie Schriften außerhalb ihrer Entwurfsgröße verwenden und dass
+er dadurch keinen optimalen Druck garantieren kann. Diese Warnung müssen Sie
+dann hinnehmen.

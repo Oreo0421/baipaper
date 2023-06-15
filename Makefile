@@ -1,24 +1,27 @@
 default: all
 
-all: vorlage.tar.bz2 vorlage.zip
+all: template-de.tar.bz2 template-de.zip \
+     template-en.tar.bz2 template-en.zip
 
-vorlage.tar.bz2: vorlage.tar
+template-%.tar.bz2: template-%.tar
 	bzip2 -9 -f $<
 
-vorlage.tar: vorlage
-	tar cf $@ --exclude .gitignore vorlage doku/arbeit.pdf
+template-%.tar: manual/manual-%.pdf
+	tar chf $@ --exclude .gitignore template-$* manual/manual-$*.pdf
 
-vorlage.zip: vorlage
-	zip -9 -r $@ vorlage doku/arbeit.pdf -x vorlage/.gitignore
+template-%.zip: manual/manual-%.pdf
+	zip -9 -r $@ template-$* manual/manual-$*.pdf -x template-$*/.gitignore
 
-.PHONY: vorlage
-vorlage:
-	make -C doku    all
-	make -C vorlage clean
+manual/manual-%.pdf:
+	make -C manual manual-$*.pdf
 
 clean:
-	rm -f vorlage.tar
-	rm -f vorlage.tar.bz2
-	rm -f vorlage.zip
-	make -C doku    clean
-	make -C vorlage clean
+	rm -f template-de.tar
+	rm -f template-de.tar.bz2
+	rm -f template-de.zip
+	rm -f template-en.tar
+	rm -f template-en.tar.bz2
+	rm -f template-en.zip
+	make -C manual      clean
+	make -C template-de clean
+	make -C template-en clean

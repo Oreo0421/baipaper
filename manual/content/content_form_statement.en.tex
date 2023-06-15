@@ -1,0 +1,23 @@
+By making a declaration on your honour, you affirm that you have complied with
+the usual rules of scientific honesty. For the formatting basically the same 
+as in the previous section applies. The only addition is a field for your
+signature. This template offers a separate environment for the declaration.
+You can add a declaration on as shown in Listing~\ref{lst:final:statement}.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,float,caption={Honourable declaration},label={lst:final:statement}]{code/final_statement.en.tex}
+
+The example corresponds to the wording as it stood at the time of writing of
+this manual footnote{April 2017} by the Central Examination Office of the
+Chemnitz University of Technology. Please note that an affirmation in lieu of
+an oath is is normally not necessary.
+
+If the heading of the declaration has to be adapted, this can be done via the
+optional argument of the environment. You create a signature field
+by the command sequence \verb+\tucsignature+. You only have to enter your name.
+For group work with several authors, you can use the command several times in
+succession. If you need a wider signature line because, for example, you have a
+longer name, enter a corresponding length in the optional argument, specify an
+appropriate length. By default, \unit[5]{cm} is used.
+
+The environment automatically starts a new right-hand page and also makes sure
+that no page number is printed.

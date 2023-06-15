@@ -1,0 +1,43 @@
+The creation of a bibliography is done in several steps.
+Listing~\ref{lst:latex:bibliography:template} shows the basic structure.
+
+\begin{compactenum}
+\item First, the package~\ctanpkg{biblatex} must be loaded in the preamble.
+\item Then, in the preamble with \lstinline[language={[LaTeX]{TeX}}]+\addbibresource+
+      the literature databases are loaded. The template uses a single
+      file~\texttt{literature.bib} by default. For extensive works or complex literature
+      studies, it is also possible to combine the bibliography from several
+      \texttt{.bib} files.
+      It is advisable to store these files in a separate subdirectory.
+      Each file with a corresponding
+      \lstinline[language={[LaTeX]{TeX}}]+\addbibresource+-command can be
+      loaded.
+\item The actual bibliography is loaded within the document with
+      \lstinline[language={[LaTeX]{TeX}}]+\printbibliography+
+      is output.
+\end{compactenum}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,caption={Grundgerüst einer Bibliografie},label={lst:latex:bibliography:template}]{code/latex_bibliography_template.en.tex}
+
+By default, the bibliography does not appear in the table of contents.
+Listing~\ref{lst:latex:bibliography:toc} contains the necessary options to make
+the bibliography appear in the table of contents.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,caption={list bibliography in table of contents},label={lst:latex:bibliography:toc}]{code/latex_bibliography_toc.en.tex}
+
+Both the package and the above commands can be customised with a variety of
+other options. For this, please refer to the corresponding documentation of
+\cite{pkg_biblatex}.
+
+The source reference is done with the \lstinline[language={[LaTeX]{TeX}}]+\cite+
+command. The keyword for the corresponds to the keyword assigned in the
+\hologo{BibTeX} file. In addition, there are a large number of other citation
+commands that are intended for different applications. The following paragraph
+lists some variants by way of example. The \LaTeX code for this is in
+Listing~\ref{lst:latex:bibliography:cite}. A detailed description of each variant
+would go beyond the scope of this manual. For this, please refer to
+\cite{pkg_biblatex,rees_biblatex_cheat}.
+
+\input{code/latex_bibliography_cite.en.tex}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,caption={literature references},label={lst:latex:bibliography:cite},morekeywords={footcite,citeauthor,citetitle,fullcite,footfullcite}]{code/latex_bibliography_cite.en.tex}

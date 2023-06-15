@@ -1,0 +1,40 @@
+As a rule, theses must be submitted in bound form. Usually comb or adhesive
+binding is used. In this case, a so-called binding correction must be made. The
+following details are taken from from \cite{dtk04.1:kohm:ausgleich}.
+
+Since a part of the inner margin is covered by the binding and the bent paper,
+the type area must be made a little narrower. This means that the proportions
+of the opened work are visually coherent again. This distance binding
+correction~$K$ is determined by the thickness of the book block book block~$d$ and
+the width of the binding~$b$.
+%
+\begin{equation}
+K = \dfrac{1}{2} \cdot \max(d, b)
+\end{equation}
+%
+The book block thickness can be calculated from the grammage~$G$ and the number
+of sheets~$n$. Here, the grammage in the unit $\unit{g / m^2}$ into the size
+equation. The result of the formula corresponds to the thickness in
+millimetres.
+%
+\begin{equation}
+d = \dfrac{n \cdot G}{1000}
+\end{equation}
+%
+A book block of 100~pages (that is 50~sheets for double-sided printing)
+therefore has a thickness of \unit[4]{mm} for paper with a thickness of $\unit[80]{g / m^2}$.
+However, a usual comb binding has a width of \unit[6]{mm}, so that the
+correction must be increased to this value.
+
+The binding correction can be set via the package~\ctanpkg{geometry}.
+Listing~\ref{lst:tpl:bcor} shows the corresponding configuration option.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,caption={set binding correction},label={lst:tpl:bcor}]{code/tpl_bcor.tex}
+
+Although the number of pages is not fixed until the work is completed, the
+binding correction should be determined at the beginning by a rough
+calculation. A change in the binding correction will lead to a different line
+and page break pagination, so that in this case certain fine-tuning may have to
+be made again.
+
+No binding correction is necessary for ring bindings.

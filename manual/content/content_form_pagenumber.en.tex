@@ -1,0 +1,26 @@
+In principle, each page of a paper is numbered. The numbering begins with the
+cover page, in the case of book publications with the first page of the title.
+The book cover is not numbered. On certain pages, e.g. the cover page or on
+cover page or on blank pages, no page number is printed. For more extensive
+works, the numbering starts again at~1 from the first chapter or the preface.
+The preceding pages (table of contents, etc.) are then numbered for the sake of
+distinction, are then numbered with Roman numerals for the sake of distinction.
+The numbering is switched with the \LaTeX command \verb+\pagenumbering+, as
+shown in Listing~\ref{lst:final:pagenumber}.
+The page counter is automatically reset to~1.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={switch page numbering},label={lst:final:pagenumber}]{code/final_pagenumber.en.tex}
+
+In the document class~\texttt{book} the change of the numbering is done
+automatically by the commands \verb+\frontmatter+, \verb+\mainmatter+ and
+\verb+\backmatter+.
+
+A separate numbering scheme for attachments is normally not customary.
+If annexes are to be numbered in the form A-1, A-2, \dots, B-1, B-2, \dots\ must
+be numbered according to Listing~\ref{lst:final:pagenumber_appendix}.
+The construct of \verb+\pagenumbering+ and \verb+\renewcommand+ must be repeated
+with each appendix. Corresponding adjustments must then also be made for the
+the following directories, such as the bibliography, glossary, etc.
+Continuous Arabic numbering is the more elegant solution here.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={Separate page numbering for appendices},label={lst:final:pagenumber_appendix},morekeywords={chapter}]{code/final_pagenumber_appendix.en.tex}

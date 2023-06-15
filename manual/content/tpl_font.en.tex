@@ -1,0 +1,57 @@
+\newcommand{\fontsample}[3][p]{
+\begin{figure}[#1]
+\centering
+\fbox{\begin{minipage}{14.2cm}
+\centering
+\begin{minipage}{14cm}
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,nolol]{code/fonts/header_#2.tex}
+\end{minipage}
+\includegraphics{figures/samples/fonts/font_#2}
+\end{minipage}}
+\caption{Font sample "`#3"'}
+\label{fig:tpl:font:#2}
+\end{figure}}
+
+The typeface has a significant effect on the readability of a text. In
+\LaTeX\ three different font families are used for text.
+
+\begin{itemize}
+\item {\rmfamily Serif fonts have small horizontal strokes at the ends of the
+      strokes, thus emphasising the baseline of a line of text. This way
+      lines of text are more perceptible.}
+\item {\sffamily Sans-serif fonts do not have these horizontal strokes and are
+      therefore more striking. They should therefore be used on title pages,
+      posters and in presentations.}
+\item {\ttfamily\raggedright The characters of serif typefaces all have the
+      same width. Such typefaces are used in mechanical typewriters. They are
+      suitable, for example, because of the uniform character size for the
+      formatted output of programme code.\par}
+\end{itemize}
+
+Furthermore, mathematical fonts complement the characters for formulas.
+
+By default, the font family "`Computer Modern"' is used for all four cases or
+its counterpart "Latin Modern"' (see fig.~\ref{fig:tpl:font:lm}) is used for
+all application. The latter has a larger character set. However, these fonts
+are quite brittle and look very thin when printed on a laser printer.
+Publishers therefore often recommend switching to other font families.
+
+\fontsample[h]{lm}{Latin Modern}
+
+\fontsample{newpx}{Palatino}
+
+\fontsample{newtx}{Times Roman}
+
+Loading additional packages redefines these standard font families. Some
+packages redefine all families. Others affect only on individual families and
+leave the other font families unchanged.
+
+Figure~\ref{fig:tpl:font:newpx} shows which \LaTeX packages are used to change
+the standard font to "`Palatino"'. As a sans serif font "Helvetica"' is used.
+In addition, adapted to Palatino mathematics fonts are loaded. The font has a
+greater weight and is therefore better suited for high-resolution printing.
+Palatino is used in this document and is also set by default in the template.
+
+The font family "`Times"' represents another alternative.
+Figure~\ref{fig:tpl:font:newtx} shows a font sample and the corresponding
+packages. The sans-serif and thick-weight fonts are identical to Palatino.

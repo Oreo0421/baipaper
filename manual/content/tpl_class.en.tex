@@ -1,0 +1,34 @@
+This template is designed for the \LaTeX standard classes \texttt{article}, \texttt{report} and
+\texttt{book}. Other classes can also be be used. However, possible incompatibilities
+cannot be excluded. The type and scope of the project determine the document
+class.
+
+\begin{description}
+\item[article] is suitable for short works such as term papers, seminar papers
+  or experimental protocols. The structuring is done by sections.
+  Chapters are not supported.
+
+\item[report] supports the structuring into chapters and is therefore suitable
+  for theses, such as diploma, bachelor or master's theses or dissertations and
+  post-doctoral theses.
+
+\item[book] should be used for extensive book publications,
+  e.g. dissertations and post-doctoral theses published by a publishing
+  publisher.
+\end{description}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={framework for \texttt{article}},label={lst:tpl:article},morekeywords={chapter,subsection}]{code/tpl_article.en.tex}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={framework for \texttt{report}},label={lst:tpl:report},morekeywords={chapter,subsection}]{code/tpl_report.en.tex}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={framework for \texttt{book}},label={lst:tpl:book},morekeywords={frontmatter,mainmatter,appendix,backmatter,chapter,subsection}]{code/tpl_book.en.tex}
+
+The outline of works based on \texttt{article} and \texttt{report} can be done intuitively using
+the \LaTeX outline commands, as is done in the Listings~\ref{lst:tpl:article}
+and~\ref{lst:tpl:report} shown as examples. Additional packages and special
+options for the document class have been omitted for reasons of clarity. For
+books the \LaTeX commands \verb+\frontmatter+, \verb+\mainmatter+ and \verb+\appendix+
+and \verb+\backmatter+ should be taken into account. They shall ensure that,
+for example. pages between \verb+\frontmatter+ and \verb+\mainmatter+ are
+numbered with small Roman numerals and that chapters are numbered only between
+\verb+\mainmatter+ and \verb+\backmatter+ are numbered.

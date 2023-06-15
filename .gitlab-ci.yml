@@ -3,6 +3,9 @@ build:
     - make all
   artifacts:
     paths:
-      - doku/arbeit.pdf
-      - vorlage.tar.bz2
-      - vorlage.zip
+      - manual/manual-de.pdf
+      - template-de.tar.bz2
+      - template-de.zip
+      - manual/manual-en.pdf
+      - template-en.tar.bz2
+      - template-en.zip

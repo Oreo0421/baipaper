@@ -1,0 +1,56 @@
+Illustrations can be included using the command \lstinline+\includegraphics+
+from the package~\ctanref{graphicx}. The image must be available as a graphic
+file for this. Place illustrations in the subdirectory \texttt{figures}.
+(see section~\ref{sec:tpl:dir}). Depending on the application, use the
+following image formats.
+
+\begin{description}
+\item[PDF] Technical drawings, graphics, diagrams, etc. -- In general
+  so-called vector graphics are meant here. These consist of points, lines
+  and areas and can be enlarged or reduced without loss of quality.
+  They also take up less storage space.
+
+  Please note, however, that texts within vector graphics are then also
+  scaled as well and this may lead to an inconsistent text image.
+
+\item[PNG] Screenshots, computer-generated images (3D visualisations,
+  simulation results, \dots), land or weather maps, heatmaps -- These are so-called
+  raster graphics. Such images consist of pixels, which are coloured
+  differently. Since the pixels are not perceived individually, the result is
+  an image impression. The enlargement or reduction of raster images, however,
+  leads to loss of quality (blurring, loss of detail). Raster graphics
+  require more storage space than vector graphics.
+
+  PNG files are a lossless image format, i.e. the image information is not lost
+  during storage. It is therefore for images with fine details (e.g. lines) and
+  high-contrast images (black and white drawings).
+
+\item[JPEG] Photographs, scanned images -- These are also raster graphics.
+  However, a lossy storage method is used. Colour values are changed by this.
+  At natural way'', such as photographs or scanned documents, these changes are
+  not noticeable. Unnatural images with strong contrasts, fine lines or
+  strongly saturated colours, however, lead to display errors
+  (so-called artefacts), which is why the JPEG format should not be used in
+  this case. Due to the storage technology, JPEG images generally require less
+  memory than PNG images.
+\end{description}
+
+Images should always be placed within a \texttt{figure} environment. This ensures that
+the illustrations are numbered and that they are inclusion in the list of
+figures. An example can be found in Listing~\ref{lst:latex:figure}.
+
+\begin{lstlisting}[language={[LaTeX]{TeX}},style=block,escapechar=\!,float,caption={An illustration},label={lst:latex:figure}]
+\begin{figure}
+\centering
+\includegraphics[width=0.7\linewidth]{figures/!\lara{filename}!}
+\caption{!\lara{caption}!}
+\label{!\lara{reference mark}!}
+\end{figure}
+\end{lstlisting}
+
+No file extension needs to be -- and should be -- specified in the file name. The
+reference mark can be omitted if no cross-reference to the image is planned.
+
+The \texttt{figure} environment is a sliding environment. The figure can be moved
+automatically to another place in the document if space availability requires
+it. For more information on this see section~\ref{sec:final:float}.

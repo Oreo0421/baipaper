@@ -1,0 +1,59 @@
+% Page margin: Inside min. 25mm
+% Outside margin: Correction margin 50mm,
+% Side notes may protrude into the 50mm margin.
+
+According to DIN~5008, the page margins should be min. \unit[2,5]{cm}. For work
+requiring a correction margin on the outside, the correction margin should be
+\unit[5]{cm} wide.
+
+The specifications for page geometry are referred to in print language as the
+"type area". In the course of the history of letterpress printing many rules
+for the design of a good type area have become established. If you search for
+the keywords "type area" and "LaTeX", you will find many papers. However, if in
+doubt, stick to the the lecturer's instructions, even if these contradict the
+classical rules of rules of type area construction.
+
+The setting of the sentence mirror is done with the package~\ctanref{geometry}.
+Listing~\ref{lst:tpl:margin} contains an example of how to use the package.
+The option \texttt{includeheadfoot} says that the top or bottom margin should extend to
+the top of the header or to the bottom of the footer. Otherwise, the margin is
+measured to the body of the text.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={set page margins},label={lst:tpl:margin}]{code/tpl_margin.en.tex}
+
+The package~\texttt{geometry} offers many more possibilities that are beyond the scope
+of this introduction. which would go beyond the scope of this introduction.
+Please refer to the package documentation.
+
+
+\begingroup
+\locbox\evenlayout
+\locbox\oddlayout
+
+\printheadingsfalse
+\printparametersfalse
+%\drawdimensionstrue
+\currentpage
+\setlayoutscale{0.45}
+
+\oddpagelayoutfalse\savebox{\evenlayout}{{\hsize=0.46\paperwidth\vbox{\centering\footnotesize\pagedesign}}}
+\oddpagelayouttrue\savebox{\oddlayout}{{\hsize=0.46\paperwidth\vbox{\centering\footnotesize\pagedesign}}}
+
+\begin{sidewaysfigure*}[p]
+\begin{minipage}{0.5\linewidth}
+\centering
+\usebox{\evenlayout}
+\end{minipage}%
+\begin{minipage}{0.5\linewidth}
+\centering
+\usebox{\oddlayout}
+\end{minipage}
+\caption{Setmirror of this document}
+\label{fig:tpl:margin_layout}
+\end{sidewaysfigure*}
+\endgroup
+
+By inserting the package~\ctanref{showframe} you can display the type area of
+your document in a form comparable to Figure~\ref{fig:tpl:margin_layout}.
+
+%\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={displaying the type area},label={lst:tpl:margin_showframe}]{code/tpl_margin_showframe.en.tex}

@@ -1,0 +1,216 @@
+Each work begins with a title page. For larger papers (term papers, reports,
+theses), a separate page should be provided. For test protocols, a standard 
+\LaTeX title may suffice.
+
+The cover page contains -- as far as applicable to the type of work -- the following information:
+
+\begin{compactitem}
+\item name of the university, faculty and chair or institute.
+\item the logo of the Chemnitz University of Technology
+\item the type of the thesis
+\item for theses the degree you are aiming for
+\item for term papers the name of the course and the semester
+\item the name of the author or all authors in the case of group work
+\item if applicable, further personal details (matriculation number, \dots)
+\item the title of the paper
+\item names of supervisors and reviewers%
+      \footnote{Please note: Some examination regulations stipulate that the
+                reviewers are only appointed after the thesis has been submitted.
+		If reviewers have already been appointed in the submitted version
+		this may constitute a formal deficiency}% .
+      , incl. academic degrees and titles
+\item date and place
+\end{compactitem}
+
+Depending on the discipline, there are different ideas of what a cover sheet
+should look like, therefore this \LaTeX template does not specify a uniform
+appearance. Rather, it provides a set of \LaTeX commands with which a cover
+page can be put together according to the modular principle. The cover page can
+also be supplemented by standard \LaTeX commands.
+
+In the file \texttt{content/titlepage.tex} cover pages for various applications
+are already prepared. Choose the variant that best suits your case and make any
+necessary adjustments. A cover page is framed by the environment \texttt{tuctitlepage}.
+The environment ensures that the cover page always appears on a right-hand
+page, that all elements are elements are centred and no page number is printed.
+
+The discussion of the individual design elements is quite technical. Best first
+take a look at the source code for three example cover sheets in the
+listings~\ref{lst:final:titlepage_da} to~\ref{lst:final:titlepage_prakt}. 
+The associated results are shown in the figures~\ref{fig:final:titlepage_da}
+to~\ref{fig:final:titlepage_prakt}. Then the following explanations will
+certainly be better understood.
+
+
+%
+% Force the float environments to start on a left-hand page, so that
+% the source text is always on the left and the finished example is just to the
+% right of it.
+%
+\afterpage{%
+  \clearpage%
+  \ifodd\value{page}\expandafter\afterpage\fi%
+  {
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={[Thesis cover page]{thesis cover page source code}},label={lst:final:titlepage_da}]{\langfilesuffix{samples/titlepage/titlepage_da}{.tex}}
+\clearpage
+
+\begin{figure}[p]
+\centering
+\fboxsep=0pt
+\fbox{\includegraphics[scale=0.7]{\langfile{figures/samples/titlepage/titlepage_da}}}
+\caption{Cover page of a thesis}
+\label{fig:final:titlepage_da}
+\end{figure}
+\clearpage
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={[Cover page of a thesis]{source code for the cover page of a thesis}},label={lst:final:titlepage_sa}]{\langfilesuffix{samples/titlepage/titlepage_sa}{.tex}}
+\clearpage
+
+\begin{figure}[p]
+\centering
+\fboxsep=0pt
+\fbox{%
+\begin{tikzpicture}[every node/.style={anchor=south west,inner sep=0pt}]
+%
+% Einzug von links
+% 0.7 [Skalierung] * (25mm [linker Rand] + 1/2 * (210mm [Seitenbreite] - (25mm + 35mm) [Rand]))
+% = 70mm (skaliert)
+% = 100mm (unskaliert)
+\draw [listingcolor!75!white] (70mm, 29mm) -- (70mm, 181mm);
+\draw [listingcolor!75!white] (17.5mm, 29mm) rectangle (122.5mm, 181mm);
+\draw [listingcolor!75!white,latex-latex]
+      (17.5mm, 0.17\paperheight)
+      -- node [above] {\footnotesize\texttt{0.5\textbackslash linewidth}}
+      (70mm, 0.17\paperheight);
+\node at (0, 0) {\includegraphics[scale=0.7]{\langfile{figures/samples/titlepage/titlepage_sa}}};
+\end{tikzpicture}}
+\caption{Cover page of a study paper}
+\label{fig:final:titlepage_sa}
+\end{figure}
+\clearpage
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={[Cover page of a seminar or term paper]{source code for the cover page of a seminar or term paper}},label={lst:final:titlepage_prakt}]{\langfilesuffix{samples/titlepage/titlepage_prakt}{.tex}}
+\clearpage
+
+\begin{figure}[p]
+\centering
+\fboxsep=0pt
+\fbox{\includegraphics[scale=0.7]{\langfile{figures/samples/titlepage/titlepage_prakt}}}
+\caption{Cover page of a seminar or term paper}
+\label{fig:final:titlepage_prakt}
+\end{figure}
+\clearpage
+  }%
+}
+
+Enter the institution where the work originated or is submitted in the \texttt{tuctitleorgunit}
+environment. Start with "`Chemnitz University of Technology"' and work your way down line by line to the
+respective professorship or institution. Create line breaks with
+\verb+\\+.
+
+The logo of the TU~Chemnitz is inserted by \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlelogo[$\text{\lara{width}}$]+
+is inserted. You can optionally specify the width of the logo. If you do not
+the logo will be scaled to \verb+0.6\linewidth+ (\unit[60]{\%} of the line
+width). The default file name for the logo is "`\texttt{figures/tuc\_green\_margin}'".
+It should not be necessary to change this. If you print the work in black and
+white, please put in the black TUC logo by changing the command sequence
+\verb+\tuctitlelogoname+ to "`\texttt{figures/tuc\_black\_margin}"':
+%
+\begin{lstlisting}[language={[LaTeX]{TeX}},style=block]
+\renewcommand{\tuctitlelogoname}{figures/tuc_black_margin}
+\end{lstlisting}
+
+Information on the type of work, intended degree, author, course and semester
+can be done with:
+
+\begin{compactitem}
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlethesistype{$\text{\lara{type of thesis}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitledegree[$\text{\lara{distance}}$]{$\text{\lara{degree}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitleauthor[$\text{\lara{distance}}$]{$\text{\lara{name}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlecourse[$\text{\lara{distance}}$]{$\text{\lara{course}}$}+.
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitleterm[$\text{\lara{distance}}$]{$\text{\lara{semester}}$}+
+\end{compactitem}
+
+Except for the type of the thesis, all other information is given by a small
+headline (see table~\ref{tab:final:titlepage_headers}). The vertical distance
+between the heading and the respective information can be set with the optional
+parameter. By default \verb+\medskipamount+ is set by default. If you want to
+dispense with the heading use instead:
+
+\begin{compactitem}
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitledegreeline{$\text{\lara{conclusion}}$}+.
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitleauthorline{$\text{\lara{name}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlecourseline{$\text{\lara{course}}$}+
+\item \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitletermline{$\text{\lara{semester}}$}+
+\end{compactitem}
+
+Appropriate font sizes and highlighting have already been selected. The type of
+thesis is shown in boldface, all other information in normal thickness. If
+adjustments are necessary, simply use the usual \LaTeX-commands within the
+command arguments.
+
+The names of the headings are derived from the headings listed in
+table~\ref{tab:final:titlepage_headers}. These can also be redefined for
+customisation.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\linewidth}{lX}
+Settings                     & default value                            \\
+\verb+\tuctitledegreephrase+ & "`to obtain the degree"'                 \\
+\verb+\tuctitleauthorphrase+ & "`submitted by"'                         \\
+\verb+\tuctitlecoursephrase+ & "`to the course"'                        \\
+\verb+\tuctitletermphrase+   & "`in"'                                   \\
+\end{tabularx}
+\caption{Preset for cover sheet block}
+\label{tab:final:titlepage_headers}
+\end{table}
+
+Information that cannot be squeezed into this scheme can also be set using a
+special environment.
+%
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,nolol]{\langfilesuffix{code/final_titlepage_block}{.tex}}
+
+The environment \texttt{tuctitletopic} takes the title of the paper. Add
+manually with \verb+\\+ line breaks, because especially with technical
+statements unwanted line breaks can quickly lead to reading difficulties.
+
+Place and date are set with
+\lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitleplacedate{$\text{\lara{place, date}}$}+.
+There is nothing more to say about this command.
+
+The environments \texttt{tuctitletable} and \texttt{tuctitletableindent}
+are available for tabular information. These can be used, for example, to
+supervisors and examiners or for formatting examination data such as
+examination data such as matriculation number, degree programme, etc.
+%
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,nolol]{\langfilesuffix{code/final_titlepage_table}{.tex}}
+
+The tables have a series of identifiers in the first column, which are
+right-justified. These are followed by the data separated by \texttt{\&}.
+respective data. The number of additional columns required is specified at the
+beginning of the environment as a parameter. Except in the case of group work,
+where all the data must be given for each author, this value will be 1. The
+optional argument specifies the formatting for the first column. A \verb+\bfseries+
+would result in the identifiers appearing in boldface.
+
+The second variant accepts an optional indent. The indent in this case is the
+distance of the column separator between the first and second line measured
+from the left edge of the line. This allows you to ensure that all tables
+appear in alignment if you are using multiple table environments. As an
+example, just look at Figure~\ref{fig:final:titlepage_sa}. The separation
+between the first and second column is exactly in the middle of the page
+(\verb+0.5\linewidth+).
+
+Between the individual elements of a cover page, the author must still add
+vertical space between the individual elements of a cover page. The logo of the
+Chemnitz University of Technology already brings its spacing according to the
+corporate design. Nothing needs to be done here. Between the information
+according to table~\ref{tab:final:titlepage_headers}, we recommend as a
+distance \verb+\bigskip+. To use the full page height, stretchable spacing must
+be used in at least one place. Before the place and date and around the title
+of the paper is a suitable place for it. Expandable space with \verb+\vspace+.
+The listings~\ref{lst:final:titlepage_da} to~\ref{lst:final:titlepage_prakt}
+show how best to do this. The spacing around the title of the work is always
+twice as large as the space in front of the date. This gives a visually more
+coherent picture.

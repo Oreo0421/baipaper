@@ -1,0 +1,20 @@
+Unless explicitly requested otherwise, papers should be printed on both sides
+to save paper. For this purpose, the class option \texttt{twoside} should be set. For
+shorter term papers or seminar papers, single-sided printing is also
+permissible.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,caption={Double-sided text},label={lst:tpl:twoside}]{code/tpl_twoside.en.tex}
+
+In more comprehensive papers (from bachelor thesis upwards), new chapters
+should always begin on a right-hand page. The class \texttt{book} will automatically
+insert a blank page before the start of a new chapter, if necessary.
+For the class \texttt{report} the option \texttt{openright} is necessary.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,caption={chapter start on right page},label={lst:tpl:openright}]{code/tpl_openright.tex}
+
+Inserted blank pages are not given page numbers. The package~\ctanref{emptypage}
+ensures this behaviour and is included in the template (see Listing~\ref{lst:tpl:emptypage}).
+
+\begin{lstlisting}[language={[LaTeX]{TeX}},style=block,caption={disable page numbers on empty pages},label={lst:tpl:emptypage}]
+\usepackage{emptypage}
+\end{lstlisting}

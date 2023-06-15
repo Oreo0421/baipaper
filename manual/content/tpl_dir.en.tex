@@ -1,0 +1,64 @@
+In contrast to simple \LaTeX documents, which usually consist of only one
+source file, this template consists of several files and subdirectories. This
+makes it easier to structure the content and separate it from the layout
+adjustments. The directory structure may seem a little opaque at first, but it
+will become clearer after the following explanations.
+Figure~\ref{fig:tpl:dir} represents the directory structure
+tree-like.
+
+\begin{figure}
+\dirtree{%
+.1 /.
+.2 thesis.tex\DTcomment{main file}.
+.2 latex/\DTcomment{subdirectory for \LaTeX customisations}.
+.3 float.tex\DTcomment{Standard settings for floating environments}.
+.3 titlepage.tex\DTcomment{Format templates for cover page}.
+.3 \dots.
+.2 figures/\DTcomment{subdirectory for illustrations}.
+.3 tuc\_black.pdf\DTcomment{TUC logo black}.
+.3 tuc\_black\_margin.pdf\DTcomment{TUC logo black with margin}.
+.3 tuc\_green.pdf\DTcomment{TUC logo green}.
+.3 tuc\_green\_margin.pdf\DTcomment{TUC logo green with border}.
+.3 \dots.
+.2 content/\DTcomment{content subdirectory}.
+.3 titlepage.tex\DTcomment{Cover page}.
+.3 \dots.
+.2 bibliogrpahy.bib\DTcomment{literature database}.
+.2 Makefile\DTcomment{control file for automatic \LaTeX run using \texttt{make}}.
+}
+\caption{Template directory structure}.
+\label{fig:tpl:dir}
+\end{figure}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float={p},caption={Principal structure of the main file \texttt{thesis.tex}},label={lst:tpl:thesis},morekeywords={chapter,subsection}]{code/tpl_thesis.en.tex}
+
+The file \texttt{thesis.tex} is the actual main file created by the
+\LaTeX compiler. In it the document class is defined and additional packages
+are loaded. Listing~\ref{lst:tpl:thesis} shows the basic structure of this
+file. In the template, this file is more extensive and supplemented by comments.
+After loading the additional packages, further files from the subdirectory
+\texttt{latex} are included. These make adjustments to the standard settings or define
+further commands. Within the file \texttt{float.tex} e.g. the placement settings for
+floating environments are made. Within this directory you can also store your
+own adjustments. This keeps the main file clear.
+
+In the directory~\texttt{figures} you should store all illustrations for your work.
+If necessary, you can structure the directory yourself by adding further
+subdirectories. The TUC logos are already in this directory, as they are
+needed, for example, for the design of the cover page.
+
+No output has been created yet. In the directory~\texttt{content} you can store the
+content of your paper. Structure at least on chapter level -- better on section
+level. Within the main file only the outline commands should appear. You can
+then use \verb+\input{}+ after the outline command to include the respective
+content.
+
+For authors who prefer to work on the command line, the file \texttt{Makefile} is
+helpful. It enables the simple translation of the project with the utility
+\texttt{make}. If you have never worked with this programme, simply ignore this file.
+It has no no relevance for you.
+
+The file~\texttt{literature.bib} in the main directory contains the literature database.
+In its initial state, the template does not generate a bibliography.
+It must first be set up according to section~\ref{sec:content:bibliography} so
+that bibliographies are automatically generated from this literature database.

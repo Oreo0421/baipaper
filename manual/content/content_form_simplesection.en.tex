@@ -1,0 +1,30 @@
+Supplements such as the short paper (abstract), the formulation of the assigned
+task or an acknowledgement, all have in common that they begin with a headline
+and contain a short text underneath. It would often be excessive to start an
+unnumbered chapter for this purpose. For this reason, the template provides the
+\texttt{tucsimplesection} environment. An example of this is shown in
+Listing~\ref{lst:final:simplesection}.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,float,caption={Simplesection},label={lst:final:simplesection}]{code/final_simplesection.en.tex}
+
+Figure~\ref{fig:final:simplesection} shows the result produced by the
+produced by the environment. The spacing between heading and content can be
+be varied by the optional spacing parameter. By default
+\verb+\bigskipamount+ is set.
+
+\begin{figure}
+\centering
+\fbox{%
+\begin{minipage}{0.95\linewidth}
+\begin{tucsimplesection}{headline}
+\lipsum[1]
+\end{tucsimplesection}
+\end{minipage}}
+\caption{Example of a simple caption}
+\label{fig:final:simplesection}
+\end{figure}
+
+It is the author's responsibility to force the start of a new page
+(\verb+\cleardoublepage+). The \verb+\vspace+ commands are used for this purpose,
+centre the text block and heading vertically. The distance to the bottom
+is larger than the one at the top. This is visually more consistent.

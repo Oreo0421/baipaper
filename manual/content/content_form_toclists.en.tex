@@ -1,0 +1,28 @@
+For the creation of directories, \LaTeX\ provides the standard commands
+according to table~\ref{tab:final:toclists}. That is all the author has to do.
+The classification of the directories in the outline of the work is explained
+in the section~\ref{sec:content:section}.
+
+\begin{table}
+\centering
+\begin{tabular}{ll}
+\verb+\tableofcentents+     & Table of contents \\
+\verb+\listoffigures+       & List of figures \\
+\verb+\listoftables+        & List of tables \\
+\verb+\lstlistoflistings+   & List of all source code \\
+\end{tabular}
+\caption{Directory commands}
+\label{tab:final:toclists}
+\end{table}
+
+For definitions, sentences or self-defined sliding environments there exist
+further commands. Please refer to the documentation of the corresponding
+packages.\todo[inline]{search and link packages}.
+
+Normally, only numbered sections appear in the table of contents.
+However, if an unnumbered item is to be included in the table of contents, it
+can be done with the \verb+\addcontentsline+ command, as in Listing~\ref{lst:final:addcontentsline}.
+The command must always be called after the corresponding outline command.
+Otherwise the page references will not be correct.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,escapechar=\!,float,caption={adding additional directory entries},label={lst:final:addcontentsline},morekeywords={chapter,subsection}]{code/final_addcontentsline.en.tex}

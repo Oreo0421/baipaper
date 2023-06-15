@@ -1,0 +1,17 @@
+In the document classes~\texttt{article} and \texttt{report} only the footer is
+used. The page number is centred there. The document class~\texttt{book}, on
+the other hand, uses living column titles. In addition to the page number, the
+current bullet point also appears in the header. By means of the package~\ctanref{fancyhdr},
+this behaviour can be can also be activated for other classes. In the file~\texttt{latex/fancyhdr.tex}
+of the template is already prepared for this. You only have to remove the
+comment characters before the passage in Listing~\ref{lst:final:fancyhdr}.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={activating living column titles},label={lst:final:fancyhdr}]{code/final_fancyhdr.tex}
+
+The settings apply to the entire document. On the first page of each
+chapter, the simple form of page numbering is still applied.
+If you also want to number the introduction of the work in the simple variant
+you can switch to the page style \texttt{plain} with the command \verb+\pagestyle+.
+\texttt{plain}, as shown in Listing~\ref{lst:final:fancyhdr2}.
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={Different numbering for the leader},label={lst:final:fancyhdr2}]{code/final_fancyhdr2.en.tex}

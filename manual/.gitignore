@@ -1,0 +1,17 @@
+# Ergebnis
+/manual-*.pdf
+
+# Temporäre Dateien
+/manual-*.aux
+/manual-*.bbl
+/manual-*.bcf
+/manual-*.blg
+/manual-*.fdb_latexmk
+/manual-*.fls
+/manual-*.lof
+/manual-*.log
+/manual-*.lol
+/manual-*.lot
+/manual-*.out
+/manual-*.run.xml
+/manual-*.toc

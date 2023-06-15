@@ -1,0 +1,36 @@
+Sources are collected in a literature database. The word
+"database"' may give rise to some misconceptions. For \LaTeX\ one understands
+a simple text file in the so-called \hologo{BibTeX} format.
+Listing~\ref{lst:latex:bibliography:bibtexentry} shows an example entry for this
+manual.
+
+\lstinputlisting[language=BibTeX,style=block,float,caption={Ein \hologo{BibTeX}-Eintrag},label={lst:latex:bibliography:bibtexentry}]{code/latex_bibliography_bibtexentry.bib}
+
+An entry consists of three parts.
+%
+\begin{compactenum}
+\item the type, here \texttt{@manual}
+\item a key, here \texttt{urz\_vorlage\_manual}
+\item several attributes, which describe the locations in more detail.
+\end{compactenum}
+
+Of course, you can maintain the file manually with a text editor. However,
+there is specialised software that allows the editing of a \hologo{BibTeX}
+database. Examples are:
+%
+\begin{compactitem}
+\item K\hologo{BibTeX} (\url{https://userbase.kde.org/KBibTeX})
+\item Zotero (\url{https://www.zotero.org})
+\item JabRef (\url{https://www.jabref.org})
+\end{compactitem}
+%
+Sometimes these programmes save the literature database in a separate format
+and export the format and export the references after processing only in the
+\hologo{BibTeX} format.
+
+In the rarest cases it is necessary to create a \hologo{BibTeX}-database
+manually. Publishers and libraries usually have a corresponding export function
+in their catalogues, which makes it possible to create prefabricated \hologo{BibTeX}
+entries. However, subsequent adaptations are generally adjustments are
+necessary if umlauts or special characters in the author names are not encoded
+correctly or data fields are missing. 

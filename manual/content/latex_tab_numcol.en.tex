@@ -1,0 +1,21 @@
+Tables with numerical material should be designed in such a way that numerical
+data of a column are aligned with the decimal point. The package~\ctanref{siunitx}
+provides the column type~\texttt{S} for this purpose. Numbers can simply be entered as
+decimal numbers. The package analyses the input independently and makes the
+correct alignment. Table~\ref{tab:latex:tab:numcol} shows a corresponding
+application example and Listing~\ref{lst:latex:tab:numcol} the corresponding \LaTeX code.
+
+\begin{table}
+\centering
+\langinput{code/latex_tab_numcol}
+\caption{planets' orbital elements at epoch J2000.0}
+\label{tab:latex:tab:numcol}
+\end{table}
+
+\lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={table with aligned number columns},label={lst:latex:tab:numcol}]{code/latex_tab_numcol.en.tex}
+
+The package~\ctanpkg{siunitx} is very flexible in terms of configuring the
+alignment of the cell contents and the display of numerical values.
+If you deal with columns of numbers in your work, it is worth taking a look at
+the package manual. \ctanref{dcolumn} is an older package for aligning older
+package for aligning numbers in tables.
