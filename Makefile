@@ -1,6 +1,8 @@
 default: all
 
-all: template-de.tar.bz2 template-de.zip \
+all: manual/manual-de.pdf \
+     manual/manual-en.pdf \
+     template-de.tar.bz2 template-de.zip \
      template-en.tar.bz2 template-en.zip
 
 template-%.tar.bz2: template-%.tar
