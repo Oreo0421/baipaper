@@ -71,14 +71,23 @@
 
 
 
-\input{latex/float}		% adjustments for float environments
-\input{latex/titlepage}		% Format template for the cover sheet
-\input{latex/simplesection}	% simple headings for tasks, etc.
-\input{latex/declaration}	% format template for the declaration of independence (Selbständigkeitserklärung)
+%
+% This approach fools TeXstudio and Texmaker to not show the included files in
+% the structure tree. This promotes clarity. Files inside the `latex/'
+% directory are not expected to be edited and thus should not be selectable.
+% Effectively the command \myinput is just an alias for \input but won't be
+% recognized be the editor.
+%
+\let\myinput\input
+
+\myinput{latex/float}		% adjustments for float environments
+\myinput{latex/titlepage}	% Format template for the cover sheet
+\myinput{latex/simplesection}	% simple headings for tasks, etc.
+\myinput{latex/declaration}	% format template for the declaration of independence (Selbständigkeitserklärung)
 
 % Activate if needed
-%\input{latex/fancyhdr}		% header and footer settings
-%\input{latex/linespace_mod}	% extended line spacing in floating environments, footnotes and minpages
+%\myinput{latex/fancyhdr}	% header and footer settings
+%\myinput{latex/linespace_md}	% extended line spacing in floating environments, footnotes and minpages
 
 
 

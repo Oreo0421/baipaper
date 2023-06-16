@@ -71,14 +71,24 @@
 
 
 
-\input{latex/float}		% Anpassungen für Gleitumgebungen
-\input{latex/titlepage}		% Formatvorlage für das Deckblatt
-\input{latex/simplesection}	% Einfache Überschriften für Aufgabenstellung usw.
-\input{latex/declaration}	% Formatvorlage für die Selbstständigkeitserklärung
+%
+% Mit diesem Konstrukt tricksen wir TeXstudio und Texmaker aus, damit die
+% Editoren die unten eingebundenen Dateien nicht im Strukturbaum anzeigen. Dies
+% dient der Übersichtlichkeit. Die Dateien im Verzeichnis `latex/' sind nicht
+% dazu gedacht bearbeitet zu werden und müssen deshalb nicht navigierbar sein.
+% Im Endeffekt hat das Kommando \myinput die selbe Funktion wie \input, wird
+% aber nicht durch die Automatik der Editoren erkannt.
+%
+\let\myinput\input
+
+\myinput{latex/float}		% Anpassungen für Gleitumgebungen
+\myinput{latex/titlepage}	% Formatvorlage für das Deckblatt
+\myinput{latex/simplesection}	% Einfache Überschriften für Aufgabenstellung usw.
+\myinput{latex/declaration}	% Formatvorlage für die Selbstständigkeitserklärung
 
 % Bei Bedarf aktivieren
-%\input{latex/fancyhdr}		% Einstellungen zu Kopf- und Fußzeilen
-%\input{latex/linespace_mod}	% Erweiterter Zeilenabstand in Gleitumgebungen, Fußnoten und Minpages
+%\myinput{latex/fancyhdr}	% Einstellungen zu Kopf- und Fußzeilen
+%\myinput{latex/linespace_mod}	% Erweiterter Zeilenabstand in Gleitumgebungen, Fußnoten und Minpages
 
 
 
