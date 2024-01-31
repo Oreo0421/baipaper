@@ -33,9 +33,9 @@ https://gitlab.hrz.tu-chemnitz.de/tuc-latex/abschlussarbeit/-/jobs/artifacts/mas
 The template consists of two parts
 
 1. the actual template
-   * [as a ZIP file](https://gitlab.hrz.tu-chemnitz.de/tuc-latex/abschlussarbeit/-/jobs/artifacts/master/raw/vorlage.zip?job=build)
-   * [as `tar.bz2` archive](https://gitlab.hrz.tu-chemnitz.de/tuc-latex/abschlussarbeit/-/jobs/artifacts/master/raw/vorlage.tar.bz2?job=build)
-2. [The accompanying documentation](https://gitlab.hrz.tu-chemnitz.de/tuc-latex/abschlussarbeit/-/jobs/artifacts/master/raw/doku/arbeit.pdf?job=build)
+   * [as a ZIP file](https://gitlab.hrz.tu-chemnitz.de/api/v4/projects/9443/jobs/artifacts/master/raw/template-en.zip?job=build)
+   * [as `tar.bz2` archive](https://gitlab.hrz.tu-chemnitz.de/api/v4/projects/9443/jobs/artifacts/master/raw/template-en.tar.bz2?job=build)
+2. [The accompanying documentation](https://gitlab.hrz.tu-chemnitz.de/api/v4/projects/9443/jobs/artifacts/master/raw/manual/manual-en.pdf?job=build)
 
 
 Use

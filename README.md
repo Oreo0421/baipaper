@@ -35,9 +35,9 @@ heruntergeladen werden.
 Die Vorlage besteht aus zwei Zeilen
 
 1. Der eigentlichen Vorlage
-   * [als ZIP-Datei](https://gitlab.hrz.tu-chemnitz.de/tuc-latex/abschlussarbeit/-/jobs/artifacts/master/raw/vorlage.zip?job=build)
-   * [als `tar.bz2`-Archiv](https://gitlab.hrz.tu-chemnitz.de/tuc-latex/abschlussarbeit/-/jobs/artifacts/master/raw/vorlage.tar.bz2?job=build)
-2. [Der zugehörigen Dokumentation](https://gitlab.hrz.tu-chemnitz.de/tuc-latex/abschlussarbeit/-/jobs/artifacts/master/raw/doku/arbeit.pdf?job=build)
+   * [als ZIP-Datei](https://gitlab.hrz.tu-chemnitz.de/api/v4/projects/9443/jobs/artifacts/master/raw/template-de.zip?job=build)
+   * [als `tar.bz2`-Archiv](https://gitlab.hrz.tu-chemnitz.de/api/v4/projects/9443/jobs/artifacts/master/raw/template-de.tar.bz2?job=build)
+2. [Der zugehörigen Dokumentation](https://gitlab.hrz.tu-chemnitz.de/api/v4/projects/9443/jobs/artifacts/master/raw/manual/manual-de.pdf?job=build)
 
 
 Benutzung
