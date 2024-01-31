@@ -114,12 +114,13 @@ jeweiligen Professur bzw. Einrichtung durch. Zeilenumbrüche erzeugen Sie mit
 
 Das Logo der TU~Chemnitz wird durch \lstinline[language={[LaTeX]{TeX}},mathescape]+\tuctitlelogo[$\text{\lara{Breite}}$]+
 eingefügt. Sie können optional die Breite des Logos angeben. Wenn Sie nichts
-angeben, wird das Logo auf \verb+0.6\linewidth+ (\unit[60]{\%} der Zeilenbreite)
-skaliert. Als Dateiname für das Logo ist "`\texttt{figures/tuc\_green\_margin}"'
-voreingestellt. Eine Änderung sollte nicht notwendig sein. Wenn Sie die Arbeit
-in schwarz-weiß drucken, setzen Sie bitte das schwarze TUC-Logo ein, indem Sie
-die Kommandosequenz \verb+\tuctitlelogoname+ auf
-"`\texttt{figures/tuc\_black\_margin}"' umdefinieren:
+angeben, wird das Logo auf \verb+0.6\linewidth+ (\qty{60}{\percent} der
+Zeilenbreite) skaliert. Als Dateiname für das Logo ist
+"`\texttt{figures/tuc\_green\_margin}"' voreingestellt. Eine Änderung sollte
+nicht notwendig sein. Wenn Sie die Arbeit in schwarz-weiß drucken, setzen Sie
+bitte das schwarze TUC-Logo ein, indem Sie die Kommandosequenz
+\verb+\tuctitlelogoname+ auf "`\texttt{figures/tuc\_black\_margin}"'
+umdefinieren:
 %
 \begin{lstlisting}[language={[LaTeX]{TeX}},style=block]
 \renewcommand{\tuctitlelogoname}{figures/tuc_black_margin}

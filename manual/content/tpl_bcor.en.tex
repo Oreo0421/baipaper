@@ -13,18 +13,19 @@ K = \dfrac{1}{2} \cdot \max(d, b)
 \end{equation}
 %
 The book block thickness can be calculated from the grammage~$G$ and the number
-of sheets~$n$. Here, the grammage in the unit $\unit{g / m^2}$ into the size
-equation. The result of the formula corresponds to the thickness in
-millimetres.
+of sheets~$n$. Here, the grammage in the unit \unit{\gram\per\metre\squared}
+into the size equation. The result of the formula corresponds to the thickness
+in millimetres.
 %
 \begin{equation}
 d = \dfrac{n \cdot G}{1000}
 \end{equation}
 %
 A book block of 100~pages (that is 50~sheets for double-sided printing)
-therefore has a thickness of \unit[4]{mm} for paper with a thickness of $\unit[80]{g / m^2}$.
-However, a usual comb binding has a width of \unit[6]{mm}, so that the
-correction must be increased to this value.
+therefore has a thickness of \qty{4}{\milli\metre} for paper with a thickness
+of \qty{80}{\gram\per\metre\squared}. However, a usual comb binding has a width
+of \qty{6}{\milli\metre}, so that the correction must be increased to this
+value.
 
 The binding correction can be set via the package~\ctanpkg{geometry}.
 Listing~\ref{lst:tpl:bcor} shows the corresponding configuration option.

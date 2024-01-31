@@ -1,6 +1,6 @@
-Term papers and theses are prepared in DIN~A4 format ($\unit[210 \times 297]{mm}$).
-The paper format is already predefined by the class option \texttt{a4paper} in the
-template (see Listing~\ref{lst:tpl:thesis}).
+Term papers and theses are prepared in DIN~A4 format (\qtyproduct{210 x
+297}{\milli\metre}). The paper format is already predefined by the class option
+\texttt{a4paper} in the template (see Listing~\ref{lst:tpl:thesis}).
 
 Exceptions apply to dissertations and post-doctoral theses that are
 (have to) be published by a book publisher at the same time. So if you are not
@@ -8,11 +8,10 @@ writing a dissertation or habilitation, skip the rest of this section.
 
 Book publications appear in a smaller format. The exact dimensions vary
 depending on the publisher. The university publisher uses for series of
-publications usually use the DIN~A5 format ($\unit[210 \times 297]{mm}$).
+publications usually use the DIN~A5 format (\qtyproduct{210 x 297}{\milli\metre}).
 Authors of such works now face a problem. Reviewers usually require the work in
-DIN~A4 format, but the publication takes place in a different format.
-There are two possible solutions, both of which have their advantages and
-disadvantages.
+DIN~A4 format, but the publication takes place in a different format. There are
+two possible solutions, both of which have their advantages and disadvantages.
 
 \begin{enumerate}
 \item You create the paper for the reviewers in DIN~A4 format, and the
@@ -34,15 +33,15 @@ correction (see section~\ref{sec:tpl:bcor}).
 \lstinputlisting[language={[LaTeX]{TeX}},style=block,float,caption={conversion to DIN~A5},label={lst:tpl:papersize_a5}]{code/tpl_papersize_a5.tex}
 
 If you want to take the less time-consuming second route, select at least the
-basic size for the A4~template at least the basic font size~\unit[12]{pt}. When
-scaling from A4 to A5, the document will be reduced to approx. A character of
-size~\unit[12]{pt} is then only barely \unit[9]{pt} in size. However, \LaTeX\
-uses a separate font for each font size. A character reduced from \unit[12]{pt}
-to \unit[9]{pt} has a different appearance than a character that is used for
-\unit[9]{pt}, designed for \unit[9]{pt}. When scaling down, the lines are
-lines are often thinner than in the respective design size. The font
-"`Latin Modern"' is particularly susceptible to this
-(see section~\ref{sec:tpl:font}).
+basic size for the A4~template at least the basic font size~\qty{12}{\pt}. When
+scaling from A4 to A5, the document will be reduced to approx.~\qty{71}{\percent}
+of its native size. A character of size~\qty{12}{\pt} is then only barely
+\qty{9}{\pt} in size. However, \LaTeX\ uses a separate font for each font size.
+A character reduced from \qty{12}{\pt} to \qty{9}{\pt} has a different
+appearance than a character that is used for \qty{9}{\pt}, designed for
+\qty{9}{\pt}. When scaling down, the lines are lines are often thinner than in
+the respective design size. The font "`Latin Modern"' is particularly
+susceptible to this (see section~\ref{sec:tpl:font}).
 
 If the basic size in the DIN~A4 template is too small, the characters in the A5
 version will be too thin, and thinner lines may even disappear altogether.
