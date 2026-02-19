@@ -1,8 +1,743 @@
-@manual{urz_vorlage_manual,
-	author = {Haustein, Mario and Schreiber, Antje and Meisel, Andre},
-	institution = {Universitätsrechenzentrum},
-	location = {Chemnitz},
-	school = {Technische Universität Chemnitz},
-	title = {Handbuch zur Vorlage für studentische Arbeiten},
-	url = {https://gitlab.hrz.tu-chemnitz.de/tuc-latex/abschlussarbeit}
+% ============================================================
+% References for the thesis (merged, deduplicated)
+% ============================================================
+
+% --- Fall Detection and Elderly Health ---
+
+@techreport{who2007falls,
+  title     = {{WHO} Global Report on Falls Prevention in Older Age},
+  author    = {{World Health Organization}},
+  year      = {2007},
+  institution = {World Health Organization},
+  address   = {Geneva, Switzerland},
+}
+
+@article{tinetti1988risk,
+  title     = {Risk Factors for Falls among Elderly Persons Living in the Community},
+  author    = {Tinetti, Mary E. and Speechley, Mark and Ginter, Sandra F.},
+  journal   = {New England Journal of Medicine},
+  volume    = {319},
+  number    = {26},
+  pages     = {1701--1707},
+  year      = {1988},
+  publisher = {Massachusetts Medical Society},
+}
+
+@book{lord2007falls,
+  title     = {Falls in Older People: Risk Factors and Strategies for Prevention},
+  author    = {Lord, Stephen R. and Sherrington, Catherine and Menz, Hylton B. and Close, Jacqueline C. T.},
+  year      = {2007},
+  edition   = {2nd},
+  publisher = {Cambridge University Press},
+}
+
+@techreport{un2019world,
+  title     = {World Population Ageing 2019: Highlights},
+  author    = {{United Nations, Department of Economic and Social Affairs, Population Division}},
+  year      = {2019},
+  institution = {United Nations},
+  number    = {ST/ESA/SER.A/430},
+}
+
+% --- Fall Detection Surveys ---
+
+@article{wang2020elderly,
+  title     = {Elderly Fall Detection Systems: A Literature Survey},
+  author    = {Wang, Xueyi and Ellul, Joshua and Azzopardi, George},
+  journal   = {Frontiers in Robotics and AI},
+  volume    = {7},
+  pages     = {71},
+  year      = {2020},
+  publisher = {Frontiers},
+}
+
+@article{mubashir2013survey,
+  title     = {A Survey on Fall Detection: Principles and Approaches},
+  author    = {Mubashir, Muhammad and Shao, Ling and Seed, Luke},
+  journal   = {Neurocomputing},
+  volume    = {100},
+  pages     = {144--152},
+  year      = {2013},
+  publisher = {Elsevier},
+}
+
+@article{igual2013challenges,
+  title     = {Challenges, Issues and Trends in Fall Detection Systems},
+  author    = {Igual, Raul and Medrano, Carlos and Plaza, Inmaculada},
+  journal   = {BioMedical Engineering OnLine},
+  volume    = {12},
+  number    = {1},
+  pages     = {66},
+  year      = {2013},
+  publisher = {BioMed Central},
+}
+
+@article{noury2007fall,
+  title     = {A Proposal for the Classification and Evaluation of Fall Detectors},
+  author    = {Noury, Norbert and Fleury, Anthony and Rumeau, Pierre and Bourke, Alan K. and Laighin, Gearoid O. and Rialle, Vincent and Lundy, Jean E.},
+  journal   = {IRBM},
+  volume    = {29},
+  number    = {6},
+  pages     = {340--349},
+  year      = {2008},
+  publisher = {Elsevier},
+}
+
+@article{zigel2009method,
+  title     = {A Method for Automatic Fall Detection of Elderly People Using Floor Vibrations and Sound---Proof of Concept on Human Mimicking Doll Falls},
+  author    = {Zigel, Yaniv and Litvak, Dima and Gannot, Israel},
+  journal   = {IEEE Transactions on Biomedical Engineering},
+  volume    = {56},
+  number    = {12},
+  pages     = {2858--2867},
+  year      = {2009},
+  publisher = {IEEE},
+}
+
+@article{nunez2017vision,
+  title     = {Vision-Based Fall Detection with Convolutional Neural Networks},
+  author    = {N{\'u}{\~n}ez-Marcos, Adri{\'a}n and Azkune, Gorka and Arganda-Carreras, Ignacio},
+  journal   = {Wireless Communications and Mobile Computing},
+  volume    = {2017},
+  pages     = {9474806},
+  year      = {2017},
+  publisher = {Hindawi},
+}
+
+@article{weinland2011survey,
+  title     = {A Survey of Vision-Based Methods for Action Representation, Segmentation and Recognition},
+  author    = {Weinland, Daniel and Ronfard, R{\'e}mi and Boyer, Edmond},
+  journal   = {Computer Vision and Image Understanding},
+  volume    = {115},
+  number    = {2},
+  pages     = {224--241},
+  year      = {2011},
+  publisher = {Elsevier},
+}
+
+@inproceedings{zhang2012privacy,
+  title     = {Privacy-Preserving Activity Recognition Using Low-Resolution Infrared Sensors},
+  author    = {Zhang, Zhengyou and Conly, Christopher and Anthitham, Vassilis},
+  booktitle = {Proceedings of the IEEE International Conference on Pervasive Computing and Communications Workshops},
+  year      = {2012},
+}
+
+% --- Thermal Infrared Fall Detection ---
+
+@inproceedings{vadivelu2016thermal,
+  title     = {Thermal Imaging Based Elderly Fall Detection},
+  author    = {Vadivelu, Somasundaram and Ganesan, Shankar and Murthy, O. V. Ramana and Dhiman, Ankit},
+  booktitle = {Proceedings of the IEEE International Conference on Signal Processing and Communication},
+  pages     = {1--5},
+  year      = {2016},
+  organization = {IEEE},
+}
+
+@inproceedings{nogas2020fall,
+  title     = {Fall Detection from Thermal Images Using Deep Learning},
+  author    = {Nogas, Jack and Khan, Shehroz S. and Mihailidis, Alex},
+  booktitle = {Proceedings of the IEEE International Symposium on Medical Measurements and Applications (MeMeA)},
+  pages     = {1--6},
+  year      = {2020},
+  organization = {IEEE},
+}
+
+@inproceedings{mashiyama2015activity,
+  title     = {Activity Recognition Using Low Resolution Infrared Array Sensor},
+  author    = {Mashiyama, Shuichi and Hong, Jaeyong and Ohtsuki, Tomoaki},
+  booktitle = {Proceedings of the IEEE International Conference on Communications},
+  pages     = {495--500},
+  year      = {2015},
+  organization = {IEEE},
+}
+
+@inproceedings{tao2018real,
+  title     = {Real-Time Human Body Thermal Infrared Image Segmentation and Fall Detection Based on Deep Learning},
+  author    = {Tao, Siming and Zhang, Ming and Wang, Pu and Yang, Lu and Hou, Yanfang},
+  booktitle = {Proceedings of the Chinese Control and Decision Conference (CCDC)},
+  pages     = {5765--5770},
+  year      = {2018},
+  organization = {IEEE},
+}
+
+@misc{heimann2024htpa,
+  title     = {{HTPA} 60x40d {R2} Thermopile Array Sensor},
+  author    = {{Heimann Sensor GmbH}},
+  year      = {2024},
+  howpublished = {\url{https://www.heimannsensor.com/60x40-array}},
+  note      = {Accessed: 2025-01-15},
+}
+
+@article{fan2017fall,
+  title     = {Fall Detection with Thermal Sensor Based on a Modified Convolutional Neural Network},
+  author    = {Fan, Kaiyang and Wang, Ping and Zhuang, Song},
+  journal   = {Proceedings of the Institution of Mechanical Engineers, Part F: Journal of Rail and Rapid Transit},
+  year      = {2017},
+}
+
+@inproceedings{chen2019drop,
+  title     = {Drop an Octave: Reducing Spatial Redundancy in Convolutional Neural Networks with Octave Convolution},
+  author    = {Chen, Yunpeng and Fan, Haoqi and Xu, Bing and Yan, Zhicheng and Kalantidis, Yannis and Rohrbach, Marcus and Yan, Shuicheng and Feng, Jiashi},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {3435--3444},
+  year      = {2019},
+}
+
+% --- Thermal Infrared Surveys & Datasets ---
+
+@article{gade2014thermal,
+  title     = {Thermal Cameras and Applications: A Survey},
+  author    = {Gade, Rikke and Moeslund, Thomas B},
+  journal   = {Machine Vision and Applications},
+  volume    = {25},
+  number    = {1},
+  pages     = {245--262},
+  year      = {2014},
+  publisher = {Springer},
+}
+
+@inproceedings{hwang2015kaist,
+  title     = {Multispectral Pedestrian Detection: Benchmark Dataset and Baseline},
+  author    = {Hwang, Soonmin and Park, Jaesik and Kim, Namil and Choi, Yukyung and Kweon, In So},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {1037--1045},
+  year      = {2015},
+}
+
+@inproceedings{jia2021llvip,
+  title     = {{LLVIP}: A Visible-Infrared Paired Dataset for Low-Light Vision},
+  author    = {Jia, Xinyu and Zhu, Chuang and Li, Minzhen and Tang, Wenqi and Zhou, Wenli},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) Workshops},
+  pages     = {3496--3504},
+  year      = {2021},
+}
+
+@article{tateno2020privacy,
+  title     = {Privacy-Preserving Fall Detection in Smart Home Using Low-Resolution Thermal Array Sensor},
+  author    = {Tateno, Shun and Meng, Fanming and Qian, Ruifeng and Hachiya, Yiwei},
+  journal   = {IEEE Sensors Journal},
+  volume    = {20},
+  number    = {2},
+  pages     = {934--946},
+  year      = {2020},
+  publisher = {IEEE},
+}
+
+@inproceedings{trofimova2017indoor,
+  title     = {Indoor Human Activity Recognition Using Low-Resolution Infrared Sensor Array},
+  author    = {Trofimova, Aleksandra A and Masciadri, Andrea and Veronese, Fabio and Salice, Fabio},
+  booktitle = {Proceedings of the International Workshop on Ambient Assisted Living},
+  pages     = {152--163},
+  year      = {2017},
+  publisher = {Springer},
+}
+
+% --- Object Detection ---
+
+@inproceedings{dalal2005hog,
+  title     = {Histograms of Oriented Gradients for Human Detection},
+  author    = {Dalal, Navneet and Triggs, Bill},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {886--893},
+  year      = {2005},
+}
+
+@inproceedings{redmon2016yolo,
+  title     = {You Only Look Once: Unified, Real-Time Object Detection},
+  author    = {Redmon, Joseph and Divvala, Santosh and Girshick, Ross and Farhadi, Ali},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {779--788},
+  year      = {2016},
+}
+
+@inproceedings{liu2016ssd,
+  title     = {{SSD}: Single Shot MultiBox Detector},
+  author    = {Liu, Wei and Anguelov, Dragomir and Erhan, Dumitru and Szegedy, Christian and Reed, Scott and Fu, Cheng-Yang and Berg, Alexander C},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {21--37},
+  year      = {2016},
+  publisher = {Springer},
+}
+
+@inproceedings{ren2015faster,
+  title     = {Faster {R-CNN}: Towards Real-Time Object Detection with Region Proposal Networks},
+  author    = {Ren, Shaoqing and He, Kaiming and Girshick, Ross and Sun, Jian},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  pages     = {91--99},
+  year      = {2015},
+}
+
+@inproceedings{devaguptapu2019borrow,
+  title     = {Borrow from Anywhere: Pseudo Multi-Modal Object Detection in Thermal Imagery},
+  author    = {Devaguptapu, Chaitanya and Akolekar, Ninad and Sharma, Manuj and Balasubramanian, Vineeth N},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+  pages     = {1029--1038},
+  year      = {2019},
+}
+
+@article{lyu2022rtmdet,
+  title     = {{RTMDet}: An Empirical Study of Designing Real-Time Object Detectors},
+  author    = {Lyu, Chengqi and Zhang, Wenwei and Huang, Haian and Zhou, Yue and Wang, Yudong and Liu, Yanyi and Zhang, Shilong and Chen, Kai},
+  journal   = {arXiv preprint arXiv:2212.07784},
+  year      = {2022},
+}
+
+% --- Neck / Feature Pyramid ---
+
+@inproceedings{liu2018path,
+  title     = {Path Aggregation Network for Instance Segmentation},
+  author    = {Liu, Shu and Qi, Lu and Qin, Haifang and Shi, Jianping and Jia, Jiaya},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {8759--8768},
+  year      = {2018},
+}
+
+% --- RoI Extraction ---
+
+@inproceedings{he2017mask,
+  title     = {Mask {R-CNN}},
+  author    = {He, Kaiming and Gkioxari, Georgia and Doll{\'a}r, Piotr and Girshick, Ross},
+  booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+  pages     = {2961--2969},
+  year      = {2017},
+}
+
+% --- Detection Losses ---
+
+@inproceedings{li2020generalized,
+  title     = {Generalized Focal Loss: Learning Qualified and Distributed Bounding Boxes for Dense Object Detection},
+  author    = {Li, Xiang and Wang, Wenhai and Wu, Lijun and Chen, Shuo and Hu, Xiaolin and Li, Jun and Tang, Jinhui and Yang, Jian},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {33},
+  pages     = {21002--21012},
+  year      = {2020},
+}
+
+@inproceedings{rezatofighi2019generalized,
+  title     = {Generalized Intersection over Union: A Metric and a Loss for Bounding Box Regression},
+  author    = {Rezatofighi, Hamid and Tsoi, Nathan and Gwak, JunYoung and Sadeghian, Amir and Reid, Ian and Savarese, Silvio},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {658--666},
+  year      = {2019},
+}
+
+% --- Lightweight Backbone ---
+
+@inproceedings{mehta2022mobilevit,
+  title     = {{MobileViT}: Light-weight, General-purpose, and Mobile-friendly Vision Transformer},
+  author    = {Mehta, Sachin and Rastegari, Mohammad},
+  booktitle = {Proceedings of the International Conference on Learning Representations (ICLR)},
+  year      = {2022},
+}
+
+@inproceedings{sandler2018mobilenetv2,
+  title     = {{MobileNetV2}: Inverted Residuals and Linear Bottlenecks},
+  author    = {Sandler, Mark and Howard, Andrew and Zhu, Menglong and Zhmoginov, Andrey and Chen, Liang-Chieh},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {4510--4520},
+  year      = {2018},
+}
+
+% --- Pose Estimation ---
+
+@inproceedings{newell2016stacked,
+  title     = {Stacked Hourglass Networks for Human Pose Estimation},
+  author    = {Newell, Alejandro and Yang, Kaiyu and Deng, Jia},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {483--499},
+  year      = {2016},
+  publisher = {Springer},
+}
+
+@inproceedings{xiao2018simple,
+  title     = {Simple Baselines for Human Pose Estimation and Tracking},
+  author    = {Xiao, Bin and Wu, Haiping and Wei, Yichen},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {466--481},
+  year      = {2018},
+  publisher = {Springer},
+}
+
+@inproceedings{sun2019hrnet,
+  title     = {Deep High-Resolution Representation Learning for Human Pose Estimation},
+  author    = {Sun, Ke and Xiao, Bin and Liu, Dong and Wang, Jingdong},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {5693--5703},
+  year      = {2019},
+}
+
+@inproceedings{xu2022vitpose,
+  title     = {{ViTPose}: Simple Vision Transformer Baselines for Human Pose Estimation},
+  author    = {Xu, Yufei and Zhang, Jing and Zhang, Qiming and Tao, Dacheng},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2022},
+}
+
+@inproceedings{cao2017realtime,
+  title     = {Realtime Multi-Person 2D Pose Estimation Using Part Affinity Fields},
+  author    = {Cao, Zhe and Simon, Tomas and Wei, Shih-En and Sheikh, Yaser},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {7291--7299},
+  year      = {2017},
+}
+
+@inproceedings{li2022simcc,
+  title     = {{SimCC}: A Simple Coordinate Classification Perspective for Human Pose Estimation},
+  author    = {Li, Yanjie and Yang, Sen and Liu, Peidong and Zhang, Shoukui and Wang, Yunxiao and Wang, Zhicheng},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {89--106},
+  year      = {2022},
+  publisher = {Springer},
+}
+
+@inproceedings{toshev2014deeppose,
+  title     = {{DeepPose}: Human Pose Estimation via Deep Neural Networks},
+  author    = {Toshev, Alexander and Szegedy, Christian},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {1653--1660},
+  year      = {2014},
+}
+
+@inproceedings{sun2018integral,
+  title     = {Integral Human Pose Regression},
+  author    = {Sun, Xiao and Xiao, Bin and Wei, Fangyin and Liang, Shuang and Wei, Yichen},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {529--545},
+  year      = {2018},
+  publisher = {Springer},
+}
+
+@article{nibali2018numerical,
+  title     = {Numerical Coordinate Regression with Convolutional Neural Networks},
+  author    = {Nibali, Aiden and He, Zhen and Morgan, Stuart and Prendergast, Luke},
+  journal   = {arXiv preprint arXiv:1801.07372},
+  year      = {2018},
+}
+
+@inproceedings{zhang2020distribution,
+  title     = {Distribution-Aware Coordinate Representation for Human Pose Estimation},
+  author    = {Zhang, Feng and Zhu, Xiatian and Dai, Hanbin and Ye, Mao and Zhu, Ce},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {7093--7102},
+  year      = {2020},
+}
+
+@inproceedings{li2019crowdpose,
+  title     = {{CrowdPose}: Efficient Crowded Scenes Pose Estimation and A New Benchmark},
+  author    = {Li, Jiefeng and Wang, Can and Zhu, Hao and Mao, Yihuan and Fang, Hao-Shu and Lu, Cewu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {10863--10872},
+  year      = {2019},
+}
+
+@inproceedings{li2021human,
+  title     = {Human Pose Regression with Residual Log-likelihood Estimation},
+  author    = {Li, Jiefeng and Bian, Siyuan and Zeng, Ailing and Wang, Can and Pang, Bo and Liu, Wentao and Lu, Cewu},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {11025--11034},
+  year      = {2021},
+}
+
+@article{luvizon2019human,
+  title     = {Human Pose Regression by Combining Indirect Part Detection and Contextual Information},
+  author    = {Luvizon, Diogo C. and Tabia, Hedi and Picard, David},
+  journal   = {Computers \& Graphics},
+  volume    = {85},
+  pages     = {15--22},
+  year      = {2019},
+  publisher = {Elsevier},
+}
+
+% --- Skeleton-based Action Recognition ---
+
+@inproceedings{du2015hierarchical,
+  title     = {Hierarchical Recurrent Neural Network for Skeleton Based Action Recognition},
+  author    = {Du, Yong and Wang, Wei and Wang, Liang},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {1110--1118},
+  year      = {2015},
+}
+
+@inproceedings{yan2018spatial,
+  title     = {Spatial Temporal Graph Convolutional Networks for Skeleton-Based Action Recognition},
+  author    = {Yan, Sijie and Xiong, Yuanjun and Lin, Dahua},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  year      = {2018},
+}
+
+@inproceedings{shi2019two,
+  title     = {Two-Stream Adaptive Graph Convolutional Networks for Skeleton-Based Action Recognition},
+  author    = {Shi, Lei and Zhang, Yifan and Cheng, Jian and Lu, Hanqing},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {12026--12035},
+  year      = {2019},
+}
+
+@inproceedings{shahroudy2016ntu,
+  title     = {{NTU RGB+D}: A Large Scale Dataset for 3{D} Human Activity Analysis},
+  author    = {Shahroudy, Amir and Liu, Jun and Ng, Tian-Tsong and Wang, Gang},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {1010--1019},
+  year      = {2016},
+}
+
+@inproceedings{liu2020msg3d,
+  title     = {Disentangling and Unifying Graph Convolutions for Skeleton-Based Action Recognition},
+  author    = {Liu, Ziyu and Zhang, Hongwen and Chen, Zhenghao and Wang, Zhiyong and Ouyang, Wanli},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {143--152},
+  year      = {2020},
+}
+
+@inproceedings{chen2021channel,
+  title     = {Channel-wise Topology Refinement Graph Convolution for Skeleton-Based Action Recognition},
+  author    = {Chen, Yuxin and Zhang, Ziqi and Yuan, Chunfeng and Li, Bing and Deng, Ying and Hu, Weiming},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {13026--13035},
+  year      = {2021},
+}
+
+% --- GRU ---
+
+@article{cho2014learning,
+  title     = {Learning Phrase Representations using {RNN} Encoder--Decoder for Statistical Machine Translation},
+  author    = {Cho, Kyunghyun and van Merrienboer, Bart and Gulcehre, Caglar and Bahdanau, Dzmitry and Bougares, Fethi and Schwenk, Holger and Bengio, Yoshua},
+  journal   = {arXiv preprint arXiv:1406.1078},
+  year      = {2014},
+}
+
+% --- Multi-Object Tracking ---
+
+@inproceedings{zhang2022bytetrack,
+  title     = {{ByteTrack}: Multi-Object Tracking by Associating Every Detection Box},
+  author    = {Zhang, Yifu and Sun, Peize and Jiang, Yi and Yu, Dongdong and Weng, Fucheng and Yuan, Zehuan and Luo, Ping and Liu, Wenyu and Wang, Xinggang},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {1--21},
+  year      = {2022},
+  publisher = {Springer},
+}
+
+@inproceedings{bewley2016simple,
+  title     = {Simple Online and Realtime Tracking},
+  author    = {Bewley, Alex and Ge, Zongyuan and Ott, Lionel and Ramos, Fabio and Upcroft, Ben},
+  booktitle = {Proceedings of the IEEE International Conference on Image Processing (ICIP)},
+  pages     = {3464--3468},
+  year      = {2016},
+  organization = {IEEE},
+}
+
+% --- Training Strategies ---
+
+@inproceedings{loshchilov2019decoupled,
+  title     = {Decoupled Weight Decay Regularization},
+  author    = {Loshchilov, Ilya and Hutter, Frank},
+  booktitle = {Proceedings of the International Conference on Learning Representations (ICLR)},
+  year      = {2019},
+}
+
+@inproceedings{loshchilov2017sgdr,
+  title     = {{SGDR}: Stochastic Gradient Descent with Warm Restarts},
+  author    = {Loshchilov, Ilya and Hutter, Frank},
+  booktitle = {Proceedings of the International Conference on Learning Representations (ICLR)},
+  year      = {2017},
+}
+
+% --- Vision-based Fall Detection (additional) ---
+
+@article{rougier2011robust,
+  title     = {Robust Video Surveillance for Fall Detection Based on Human Shape Deformation},
+  author    = {Rougier, Caroline and Meunier, Jean and St-Arnaud, Alain and Rousseau, Jacqueline},
+  journal   = {IEEE Transactions on Circuits and Systems for Video Technology},
+  volume    = {21},
+  number    = {5},
+  pages     = {611--622},
+  year      = {2011},
+  publisher = {IEEE},
+}
+
+@article{mastorakis2014fall,
+  title     = {Fall Detection System Using Kinect's Infrared Sensor},
+  author    = {Mastorakis, Georgios and Makris, Dimitrios},
+  journal   = {Journal of Real-Time Image Processing},
+  volume    = {9},
+  number    = {4},
+  pages     = {635--646},
+  year      = {2014},
+  publisher = {Springer},
+}
+
+@inproceedings{zhang2012rgb,
+  title     = {A Viewpoint-Independent Statistical Method for Fall Detection},
+  author    = {Zhang, Zhengyou and Conly, Christopher and Athitsos, Vassilis},
+  booktitle = {Proceedings of the International Conference on Pattern Recognition (ICPR)},
+  pages     = {3626--3630},
+  year      = {2012},
+}
+
+@article{charfi2013optimized,
+  title     = {Optimized Spatio-temporal Descriptors for Real-time Fall Detection: Comparison of Support Vector Machine and Adaboost-based Classification},
+  author    = {Charfi, Imen and Miteran, Johel and Dubois, Julien and Atri, Mohamed and Tourki, Rached},
+  journal   = {Journal of Electronic Imaging},
+  volume    = {22},
+  number    = {4},
+  pages     = {041106},
+  year      = {2013},
+  publisher = {SPIE},
+}
+
+% --- Epidemiology and Demographics ---
+
+@techreport{wild2004unintentional,
+  title     = {Unintentional Injuries: The Facts},
+  author    = {Wild, Donna},
+  year      = {2004},
+  institution = {World Health Organization},
+  address   = {Geneva, Switzerland},
+}
+
+@article{Fleming2008inability,
+  title     = {Inability to Get Up after Falling, Subsequent Time on Floor, and Summoning Help: Prospective Cohort Study in People over 90},
+  author    = {Fleming, Jane and Brayne, Carol and {Cambridge City over-75s Cohort (CC75C) study collaboration}},
+  journal   = {BMJ},
+  volume    = {337},
+  pages     = {a2227},
+  year      = {2008},
+  publisher = {BMJ Publishing Group},
+}
+
+@article{bloom2015macroeconomic,
+  title     = {The Macroeconomic Implications of Population Ageing and Selected Policy Responses},
+  author    = {Bloom, David E. and Chatterji, Somnath and Kowal, Paul and Lloyd-Sherlock, Peter and McKee, Martin and Rechel, Bernd and Rosenberg, Larry and Smith, James P.},
+  journal   = {The Lancet},
+  volume    = {385},
+  number    = {9968},
+  pages     = {649--657},
+  year      = {2015},
+  publisher = {Elsevier},
+}
+
+% --- Additional Fall Detection Surveys ---
+
+@article{delahoz2014survey,
+  title     = {Survey on Fall Detection and Fall Prevention Using Wearable and External Sensors},
+  author    = {Delahoz, Yueng Santiago and Labrador, Miguel A.},
+  journal   = {Sensors},
+  volume    = {14},
+  number    = {10},
+  pages     = {19806--19842},
+  year      = {2014},
+  publisher = {MDPI},
+}
+
+@article{chaudhuri2014fall,
+  title     = {Fall Detection Devices and Their Use with Older Adults: A Systematic Review},
+  author    = {Chaudhuri, Shomir and Thompson, Hilaire and Demiris, George},
+  journal   = {Journal of Geriatric Physical Therapy},
+  volume    = {37},
+  number    = {4},
+  pages     = {178--196},
+  year      = {2014},
+  publisher = {Wolters Kluwer},
+}
+
+@inproceedings{li2012acoustic,
+  title     = {Acoustic Fall Detection Using a Circular Microphone Array},
+  author    = {Li, Yun and Ho, K. C. and Popescu, Mihail},
+  booktitle = {Proceedings of the Annual International Conference of the IEEE Engineering in Medicine and Biology Society (EMBC)},
+  pages     = {2242--2245},
+  year      = {2012},
+  organization = {IEEE},
+}
+
+% --- RGB Action Recognition ---
+
+@inproceedings{wang2016temporal,
+  title     = {Temporal Segment Networks: Towards Good Practices for Deep Action Recognition},
+  author    = {Wang, Limin and Xiong, Yuanjun and Wang, Zhe and Qiao, Yu and Lin, Dahua and Tang, Xiaoou and Van Gool, Luc},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {20--36},
+  year      = {2016},
+  publisher = {Springer},
+}
+
+@inproceedings{zhang2015rgb,
+  title     = {RGB-D-based Action Recognition Datasets: A Survey},
+  author    = {Zhang, Jing and Li, Wanqing and Ogunbona, Philip O. and Wang, Pichao and Tang, Chang},
+  booktitle = {Pattern Recognition},
+  volume    = {60},
+  pages     = {86--105},
+  year      = {2016},
+  publisher = {Elsevier},
+}
+
+% --- Privacy Regulation ---
+
+@misc{gdpr2016,
+  title     = {Regulation ({EU}) 2016/679 of the {European Parliament} and of the {Council} (General Data Protection Regulation)},
+  author    = {{European Parliament and Council of the European Union}},
+  year      = {2016},
+  howpublished = {Official Journal of the European Union, L 119, 1--88},
+}
+
+% --- Edge Deployment and Efficient Networks ---
+
+@article{sze2017efficient,
+  title     = {Efficient Processing of Deep Neural Networks: A Tutorial and Survey},
+  author    = {Sze, Vivienne and Chen, Yu-Hsin and Yang, Tien-Ju and Emer, Joel S.},
+  journal   = {Proceedings of the IEEE},
+  volume    = {105},
+  number    = {12},
+  pages     = {2295--2329},
+  year      = {2017},
+  publisher = {IEEE},
+}
+
+@article{guo2019survey,
+  title     = {A Survey of FPGA-Based Neural Network Inference Accelerators},
+  author    = {Guo, Kaiyuan and Zeng, Shulin and Yu, Jincheng and Wang, Yu and Yang, Huazhong},
+  journal   = {ACM Transactions on Reconfigurable Technology and Systems},
+  volume    = {12},
+  number    = {1},
+  pages     = {1--26},
+  year      = {2019},
+  publisher = {ACM},
+}
+
+% --- Multi-Task Learning ---
+
+@article{caruana1997multitask,
+  title     = {Multitask Learning},
+  author    = {Caruana, Rich},
+  journal   = {Machine Learning},
+  volume    = {28},
+  number    = {1},
+  pages     = {41--75},
+  year      = {1997},
+  publisher = {Springer},
+}
+
+@article{ruder2017overview,
+  title     = {An Overview of Multi-Task Learning in Deep Neural Networks},
+  author    = {Ruder, Sebastian},
+  journal   = {arXiv preprint arXiv:1706.05098},
+  year      = {2017},
+}
+
+% --- Benchmarks ---
+
+@inproceedings{lin2014microsoft,
+  title     = {Microsoft {COCO}: Common Objects in Context},
+  author    = {Lin, Tsung-Yi and Maire, Michael and Belongie, Serge and Hays, James and Perona, Pietro and Ramanan, Deva and Doll{\'a}r, Piotr and Zitnick, C. Lawrence},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {740--755},
+  year      = {2014},
+  publisher = {Springer},
+}
+
+@inproceedings{deng2009imagenet,
+  title     = {{ImageNet}: A Large-Scale Hierarchical Image Database},
+  author    = {Deng, Jia and Dong, Wei and Socher, Richard and Li, Li-Jia and Li, Kai and Fei-Fei, Li},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {248--255},
+  year      = {2009},
 }

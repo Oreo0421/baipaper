@@ -1,1 +1,156 @@
-\lipsum[1-5]
+% ============================================================
+% Section 1: Introduction
+% ============================================================
+\section{Background and Motivation}
+\label{sec:intro_background}
+
+Falls are a major health risk for older adults. The World Health Organization reports that falls are the second leading cause of accidental injury deaths worldwide, and people over 65 carry the highest burden~\cite{who2007falls}. Each year, about 37.3 million falls require medical attention, and 28\%--35\% of adults aged 65+ experience at least one fall annually (32\%--42\% for those over 70)~\cite{tinetti1988risk,lord2007falls}. Critically, delayed assistance after a fall (a ``long lie'') can cause severe secondary complications and markedly increased mortality risk~\cite{wild2004unintentional,Fleming2008inability}. This motivates automated fall detection that is fast, reliable, and suitable for residential deployment.
+
+
+Thermal infrared (IR) imaging has emerged as an exceptionally promising candidate that addresses this privacy--capability trade-off~\cite{vadivelu2016thermal, nogas2020fall}. Thermopile sensor arrays, such as the Heimann HTPA $60 \times 40$ module employed in the SensIR project~\cite{heimann2024htpa}, operate by measuring the far-infrared thermal radiation (wavelengths of approximately $8$--$14\,\mu$m) emitted by objects in the scene. Because the human body maintains a core temperature significantly above the ambient temperature of typical indoor environments, individuals appear as distinctive warm regions---thermal silhouettes---against a cooler background in the sensor output. Crucially, the low spatial resolution of thermopile arrays ($60 \times 40$ pixels) and the nature of far-infrared imaging together ensure that the captured data cannot reveal facial features, clothing patterns, skin color, or any other visually identifying information~\cite{mashiyama2015activity, tao2018real}. This inherent privacy protection constitutes a decisive advantage over both RGB cameras and higher-resolution thermal cameras. Furthermore, thermal sensors are entirely independent of ambient illumination conditions, enabling consistent monitoring in complete darkness---a critical capability for nighttime fall detection in bedrooms and hallways where falls are particularly dangerous. The low data bandwidth associated with the $60 \times 40$ pixel resolution (each frame comprising only 2,400 temperature values) additionally reduces computational load, network transmission requirements, and storage overhead, rendering thermopile arrays well-suited for continuous long-term monitoring in embedded and edge computing environments~\cite{heimann2024htpa}.
+
+The SensIR project, within which this thesis is situated, aims to develop a comprehensive deep learning framework for human pose estimation, activity recognition, and fall detection using a pair of Heimann HTPA $60 \times 40$ thermopile sensor arrays connected to an FPGA-accelerated edge computing device. The dual-sensor configuration extends the field of view, yielding a combined input resolution of approximately $40 \times 114$ pixels after spatial fusion. The system must operate at a minimum frame rate of 20 frames per second (fps) to enable real-time monitoring and prompt fall alerting, imposing stringent constraints on model complexity and computational efficiency. This application context motivates the central research question of this thesis: \textit{How can we design a unified, lightweight deep learning framework that simultaneously performs person detection, body pose estimation, fall classification, and tracking from extremely low-resolution thermal imagery, while meeting the real-time throughput requirements of FPGA-based edge deployment?}
+
+\section{Technical Challenges}
+\label{sec:intro_challenges}
+
+Despite the inherent advantages of thermal infrared sensing for privacy-preserving indoor monitoring, the development of an accurate and efficient fall detection system operating on low-resolution thermopile data presents a constellation of interrelated technical challenges that distinguish this problem from conventional computer vision tasks.
+
+\textbf{Extreme spatial resolution constraints.} The Heimann HTPA $60 \times 40$ sensor produces extremely low-resolution thermal images in which a human typically occupies only $10$--$30$ pixels in height~\cite{nogas2020fall}. Fine-grained structural cues such as limb boundaries and joint articulations are heavily degraded, often collapsing into small amorphous blobs. Consequently, the backbone must extract semantically meaningful representations from severely information-limited inputs, with minimal spatial redundancy to support generalization~\cite{chen2019drop}.
+
+\textbf{Temporal ambiguity and inter-class confusion.} Falls are brief events (0.5--2 s) that visually overlap with common daily activities such as sitting, lying down, or bending~\cite{fan2017fall,mubashir2013survey}. Single-frame analysis is therefore insufficient. Reliable detection requires temporal modeling to capture characteristic motion dynamics (e.g., rapid descent followed by prolonged immobility), a challenge further amplified in the thermal domain due to the absence of texture and color cues.
+
+\textbf{Computational and latency constraints for edge deployment.} Deployment on an FPGA-accelerated edge device imposes strict limits on model size, memory footprint, and arithmetic complexity~\cite{sze2017efficient,chen2019drop}. Achieving $>$20 fps requires inference latency below 50 ms per frame, while FPGA hardware offers limited on-chip memory, restricted operator support, and often fixed-point arithmetic~\cite{guo2019survey}. Architectural design must therefore balance accuracy with computational efficiency and hardware compatibility.
+
+\textbf{Multi-person identity persistence.} Real-world environments may contain multiple individuals, requiring consistent identity tracking to maintain temporally coherent action sequences~\cite{bewley2016simple,zhang2022bytetrack}. In the thermal domain, low resolution and lack of appearance features make tracking particularly difficult, increasing the risk of identity switches and corrupted temporal features.
+
+\textbf{Cascading errors in modular pipelines.} Sequential pipelines (detection $\rightarrow$ pose $\rightarrow$ classification $\rightarrow$ tracking) suffer from error propagation~\cite{cao2017realtime}. Upstream inaccuracies degrade downstream performance, which is especially critical in fall detection. Joint optimization can mitigate this issue but introduces challenges in multi-task loss balancing and training stability.
+
+\section{Research Gap Analysis}
+\label{sec:intro_gap}
+
+A systematic examination of the existing literature on thermal infrared fall detection reveals several critical gaps that collectively motivate the present work. We identify five principal shortcomings in prior approaches.
+
+\textbf{Gap 1: Absence of keypoint-based structural reasoning.} 
+Most thermal fall detection systems rely on holistic image features or silhouette descriptors without modeling articulated body structure~\cite{nogas2020fall,vadivelu2016thermal}. Prior works employ handcrafted thermal features~\cite{mashiyama2015activity} or CNN classifiers on image patches~\cite{nogas2020fall}, but none extract keypoint skeletons. In contrast, skeleton-based representations have shown strong discriminative power and view invariance in RGB action recognition~\cite{yan2018spatial,shi2019two}. Their application to low-resolution thermal imagery remains largely unexplored, despite offering a compact, interpretable, and privacy-preserving representation.
+
+\textbf{Gap 2: Limited temporal modeling.} 
+Many existing methods perform per-frame classification~\cite{vadivelu2016thermal,nogas2020fall} or rely on simple rule-based temporal heuristics~\cite{mashiyama2015activity}. Learned temporal models such as RNNs or temporal convolutional networks are rarely adopted. However, temporal modeling over skeleton sequences is crucial for distinguishing fall events from fall-like activities with similar static poses~\cite{du2015hierarchical,yan2018spatial}. The lack of learned temporal modeling limits robustness in practical scenarios.
+
+\textbf{Gap 3: No unified multi-task framework.} 
+To date, no prior work integrates detection, keypoint estimation, temporal classification, and multi-object tracking into a single jointly optimized architecture for thermal fall detection. Existing approaches use isolated or sequential modules~\cite{cao2017realtime}, leading to redundant computation and error propagation. Although multi-task learning is known to improve representation sharing and generalization~\cite{caruana1997multitask,ruder2017overview}, it has not been systematically applied in this domain.
+
+\textbf{Gap 4: Lack of hardware-aware design.} 
+Despite the edge-deployment motivation of low-resolution thermal sensing, few works explicitly account for embedded hardware constraints~\cite{sze2017efficient}. Architectures such as standard ResNets or VGG-style networks often exceed the computational budget of FPGA-based devices operating at real-time frame rates. A hardware–algorithm co-design strategy tailored to latency, memory, and arithmetic constraints is largely absent in current thermal fall detection literature.
+
+
+\section{Problem Formulation}
+\label{sec:intro_formulation}
+
+We formulate fall detection as a composite perception problem over a temporal sequence of thermal infrared frames. Let $\mathbf{I}_t \in \mathbb{R}^{H \times W}$ denote the single-channel thermal image at discrete time step $t$, where $H=40$ and $W=114$ represent the fused resolution of the dual thermopile arrays. Each frame is resized to a canonical network input size of $H' \times W'$ (here $384 \times 384$) during both training and inference.
+
+Given $\mathbf{I}_t$, the system predicts per-person outputs for all $N_t$ individuals present in the scene. For each person $i \in \{1,\ldots,N_t\}$, the model produces a bounding box $\mathbf{b}_t^{(i)}=(x^{(i)}, y^{(i)}, w^{(i)}, h^{(i)}) \in \mathbb{R}^4$ with confidence score $s_t^{(i)} \in [0,1]$, and a set of $J=7$ body keypoints
+\begin{equation}
+\mathbf{K}_t^{(i)}=\{(\hat{x}_j^{(i)}, \hat{y}_j^{(i)}, v_j^{(i)})\}_{j=1}^{J},
+\end{equation}
+where $(\hat{x}_j^{(i)}, \hat{y}_j^{(i)})$ are 2D keypoint coordinates and $v_j^{(i)} \in \{0,1,2\}$ indicates the visibility state (not labeled, occluded, or visible). In addition, the system outputs a fall probability $p_t^{(i)} \in [0,1]$ for each person. To ensure temporal consistency, detections are associated across frames via a tracker that assigns a persistent identity $\mathrm{id}_t^{(i)} \in \mathbb{Z}^+$.
+
+Fall prediction is performed using a temporal window of normalized skeleton observations. We define a bounding-box-normalized keypoint vector for person $i$ at time $t$ as
+\begin{equation}
+\label{eq:normalized_kp}
+\mathbf{k}_t^{(i)} =
+\left[
+\frac{\hat{x}_1^{(i)}-x^{(i)}}{w^{(i)}},
+\frac{\hat{y}_1^{(i)}-y^{(i)}}{h^{(i)}},
+v_1^{(i)},
+\ldots,
+\frac{\hat{x}_J^{(i)}-x^{(i)}}{w^{(i)}},
+\frac{\hat{y}_J^{(i)}-y^{(i)}}{h^{(i)}},
+v_J^{(i)}
+\right]
+\in \mathbb{R}^{3J},
+\end{equation}
+which provides translation and scale invariance by normalizing coordinates relative to the enclosing bounding box. The temporal classifier operates on the sequence
+$\mathbf{k}_{t-T+1:t}^{(i)}=[\mathbf{k}_{t-T+1}^{(i)},\ldots,\mathbf{k}_t^{(i)}]\in\mathbb{R}^{T\times 3J}$
+to estimate the fall probability
+\begin{equation}
+\label{eq:fall_prob}
+p_t^{(i)}=\sigma\!\left(f_{\text{action}}\!\left(\mathbf{k}_{t-T+1:t}^{(i)};\boldsymbol{\theta}_{\text{action}}\right)\right),
+\end{equation}
+where $f_{\text{action}}$ denotes a GRU-based temporal model with parameters $\boldsymbol{\theta}_{\text{action}}$, and $\sigma(\cdot)$ is the sigmoid activation function. The tracking identity $\mathrm{id}_t^{(i)}$ is used to maintain the correct per-person temporal buffer across frames.
+
+The overall training objective jointly optimizes detection, pose estimation, and temporal fall classification in a unified multi-task setting:
+\begin{equation}
+\label{eq:total_loss}
+\mathcal{L}_{\text{total}}
+=
+\mathcal{L}_{\text{det}}(\boldsymbol{\theta}_{\text{det}})
++
+\mathcal{L}_{\text{pose}}(\boldsymbol{\theta}_{\text{pose}})
++
+\mathcal{L}_{\text{action}}(\boldsymbol{\theta}_{\text{action}}),
+\end{equation}
+where $\boldsymbol{\theta}_{\text{det}}$, $\boldsymbol{\theta}_{\text{pose}}$, and $\boldsymbol{\theta}_{\text{action}}$ are learnable parameters for detection, pose estimation, and action classification, respectively, with feature sharing through a common backbone/neck. The individual loss terms and training details are described in Chapter Method.
+
+
+\section{Rationale for Unified Multi-Task Learning}
+\label{sec:intro_multitask}
+
+Our system is organized as an end-to-end trainable \emph{multi-head} network for person detection, pose estimation, and fall classification, with multi-object tracking applied as an inference-time association module. Concretely, the detector, keypoint head, and action head share a common backbone/neck and are optimized jointly with a combined objective, while tracking is performed after the network forward pass to maintain identity consistency over time. Under this setting, multi-task learning is adopted primarily for efficiency and representation sharing, rather than claiming a fully coupled ``all-in-one'' solution that learns tracking jointly.
+
+First, sharing a single feature backbone amortizes the cost of feature extraction across detection, pose estimation, and action classification. In contrast to modular designs where each stage may maintain its own feature extractor, our shared backbone computes multi-scale features once per frame and feeds them to the detection and pose branches, while the action head leverages the resulting pose outputs. This reduces redundant computation and memory traffic, which is important for real-time inference under edge constraints~\cite{caruana1997multitask}.
+
+Second, joint optimization of detection, pose, and action provides a practical regularization effect and can improve generalization on modest-sized datasets~\cite{ruder2017overview}. Compared with large-scale benchmarks such as COCO~\cite{lin2014microsoft} or ImageNet~\cite{deng2009imagenet}, the available thermal training data are relatively limited. By learning shared features that must support both localization (detection), structural understanding (pose), and temporal decision making (action), the network is encouraged to avoid overly task-specific shortcuts. In particular, the pose estimation objective encourages the backbone to preserve body-structure cues that can also benefit fall-related classification.
+
+Third, although our tracking module is not part of end-to-end training, joint training of detection and pose can still reduce error amplification within the perception front-end. More accurate person localization improves the RoI features used by the keypoint head, and better keypoint quality provides a cleaner input to the temporal action head. In this sense, the action loss can provide an additional learning signal that complements the pose loss, while we avoid claiming full cross-module optimality across tracking, which remains a post-processing component.
+
+Finally, this design simplifies deployment. Instead of maintaining separate detection and pose networks on the edge device, the main perception components are consolidated into a single model that can be exported and optimized as a unit (e.g., quantization and hardware mapping), while tracking remains a lightweight inference-time module. This reduces engineering overhead and potential synchronization issues compared with fully modular pipelines.
+
+
+
+\section{Approach Overview}
+\label{sec:intro_approach}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/overall_framework.pdf}
+    \caption{Overall research framework of the proposed thermal infrared fall detection system. 
+    The pipeline consists of three major stages: (1) thermal data acquisition and annotation 
+    of a single-person AAG dataset using a 114×40 thermopile sensor; 
+    (2) unified multi-task model design integrating detection, seven-keypoint pose estimation, 
+    and temporal fall classification; 
+    and (3) real-time inference and edge deployment with fall probability output.}
+    \label{fig:overall_framework}
+\end{figure}
+
+Building upon the analysis of existing gaps and the articulated design principles, we propose \textbf{RTMDetWithPose}, a unified end-to-end deep learning framework that simultaneously addresses human body detection, seven-keypoint pose estimation, binary fall classification, and multi-object tracking from thermal infrared images captured by thermopile sensor arrays. The framework is designed from the outset to satisfy the competing demands of high perceptual accuracy and low computational cost, making it suitable for real-time deployment on FPGA-accelerated edge devices.
+
+The architectural design of RTMDetWithPose is organized around four tightly integrated components that share a common feature extraction pathway. The feature extraction pathway consists of a \textbf{MobileViT-S backbone}~\cite{mehta2022mobilevit}, which combines the local receptive fields of depthwise separable convolutions with the global context modeling of vision transformers in a parameter-efficient hybrid architecture, and a \textbf{CSPNeXt-PAFPN neck}~\cite{lyu2022rtmdet, liu2018path} that aggregates features from multiple backbone stages into three output scales suitable for detecting persons at varying distances from the sensor.
+
+An anchor-free \textbf{RTMDet detection head}~\cite{lyu2022rtmdet} operates on the multi-scale feature maps to predict person bounding boxes and confidence scores, using Quality Focal Loss~\cite{li2020generalized} for classification and GIoU Loss~\cite{rezatofighi2019generalized} for box regression with a dynamic soft label assignment strategy. For each detected person, a \textbf{RoIAlign module}~\cite{he2017mask} extracts a fixed-size feature patch from the shared multi-scale features, which is then processed by the pose estimation head.
+
+For pose estimation, we conduct a systematic investigation of five alternative head designs spanning the three major paradigms in keypoint localization: heatmap-based methods~\cite{newell2016stacked, xiao2018simple}, integral regression~\cite{sun2018integral, nibali2018numerical}, and coordinate classification~\cite{li2022simcc}. Our final architecture adopts the \textbf{SimCC formulation}~\cite{li2022simcc}, which decomposes the 2D keypoint localization problem into two independent 1D classification tasks along the horizontal and vertical axes. This approach eliminates the quadratic memory cost of 2D heatmap representations, avoids the quantization errors inherent in discrete argmax decoding, and achieves state-of-the-art accuracy with substantially fewer operations---properties that are particularly advantageous in the low-resolution, resource-constrained thermal domain.
+
+A lightweight \textbf{GRU-based temporal action classifier}~\cite{cho2014learning} consumes the sequence of bounding-box-normalized keypoint coordinates for each tracked individual, enabling the system to model the temporal dynamics of body motion and distinguish genuine falls from visually similar non-fall activities. The temporal sequences are maintained by a \textbf{ByteTrack multi-object tracker}~\cite{zhang2022bytetrack} that uses Kalman-filter-based motion prediction and a two-stage association strategy to preserve identity consistency even through temporary occlusions and low-confidence detections.
+
+
+\section{Contributions}
+\label{sec:intro_contributions}
+
+The principal contributions of this thesis are as follows:
+
+\begin{enumerate}
+    \item \textbf{Unified end-to-end multi-task framework.} We present RTMDetWithPose, a single-model architecture that jointly performs object detection, seven-keypoint pose estimation, skeleton-based fall classification, and multi-object tracking from low-resolution thermal infrared imagery. To the best of our knowledge, this is the first framework to integrate all four capabilities within a unified, jointly trained architecture specifically designed for the thermopile sensor domain. The unified design enables shared feature computation, beneficial gradient interactions between tasks, and a compact deployment footprint suitable for edge devices.
+
+    \item \textbf{Systematic pose estimation head comparison.} We conduct a rigorous ablation study comparing five distinct pose estimation head architectures---2D Gaussian heatmaps, foreground-weighted heatmaps with visibility prediction, soft-argmax integral regression, SimCC-based 1D coordinate classification, and direct coordinate regression---within the unified framework. This comparison provides the first systematic evaluation of modern pose estimation paradigms in the low-resolution thermal domain, and demonstrates that the SimCC formulation achieves the most favorable accuracy--efficiency trade-off under the extreme resolution constraints of thermopile sensor data.
+
+    \item \textbf{Lightweight temporal fall classification with skeleton-based GRU.} We introduce a computationally efficient GRU-based temporal action classifier that operates on bounding-box-normalized skeleton sequences, with per-track keypoint buffering maintained by an integrated ByteTrack multi-object tracker. This design enables temporally coherent fall detection in multi-person scenarios while adding negligible computational overhead to the overall inference pipeline. The normalization scheme ensures translation and scale invariance of the skeleton features, and the GRU architecture is selected specifically for its suitability to the minimal skeleton dimensionality ($J=7$ keypoints) of the thermopile domain.
+
+    \item \textbf{Validation on the SenIR thermal infrared dataset.} We validate the complete framework on the SenIR dataset, a thermal infrared dataset captured with Heimann HTPA $60 \times 40$ thermopile sensor arrays annotated with bounding boxes, seven-keypoint poses, and fall/non-fall labels. Our experiments demonstrate that the proposed system achieves competitive performance in detection, pose estimation, and fall classification while maintaining a model complexity compatible with real-time inference on edge hardware operating at $>$20 fps.
+\end{enumerate}
+
+
+\section{Thesis Organization}
+\label{sec:intro_organization}
+
+The remainder of this thesis is organized as follows. Chapter Related work provides a comprehensive review of related work, covering five domains: anchor-free object detection, human pose estimation methods, skeleton-based action recognition, multi-object tracking algorithms, and fall detection systems with emphasis on thermal infrared approaches. Chapter Method presents the proposed RTMDetWithPose framework in detail, describing the backbone, neck, detection head, RoI extraction, pose estimation head variants, temporal action classifier, tracking integration, and multi-task training strategy. Chapter Experiments reports experimental results on the SenIR dataset, including implementation details, ablation studies on pose estimation head design, detection and pose estimation metrics, fall classification performance, and tracking analysis. Finally, Chapter Conclusion summarizes the findings, discusses limitations of the current system, and outlines directions for future work including fine-grained multi-class action recognition, graph-based temporal modeling, and model quantization for FPGA deployment.
