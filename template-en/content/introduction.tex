@@ -74,8 +74,8 @@ which provides translation and scale invariance by normalizing coordinates relat
 $\mathbf{k}_{t-T+1:t}^{(i)}=[\mathbf{k}_{t-T+1}^{(i)},\ldots,\mathbf{k}_t^{(i)}]\in\mathbb{R}^{T\times 3J}$
 to estimate the fall probability
 \begin{equation}
-\label{eq:fall_prob}
-p_t^{(i)}=\sigma\!\left(f_{\text{action}}\!\left(\mathbf{k}_{t-T+1:t}^{(i)};\boldsymbol{\theta}_{\text{action}}\right)\right),
+    p_\text{fall} = \sigma(\mathbf{w}_c^\top \mathbf{o} + b_c).
+    \label{eq:fall_prob_v1}
 \end{equation}
 where $f_{\text{action}}$ denotes a GRU-based temporal model with parameters $\boldsymbol{\theta}_{\text{action}}$, and $\sigma(\cdot)$ is the sigmoid activation function. The tracking identity $\mathrm{id}_t^{(i)}$ is used to maintain the correct per-person temporal buffer across frames.
 
@@ -116,10 +116,9 @@ Finally, this design simplifies deployment. Instead of maintaining separate dete
     \includegraphics[width=\textwidth]{figures/overall_framework.pdf}
     \caption{Overall research framework of the proposed thermal infrared fall detection system. 
     The pipeline consists of three major stages: (1) thermal data acquisition and annotation 
-    of a single-person AAG dataset using a 114×40 thermopile sensor; 
+    of a single-person  dataset using a 114×40 thermopile sensor; 
     (2) unified multi-task model design integrating detection, seven-keypoint pose estimation, 
-    and temporal fall classification; 
-    and (3) real-time inference and edge deployment with fall probability output.}
+    and temporal fall classification; and (3) real-time inference and edge deployment with fall probability output.}
     \label{fig:overall_framework}
 \end{figure}
 
@@ -129,7 +128,7 @@ The architectural design of RTMDetWithPose is organized around four tightly inte
 
 An anchor-free \textbf{RTMDet detection head}~\cite{lyu2022rtmdet} operates on the multi-scale feature maps to predict person bounding boxes and confidence scores, using Quality Focal Loss~\cite{li2020generalized} for classification and GIoU Loss~\cite{rezatofighi2019generalized} for box regression with a dynamic soft label assignment strategy. For each detected person, a \textbf{RoIAlign module}~\cite{he2017mask} extracts a fixed-size feature patch from the shared multi-scale features, which is then processed by the pose estimation head.
 
-For pose estimation, we conduct a systematic investigation of five alternative head designs spanning the three major paradigms in keypoint localization: heatmap-based methods~\cite{newell2016stacked, xiao2018simple}, integral regression~\cite{sun2018integral, nibali2018numerical}, and coordinate classification~\cite{li2022simcc}. Our final architecture adopts the \textbf{SimCC formulation}~\cite{li2022simcc}, which decomposes the 2D keypoint localization problem into two independent 1D classification tasks along the horizontal and vertical axes. This approach eliminates the quadratic memory cost of 2D heatmap representations, avoids the quantization errors inherent in discrete argmax decoding, and achieves state-of-the-art accuracy with substantially fewer operations---properties that are particularly advantageous in the low-resolution, resource-constrained thermal domain.
+For pose estimation, we conduct a systematic investigation of five alternative head designs spanning the three major paradigms in keypoint localization: heatmap-based methods~\cite{newell2016stacked, xiao2018simple}, integral regression~\cite{sun2018integral, nibali2018numerical}, and Disentangled Representation~\cite{li20212d}. Our final architecture adopts the \textbf{SimDR formulation}~\cite{li20212d}, which decomposes the 2D keypoint localization problem into two independent 1D classification tasks along the horizontal and vertical axes. This approach eliminates the quadratic memory cost of 2D heatmap representations, avoids the quantization errors inherent in discrete argmax decoding, and achieves state-of-the-art accuracy with substantially fewer operations---properties that are particularly advantageous in the low-resolution, resource-constrained thermal domain.
 
 A lightweight \textbf{GRU-based temporal action classifier}~\cite{cho2014learning} consumes the sequence of bounding-box-normalized keypoint coordinates for each tracked individual, enabling the system to model the temporal dynamics of body motion and distinguish genuine falls from visually similar non-fall activities. The temporal sequences are maintained by a \textbf{ByteTrack multi-object tracker}~\cite{zhang2022bytetrack} that uses Kalman-filter-based motion prediction and a two-stage association strategy to preserve identity consistency even through temporary occlusions and low-confidence detections.
 
@@ -142,7 +141,7 @@ The principal contributions of this thesis are as follows:
 \begin{enumerate}
     \item \textbf{Unified end-to-end multi-task framework.} We present RTMDetWithPose, a single-model architecture that jointly performs object detection, seven-keypoint pose estimation, skeleton-based fall classification, and multi-object tracking from low-resolution thermal infrared imagery. To the best of our knowledge, this is the first framework to integrate all four capabilities within a unified, jointly trained architecture specifically designed for the thermopile sensor domain. The unified design enables shared feature computation, beneficial gradient interactions between tasks, and a compact deployment footprint suitable for edge devices.
 
-    \item \textbf{Systematic pose estimation head comparison.} We conduct a rigorous ablation study comparing five distinct pose estimation head architectures---2D Gaussian heatmaps, foreground-weighted heatmaps with visibility prediction, soft-argmax integral regression, SimCC-based 1D coordinate classification, and direct coordinate regression---within the unified framework. This comparison provides the first systematic evaluation of modern pose estimation paradigms in the low-resolution thermal domain, and demonstrates that the SimCC formulation achieves the most favorable accuracy--efficiency trade-off under the extreme resolution constraints of thermopile sensor data.
+    \item \textbf{Systematic pose estimation head comparison.} We conduct a rigorous ablation study comparing five distinct pose estimation head architectures---2D Gaussian heatmaps, foreground-weighted heatmaps with visibility prediction, soft-argmax integral regression, SimDR-based 1D coordinate classification, and direct coordinate regression---within the unified framework. This comparison provides the first systematic evaluation of modern pose estimation paradigms in the low-resolution thermal domain, and demonstrates that the SimDR formulation achieves the most favorable accuracy--efficiency trade-off under the extreme resolution constraints of thermopile sensor data.
 
     \item \textbf{Lightweight temporal fall classification with skeleton-based GRU.} We introduce a computationally efficient GRU-based temporal action classifier that operates on bounding-box-normalized skeleton sequences, with per-track keypoint buffering maintained by an integrated ByteTrack multi-object tracker. This design enables temporally coherent fall detection in multi-person scenarios while adding negligible computational overhead to the overall inference pipeline. The normalization scheme ensures translation and scale invariance of the skeleton features, and the GRU architecture is selected specifically for its suitability to the minimal skeleton dimensionality ($J=7$ keypoints) of the thermopile domain.
 

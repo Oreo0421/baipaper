@@ -1,0 +1,317 @@
+% ============================================================
+% Method Chapters
+% ============================================================
+
+% -----------------------------------------------------------
+\section{Overall Architecture}
+\label{sec:overall}
+
+The proposed system, which we refer to as \textbf{RTMDetWithPose}, is a unified multi-task framework that jointly performs human detection, seven-keypoint pose estimation, temporal fall classification, and multi-object tracking within a single architecture. The framework is organized into three functional stages:
+
+\textbf{Stage~1 (Detection + Pose Estimation):} A single-frame thermal IR image, resized to $384 \times 384$ pixels, is processed by a shared MobileViT-S backbone and CSPNeXtPAFPN neck to produce multi-scale feature maps at strides $\{8, 16, 32\}$. An anchor-free RTMDet detection head localizes human subjects, producing bounding boxes and confidence scores. For each detected person, RoI-aligned features of size $48 \times 48$ are extracted from the multi-scale feature pyramid and fed to a SimDR-based pose estimation head, which predicts seven keypoint coordinates along with per-keypoint visibility scores.
+
+\textbf{Stage~2 (Temporal Action Classification):} For each tracked person, the estimated keypoint coordinates are normalized relative to the bounding box and augmented with velocity features. The resulting temporal sequence is processed by a GRU-based binary classifier that produces a fall probability.
+
+\textbf{Stage~3 (Inference Pipeline):} ByteTrack associates detections across frames to maintain consistent person identities. Per-track keypoint buffers of up to 30~frames feed the temporal classifier. Rule-based post-processing leverages physical priors on head velocity, descent rate, and body motion to refine fall predictions and suppress false positives. Additionally, a rule-based action state estimator infers seven discrete activity states for visualization and clinical reporting.
+
+An overview of the complete framework is illustrated in Fig.~\ref{fig:overall_architecture}, including the shared backbone--neck, the detection and pose heads, ByteTrack-based identity association, temporal keypoint buffering, and the GRU-based fall classifier with rule-based post-processing.
+
+\begin{figure}[!tbhp]
+    \includegraphics[width=\columnwidth]{figures/overall_architecture.pdf}
+    \caption{Overview of the proposed RTMDetWithPose framework. A shared MobileViT-S backbone and CSPNeXtPAFPN neck produce multi-scale features consumed by both the RTMDet detection head and the SimDR pose estimation head via RoI-aligned features. ByteTrack maintains cross-frame identity association, feeding per-track keypoint sequences to the GRU-based temporal action classifier. Rule-based post-processing refines fall predictions using physical motion priors.}
+    \label{fig:overall_architecture}
+\end{figure}
+
+% -----------------------------------------------------------
+\section{Backbone: MobileViT-S}
+\label{sec:backbone}
+
+We employ MobileViT-S~\cite{mehta2022mobilevit} as the backbone feature extractor. MobileViT is a hybrid architecture that combines the local feature extraction capabilities of MobileNetV2~\cite{sandler2018mobilenetv2} inverted residual blocks with the global contextual modeling of Vision Transformers~\cite{dosovitskiy2020vit}. Specifically, the early stages consist of standard MobileNetV2 blocks that capture local spatial patterns efficiently, while the later stages introduce MobileViT blocks in which feature map patches are processed by lightweight Transformer encoders. This hybrid design enables the network to jointly model local textures and global spatial relationships, which is particularly beneficial for thermal IR imagery where local gradients are subtle and long-range body part dependencies are informative.
+
+MobileViT-S is selected for its favorable accuracy--efficiency trade-off: it achieves competitive performance on ImageNet classification while requiring significantly fewer parameters and FLOPs than full Vision Transformers or heavy CNN backbones, making it well suited for edge deployment on FPGA-accelerated hardware. We initialize the backbone with ImageNet-pretrained weights from the \texttt{timm} library~\cite{rw2019timm} and extract multi-scale features from stages 2, 3, and 4, yielding feature maps with channel dimensions of 96, 128, and 640, respectively.
+
+% -----------------------------------------------------------
+\section{Neck: CSPNeXtPAFPN}
+\label{sec:neck}
+
+To fuse multi-scale features from the backbone, we adopt CSPNeXtPAFPN~\cite{lyu2022rtmdet}, a feature pyramid network that extends the Path Aggregation Feature Pyramid Network (PAFPN)~\cite{liu2018path} with Cross Stage Partial (CSP) blocks~\cite{wang2020cspnet} redesigned using the NeXt-style block from RTMDet. The neck receives feature maps with channel dimensions $[96, 128, 640]$ from backbone stages 2, 3, and 4, and produces three output feature maps $\{P_3, P_4, P_5\}$ at strides $\{8, 16, 32\}$, all with a unified channel dimension of 96. The top-down pathway aggregates semantic information from deep layers to shallow layers, while the bottom-up pathway propagates fine-grained spatial details back to deeper levels. We use a single CSP block per fusion stage (\texttt{num\_csp\_blocks}$=1$) to maintain computational efficiency. The resulting multi-scale feature maps are shared between the detection head and the RoI feature extractor for pose estimation.
+
+% -----------------------------------------------------------
+\section{Detection Head: RTMDet}
+\label{sec:detection_head}
+
+We employ the RTMDet detection head~\cite{lyu2022rtmdet}, an anchor-free single-stage detector that predicts object locations as distances from feature map grid points to the four bounding box edges. The head operates on all three feature pyramid levels $\{P_3, P_4, P_5\}$ and performs single-class detection (human). Feature channels in the detection head are set to 96, matching the neck output dimension.
+
+\textbf{Bounding box parameterization.} For each spatial location $(c_x, c_y)$ on the feature map, the detector predicts four non-negative distances $(l, t, r, b)$ to the left, top, right, and bottom edges of the bounding box, respectively. The decoded box coordinates are given by:
+\begin{equation}
+    (x_1, y_1, x_2, y_2) = (c_x - l,\; c_y - t,\; c_x + r,\; c_y + b).
+\end{equation}
+
+\textbf{Label assignment.} We use the DynamicSoftLabelAssigner with $\text{topk}=13$, which dynamically assigns positive samples based on a combination of classification confidence and localization quality, replacing the need for fixed IoU-based assignment rules.
+
+\textbf{Classification loss.} The classification branch is trained with Quality Focal Loss (QFL)~\cite{li2020generalized}, which jointly models classification confidence and localization quality:
+\begin{equation}
+    \mathcal{L}_\text{cls} = -|y - \sigma(\hat{y})|^\beta \left[ y \log \sigma(\hat{y}) + (1-y) \log (1 - \sigma(\hat{y})) \right],
+    \label{eq:qfl}
+\end{equation}
+where $\hat{y}$ denotes the predicted logit, $\sigma(\cdot)$ is the sigmoid function, $y$ is the soft target encoding localization quality, and $\beta = 2.0$ controls the focusing strength.
+
+\textbf{Regression loss.} The bounding box regression branch is supervised with Generalized Intersection over Union (GIoU) loss~\cite{rezatofighi2019generalized}:
+\begin{equation}
+    \mathcal{L}_\text{bbox} = 1 - \text{GIoU}(\hat{\mathbf{b}}, \mathbf{b}),
+    \label{eq:giou}
+\end{equation}
+where $\hat{\mathbf{b}}$ and $\mathbf{b}$ denote the predicted and ground-truth bounding boxes, respectively. The regression loss weight is set to 2.0.
+
+\textbf{Test-time inference.} During inference, detections are filtered with a confidence threshold of 0.3 and refined through non-maximum suppression (NMS) with an IoU threshold of 0.45, retaining at most 100 detections per image.
+
+% -----------------------------------------------------------
+\section{Pose Estimation Head: SimDR}
+\label{sec:pose_head}
+
+We adopt a top-down pose estimation approach in which keypoints are estimated within each detected bounding box. This subsection describes the RoI feature extraction process and the SimDR-based keypoint estimation head.
+
+\subsection{RoI Feature Extraction}
+\label{subsec:roi}
+
+For each detected person, we extract a fixed-size feature representation using RoIAlign~\cite{he2017mask} applied to the multi-scale feature pyramid $\{P_3, P_4, P_5\}$. The RoIAlign operation produces a $48 \times 48$ feature map for each person, with bilinear interpolation ensuring sub-pixel alignment. During training, we use ground-truth bounding boxes with $\pm 10\%$ random jitter along each axis to simulate detection noise and improve robustness. During inference, we use the top-$K$ detected bounding boxes ranked by confidence score.
+
+\subsection{Keypoint Definition}
+\label{subsec:keypoint_def}
+
+Given the low spatial resolution of thermal IR imagery, we define a reduced skeleton with seven keypoints: (0)~Head, (1)~Shoulder center, (2)~Right hand, (3)~Left hand, (4)~Hip center, (5)~Right foot, and (6)~Left foot. This coarse skeleton captures the essential body configuration for fall detection while remaining feasible to estimate from the limited thermal resolution. Each keypoint annotation includes a visibility flag: $v=0$ (not labeled), $v=1$ (occluded), and $v \geq 2$ (visible).
+
+\begin{figure}[!tbhp]
+    \includegraphics[width=0.9\columnwidth]{figures/keypoint.pdf}
+    \caption{Definition of the seven-keypoint skeleton for thermal IR pose estimation. (a)~Keypoint layout and bone connections on a representative thermal image. (b)~Skeleton configurations across different activity states: standing, sitting, lying, and falling. The reduced skeleton captures essential body structure while remaining estimable at the low resolution of thermopile arrays.}
+    \label{fig:keypoint_definition}
+\end{figure}
+
+\subsection{SimDR Architecture}
+\label{subsec:simdr_arch}
+
+We adopt SimDR (Simple Disentangled Representation)~\cite{li20212d}, which reformulates two-dimensional keypoint localization as two independent one-dimensional classification problems along the horizontal ($x$) and vertical ($y$) axes. This avoids the computational overhead of generating and processing full 2D heatmaps while achieving sub-pixel accuracy through a configurable bin resolution.
+
+\textbf{Shared feature extractor.} The $48 \times 48$ RoI-aligned feature map is processed by four convolutional layers, each consisting of a $3 \times 3$ convolution (from 96 to 128 channels), batch normalization, and ReLU activation.
+
+\textbf{Axis-wise decomposition.} The shared feature tensor $\mathbf{F} \in \mathbb{R}^{128 \times H \times W}$ (where $H = W = 48$) is decomposed along each axis via average pooling:
+\begin{align}
+    \mathbf{f}_x &= \frac{1}{H} \sum_{h=1}^{H} \mathbf{F}[:, h, :] \;\in \mathbb{R}^{128 \times W}, \label{eq:axis_pool_x} \\
+    \mathbf{f}_y &= \frac{1}{W} \sum_{w=1}^{W} \mathbf{F}[:, :, w] \;\in \mathbb{R}^{128 \times H}. \label{eq:axis_pool_y}
+\end{align}
+
+\textbf{1D classification heads.} Each axis-pooled feature is processed by a dedicated one-dimensional head consisting of a $3 \times 1$ Conv1d with batch normalization and ReLU, a transposed convolution (\texttt{ConvTranspose1d} with kernel size 4 and stride 2) for $\times 2$ upsampling, and a $1 \times 1$ Conv1d that produces logits of dimension $L = W_\text{feat} \times k$ for the $x$-axis and $L = H_\text{feat} \times k$ for the $y$-axis, where $k = 2$ is the SimDR scale factor. With $W_\text{feat} = H_\text{feat} = 48$ and $k = 2$, each axis produces $L = 96$ classification bins, enabling sub-pixel localization precision.
+
+\textbf{Visibility branch.} A separate branch applies global average pooling over the shared feature map followed by a fully connected layer to predict per-keypoint visibility logits $\hat{v}_j \in \mathbb{R}$ for $j = 1, \ldots, 7$.
+
+\textbf{Coordinate decoding.} At inference time, keypoint coordinates are recovered by taking the argmax over the 1D logit vectors and dividing by the scale factor and feature map dimension:
+\begin{equation}
+    \hat{x}_j = \frac{\arg\max(\mathbf{p}^x_j)}{k \cdot W_\text{feat}}, \quad \hat{y}_j = \frac{\arg\max(\mathbf{p}^y_j)}{k \cdot H_\text{feat}},
+    \label{eq:simdr_decode}
+\end{equation}
+where $\mathbf{p}^x_j$ and $\mathbf{p}^y_j$ are the softmax-normalized logit vectors for keypoint $j$ along the $x$- and $y$-axes, respectively. The resulting coordinates lie in $[0, 1]$ and are subsequently mapped to image coordinates using the bounding box geometry.
+
+To better illustrate the structural difference between conventional heatmap-based pose estimation and the SimDR formulation adopted in this work, we provide a visual comparison in Fig.~\ref{fig:simdr_vs_heatmap}. As shown, the traditional 2D Gaussian heatmap approach predicts a dense $K \times H \times W$ tensor for keypoint localization, followed by spatial argmax decoding. In contrast, SimDR decomposes the 2D localization problem into two independent 1D classification tasks along the horizontal and vertical axes via axis-wise pooling. This design substantially reduces output dimensionality and computational overhead while preserving localization precision through fine-grained discretization.
+
+\begin{figure}[!tbhp]
+    \includegraphics[width=\columnwidth]{figures/SimDRvsHeatmap.pdf}
+    \caption{Comparison of (a)~traditional 2D Gaussian heatmap decoding and (b)~the SimDR approach adopted in this work. SimDR decomposes 2D keypoint localization into two independent 1D classification problems along the $x$- and $y$-axes via axis-wise average pooling. This reduces the output dimensionality from $K \times H \times W$ to $2 \times K \times L$ while maintaining sub-pixel precision through the scale factor $k=2$.}
+    \label{fig:simdr_vs_heatmap}
+\end{figure}
+
+
+
+\subsection{Pose Estimation Losses}
+\label{subsec:pose_losses}
+
+\textbf{SimDR coordinate loss.} The 1D classification targets are generated as discrete Gaussian distributions centered at the ground-truth bin location with standard deviation $\sigma_{1d} = 1.5$:
+\begin{equation}
+    q^x_j(i) = \frac{\exp\left(-\frac{(i - \hat{i}^x_j)^2}{2\sigma_{1d}^2}\right)}{\sum_{m=1}^{L} \exp\left(-\frac{(m - \hat{i}^x_j)^2}{2\sigma_{1d}^2}\right)},
+    \label{eq:simdr_target}
+\end{equation}
+where $\hat{i}^x_j = \text{round}(x_j^\text{gt} \cdot k \cdot W_\text{feat})$ is the ground-truth bin index for keypoint $j$ along the $x$-axis. An analogous target $q^y_j$ is constructed for the $y$-axis. The SimDR loss is the Kullback--Leibler divergence between the predicted and target distributions, averaged over all visible keypoints:
+\begin{equation}
+    \mathcal{L}_\text{simdr} = \frac{1}{K_\text{vis}} \sum_{j=1}^{K} \mathbb{1}[v_j \geq 2] \left[ \text{KL}(q^x_j \| p^x_j) + \text{KL}(q^y_j \| p^y_j) \right],
+    \label{eq:kl_loss}
+\end{equation}
+where $K = 7$ is the number of keypoints, $K_\text{vis}$ is the count of visible keypoints, and $\mathbb{1}[\cdot]$ is the indicator function.
+
+\textbf{Visibility loss.} The visibility branch is trained with binary cross-entropy loss using three-level weighting: invisible keypoints ($v = 0$) are ignored, occluded keypoints ($v = 1$) receive weight $0.3$, and visible keypoints ($v \geq 2$) receive weight $1.0$:
+\begin{equation}
+    \mathcal{L}_\text{vis} = -\frac{1}{K} \sum_{j=1}^{K} w_j^v \left[ \bar{v}_j \log \sigma(\hat{v}_j) + (1 - \bar{v}_j) \log (1 - \sigma(\hat{v}_j)) \right],
+    \label{eq:vis_loss}
+\end{equation}
+where $\bar{v}_j$ is the binary visibility target and $w_j^v$ is the visibility-dependent weight.
+
+\subsection{Alternative Pose Estimation Methods}
+\label{subsec:pose_alternatives}
+
+To validate the choice of SimDR, we implement and compare four additional pose estimation approaches as part of our ablation study:
+
+\textbf{(A) 2D Gaussian Heatmap:} A standard heatmap-based approach~\cite{newell2016stacked, xiao2018simple} that generates a $96 \times 96$ heatmap per keypoint via four convolutional layers followed by one deconvolutional layer with $\times 2$ upsampling. The loss is the mean squared error (MSE) between predicted and ground-truth Gaussian heatmaps ($\sigma = 3.0$). Coordinates are extracted via argmax with sub-pixel refinement.
+
+\textbf{(B) Foreground-Weighted Heatmap with Visibility:} Extends method~(A) with foreground-weighted MSE~\cite{zhang2020distribution} that amplifies the loss at keypoint peak locations (foreground weight $= 10.0$) to mitigate the dominance of background pixels, and an auxiliary visibility branch~\cite{li2019crowdpose} trained with BCE loss using the three-level weighting scheme described above.
+
+\textbf{(C) Soft-Argmax / Integral Regression:} Extends method~(B) with a differentiable soft-argmax (integral) operation~\cite{nibali2018numerical, sun2018integral} that extracts continuous coordinates from the heatmap, enabling direct supervision of keypoint positions via an additional Smooth L1 loss ($\text{weight} = 0.5$) with temperature parameter $\beta = 10.0$.
+
+\textbf{(E) Direct Coordinate Regression:} A regression baseline~\cite{toshev2014deeppose} that directly predicts $(x, y)$ coordinates from pooled RoI features via fully connected layers, without any intermediate heatmap representation.
+
+% -----------------------------------------------------------
+\section{Temporal Action Classification Head}
+\label{sec:action_head}
+
+The temporal action classification head is a lightweight GRU-based network that classifies fall events from skeleton keypoint sequences. We choose a recurrent architecture over graph convolutional approaches (e.g., ST-GCN~\cite{yan2018spatial}) because our reduced seven-keypoint skeleton has a simple spatial structure that does not warrant the additional complexity of graph-based modeling.
+
+\subsection{Input Feature Representation}
+\label{subsec:action_input}
+
+For each tracked person at frame $t$, we construct a 35-dimensional feature vector by concatenating five features per keypoint:
+\begin{equation}
+    \mathbf{f}_t = \left[ x_1, y_1, v_1, \Delta x_1, \Delta y_1, \;\ldots,\; x_7, y_7, v_7, \Delta x_7, \Delta y_7 \right] \in \mathbb{R}^{35},
+    \label{eq:action_feature}
+\end{equation}
+where $(x_j, y_j)$ are keypoint coordinates normalized to $[0, 1]$ relative to the bounding box, $v_j$ is the visibility score from the SimDR head, and $(\Delta x_j, \Delta y_j) = (x_j^{(t)} - x_j^{(t-1)}, y_j^{(t)} - y_j^{(t-1)})$ are frame-to-frame velocity features. Keypoints that lie outside the bounding box have their coordinates and visibility set to zero. The temporal input is a sequence $\mathbf{F} = [\mathbf{f}_1, \ldots, \mathbf{f}_T] \in \mathbb{R}^{T \times 35}$, where $T = 8$ during training and $T \leq 30$ during inference.
+
+\subsection{Per-Keypoint Importance Weighting}
+\label{subsec:kpt_weight}
+
+Prior to encoding, we apply learned importance weights to each keypoint's feature block. The weight vector is defined as $\mathbf{w} = [1.5, 1.0, 0.5, 0.5, 1.5, 1.2, 1.2]$ for Head, Shoulder, Right hand, Left hand, Hip, Right foot, and Left foot, respectively. The Head and Hip keypoints receive the highest weights (1.5) as they are most discriminative for fall direction; the Feet receive moderate weights (1.2) for motion detection; and the Hands receive low weights (0.5) as they are least informative for fall classification.
+
+\subsection{Network Architecture}
+\label{subsec:action_arch}
+
+The temporal action classifier comprises three modules:
+
+\textbf{Per-frame encoder.} A two-layer MLP transforms the 35-dimensional input into a 64-dimensional per-frame representation:
+\begin{equation}
+    \mathbf{h}_t = \text{ReLU}\!\left(\mathbf{W}_2 \cdot \text{ReLU}\!\left(\mathbf{W}_1 \mathbf{f}'_t + \mathbf{b}_1\right) + \mathbf{b}_2\right),
+    \label{eq:per_frame_enc}
+\end{equation}
+where $\mathbf{W}_1 \in \mathbb{R}^{64 \times 35}$, $\mathbf{W}_2 \in \mathbb{R}^{64 \times 64}$, and dropout ($p = 0.2$) is applied after the first ReLU.
+
+\textbf{Temporal GRU.} A single-layer GRU~\cite{cho2014learning} with hidden size 64 processes the sequence of per-frame features, followed by Layer Normalization~\cite{ba2016layernorm}:
+\begin{equation}
+    \mathbf{g}_T = \text{LayerNorm}\!\left(\text{GRU}(\mathbf{h}_1, \ldots, \mathbf{h}_T)\right),
+    \label{eq:gru}
+\end{equation}
+where $\mathbf{g}_T \in \mathbb{R}^{64}$ is the final hidden state.
+
+\textbf{Temporal residual connection.} To stabilize early training when GRU weights are randomly initialized, we add a skip connection from the last-frame encoder output:
+\begin{equation}
+    \mathbf{o} = \mathbf{h}_T + \mathbf{g}_T.
+    \label{eq:temporal_residual}
+\end{equation}
+
+\textbf{Binary classifier.} A linear layer maps the fused feature to a scalar logit, followed by sigmoid activation:
+\begin{equation}
+    p_\text{fall} = \sigma(\mathbf{w}_c^\top \mathbf{o} + b_c).
+    \label{eq:fall_prob}
+\end{equation}
+
+To clarify the design of the temporal fall classifier, we visualise the complete data flow of the proposed GRU-based action head in Fig.~\ref{fig:action_head}. Given a per-track keypoint sequence, the model first applies per-keypoint importance weighting to emphasize discriminative joints (e.g., head and hip), then encodes each frame with a lightweight MLP before a GRU aggregates temporal dynamics across $T$ frames. Finally, a residual skip connection from the last-frame encoder output is added to the GRU feature to stabilise optimisation, and a linear classifier outputs the fall probability.
+
+\begin{figure}[!tbhp]
+\includegraphics[width=\columnwidth]{figures/action_head.pdf}
+\caption{Architecture of the GRU-based temporal action classification head. Per-frame keypoint features are first scaled by learned keypoint importance weights, then encoded by a two-layer MLP. A single-layer GRU captures temporal dynamics across $T$ frames. A residual connection from the last-frame encoder output stabilizes training. The final binary classifier outputs the fall probability.}
+\label{fig:action_head}
+\end{figure}
+
+\subsection{Loss Function: Focal BCE with Hard Negative Weighting}
+\label{subsec:action_loss}
+
+The action head is trained with Focal Binary Cross-Entropy loss~\cite{lin2017focal} to address class imbalance between fall and non-fall samples. The focal modulating factor $(1 - p_t)^\gamma$ down-weights easy, well-classified examples and concentrates learning on hard, ambiguous samples near the decision boundary:
+\begin{equation}
+    \mathcal{L}_\text{focal}(p, y) = -(1 - p_t)^\gamma \log(p_t),
+    \label{eq:focal_bce}
+\end{equation}
+where $p_t = p$ if $y = 1$ (fall) and $p_t = 1 - p$ otherwise, with focusing parameter $\gamma = 2.0$.
+
+\textbf{Per-sample importance weighting.} We further apply sample-dependent weights to address inter-class confusion:
+\begin{equation}
+    w_i = \begin{cases}
+        w_\text{pos} = 2.0 & \text{if } y_i = 1 \text{ (falling)}, \\
+        w_\text{hard} = 3.0 & \text{if } y_i = 0 \text{ and } c_i \in \{5, 6\}, \\
+        1.0 & \text{otherwise},
+    \end{cases}
+    \label{eq:sample_weight}
+\end{equation}
+where $c_i$ denotes the original 10-class action label. Classes 5 (lying down) and 6 (getting up from lying down) are designated as \emph{hard negatives} because they involve body configurations highly similar to falling but are not actual falls. Assigning them a weight of 3.0 forces the model to learn the subtle kinematic distinctions---primarily the speed of descent and limb dynamics---that differentiate controlled postural transitions from uncontrolled falls.
+
+\textbf{Label mapping.} The dataset provides 10 activity classes (1A-1 through 1A-10). For binary training, classes 1A-1 through 1A-6 (standing still, walking, sitting down, standing up, lying down, getting up) are mapped to $y = 0$ (non-fall), while classes 1A-7 through 1A-10 (falling while walking, falling while trying to stand, falling while trying to sit, falling and immediately standing up) are mapped to $y = 1$ (fall).
+
+The final action loss is:
+\begin{equation}
+    \mathcal{L}_\text{action} = \frac{\lambda_\text{action}}{N} \sum_{i=1}^{N} w_i \cdot (1 - p_{t,i})^\gamma \cdot \text{BCE}(\hat{y}_i, y_i),
+    \label{eq:action_loss_full}
+\end{equation}
+with $\lambda_\text{action} = 2.0$.
+
+% -----------------------------------------------------------
+\section{Multi-Object Tracking: ByteTrack}
+\label{sec:tracking}
+
+During video inference, we employ ByteTrack~\cite{zhang2022bytetrack} to associate detections across frames and maintain consistent person identities. ByteTrack uses a cascaded two-stage association strategy.
+
+\textbf{Motion model.} A Kalman filter~\cite{bewley2016simple} predicts each tracklet's bounding box in the next frame based on a constant-velocity motion model.
+
+\textbf{First association.} High-confidence detections (score $> 0.6$) are matched to confirmed tracks using IoU-based cost (threshold $= 0.1$) via the Hungarian algorithm.
+
+\textbf{Second association.} Unmatched high-confidence detections are matched to tentative tracks (IoU threshold $= 0.3$).
+
+\textbf{Third association.} Low-confidence detections (score in $[0.1, 0.6]$) are matched to remaining unmatched tracks (IoU threshold $= 0.5$), recovering partially occluded persons that would otherwise be discarded.
+
+\textbf{Track lifecycle.} New tracks are initialized from unmatched detections with confidence $> 0.7$ and remain tentative for 3~frames before confirmation. Tracks without matches for 30~consecutive frames are deleted. Each active track maintains a keypoint buffer of up to $T = 30$ frames, from which the temporal action classifier draws its input sequence.
+
+% -----------------------------------------------------------
+\section{Multi-Task Training Strategy}
+\label{sec:training}
+
+\subsection{Two-Stage Training}
+\label{subsec:two_stage}
+
+The model is trained in two sequential stages to ensure stable multi-task optimization:
+
+\textbf{Stage~1: Joint detection and pose estimation.} The backbone (MobileViT-S), neck (CSPNeXtPAFPN), detection head (RTMDet), and pose head (SimDR) are trained jointly end-to-end. The combined loss is:
+\begin{equation}
+    \mathcal{L}_\text{stage1} = \mathcal{L}_\text{cls} + 2.0 \cdot \mathcal{L}_\text{bbox} + 5.0 \cdot \mathcal{L}_\text{simdr} + 1.0 \cdot \mathcal{L}_\text{vis}.
+    \label{eq:stage1_loss}
+\end{equation}
+Training uses the AdamW optimizer~\cite{loshchilov2019decoupled} with learning rate $2 \times 10^{-4}$, weight decay $10^{-4}$, and gradient clipping at 10. The learning rate is warmed up linearly over 1000 iterations (start factor $= 0.001$) and then decayed according to a cosine annealing schedule~\cite{loshchilov2017sgdr}. Training runs for approximately 75 epochs with batch size 4.
+
+\textbf{Stage~2: Action head training with frozen Stage~1.} All parameters trained in Stage~1 are frozen, and only the randomly initialized ActionTemporalHead is optimized. The loss is $\mathcal{L}_\text{stage2} = \mathcal{L}_\text{action}$. Training uses AdamW with learning rate $10^{-4}$, weight decay $10^{-3}$, linear warmup over 500 iterations, and cosine annealing. The best checkpoint is selected based on fall F1-score on a validation set. Training runs for 15 epochs.
+
+The two-stage strategy is motivated by two considerations. First, the detection and pose estimation tasks require substantially more epochs to converge than the action head, which is a comparatively small network. Second, freezing the detection and pose parameters prevents catastrophic forgetting of well-learned visual features when the action head's gradients flow backward through the shared representation during joint optimization. During Stage~2, the action head receives clean keypoint inputs from the pre-trained pose estimator, ensuring stable and efficient training.
+
+\subsection{Data Augmentation}
+\label{subsec:augmentation}
+
+The training pipeline applies the following augmentations: random rotation ($\pm 20^\circ$, $p = 0.5$) with synchronized keypoint coordinate transformation; resize to $384 \times 384$ (without preserving aspect ratio); random horizontal flip ($p = 0.5$); and photometric distortion (brightness $\pm 32$, contrast in $[0.5, 1.5]$, saturation in $[0.5, 1.5]$, hue $\pm 18$). For the action head, temporal keypoint sequences of length $T = 8$ are provided as pre-computed fields in the dataset, with each frame's feature vector containing normalized coordinates, visibility scores, and velocity displacements.
+
+% -----------------------------------------------------------
+\section{Inference-Time Post-Processing}
+\label{sec:postprocessing}
+
+At inference time, the raw fall probability $p_\text{fall}$ produced by the GRU classifier is refined through rule-based post-processing that encodes physical priors about human motion during falls.
+
+\textbf{Head velocity computation.} The head velocity is estimated as a smoothed displacement over a short temporal window:
+\begin{equation}
+    v_\text{head}^{(t)} = \frac{y_\text{head}^{(t)} - y_\text{head}^{(t-2)}}{2}, \quad a_\text{head}^{(t)} = v_\text{head}^{(t)} - v_\text{head}^{(t-2)},
+    \label{eq:head_velocity}
+\end{equation}
+where $y_\text{head}$ is the normalized vertical position of the head keypoint (with increasing values indicating downward motion) and $a_\text{head}$ is the estimated acceleration.
+
+The following heuristic rules are applied:
+
+\textit{Rule~1 (Rapid head drop---boost):} If the head drops by more than 0.15 (normalized) over 3~frames and feet exhibit motion, $p_\text{fall}$ is boosted by up to 0.4.
+
+\textit{Rule~2 (Lying still---suppress):} If the head is in a low position ($y > 0.7$) and body motion is negligible for $\geq 5$ frames, $p_\text{fall}$ is multiplied by 0.3 (person is already lying, not actively falling).
+
+\textit{Rule~3 (Slow descent---suppress):} If the head drops slowly (per-frame displacement $< 0.06$) and feet remain stable, $p_\text{fall}$ is multiplied by 0.3 (controlled sitting or lying transition).
+
+\textit{Rule~4 (Getting up---suppress):} If the head is rising ($y$ decreasing by $> 0.1$) over recent frames, $p_\text{fall}$ is multiplied by 0.3.
+
+\textit{Rule~5 (Velocity gate---suppress):} If average body motion is below 0.02 for $\geq 3$ frames and the head is not dropping rapidly, $p_\text{fall}$ is multiplied by 0.2 (static person).
+
+\textit{Rule~6 (Direction and speed gate):} (a) If $v_\text{head} < -0.03$ (head moving upward), $p_\text{fall} \gets 0.15 \cdot p_\text{fall}$. (b) If $0 < v_\text{head} < 0.04$ (slow downward), $p_\text{fall} \gets 0.4 \cdot p_\text{fall}$. (c) If $v_\text{head} > 0.08$ and $a_\text{head} > 0.02$ (rapid acceleration downward), $p_\text{fall} \gets p_\text{fall} + 0.3$.
+
+\textbf{Action state classification.} Since the model produces only a binary fall probability, we infer seven discrete action states from keypoint kinematics during inference using a priority-based rule system (in descending priority): \emph{falling} ($p_\text{fall} \geq \tau$), \emph{getting\_up} ($v_\text{head} < -0.03$ and body motion $> 0.02$), \emph{sitting\_down} ($0.01 < v_\text{head} < 0.06$ and foot motion $< 0.03$), \emph{lying} (head $y > 0.7$ and body motion $< 0.03$), \emph{sitting} (head $y \in [0.4, 0.75]$ and minimal motion), \emph{walking} (foot and body motion $> 0.02$), and \emph{standing} (default). These states serve visualization and clinical reporting purposes, while the primary clinical output remains the binary fall probability for alerting.
