@@ -10,7 +10,7 @@ The proposed system, which we refer to as \textbf{RTMDetWithPose}, is a unified 
 
 \textbf{Stage~1 (Detection + Pose Estimation):} A single-frame thermal IR image, resized to $384 \times 384$ pixels, is processed by a shared MobileViT-S backbone and CSPNeXtPAFPN neck to produce multi-scale feature maps at strides $\{8, 16, 32\}$. An anchor-free RTMDet detection head localizes human subjects, producing bounding boxes and confidence scores. For each detected person, RoI-aligned features of size $48 \times 48$ are extracted from the multi-scale feature pyramid and fed to a SimDR-based pose estimation head, which predicts seven keypoint coordinates along with per-keypoint visibility scores.
 
-\textbf{Stage~2 (Temporal Action Classification):} For each tracked person, the estimated keypoint coordinates are normalized relative to the bounding box and augmented with velocity features. The resulting temporal sequence is processed by a GRU-based binary classifier that produces a fall probability.
+\textbf{Stage~2 (Temporal Action Classification):} For each tracked person, the estimated keypoint coordinates are normalized relative to the bounding box and augmented with velocity features. The resulting temporal sequence is processed by a dual-task GRU classifier that simultaneously predicts 4-class activity and binary fall that produces a fall probability.
 
 \textbf{Stage~3 (Inference Pipeline):} ByteTrack associates detections across frames to maintain consistent person identities. Per-track keypoint buffers of up to 30~frames feed the temporal classifier. Rule-based post-processing leverages physical priors on head velocity, descent rate, and body motion to refine fall predictions and suppress false positives. Additionally, a rule-based action state estimator infers seven discrete activity states for visualization and clinical reporting.
 
@@ -107,7 +107,7 @@ We adopt SimDR (Simple Disentangled Representation)~\cite{li20212d}, which refor
 \textbf{Coordinate decoding.} At inference time, keypoint coordinates are recovered by taking the argmax over the 1D logit vectors and dividing by the scale factor and feature map dimension:
 \begin{equation}
     \hat{x}_j = \frac{\arg\max(\mathbf{p}^x_j)}{k \cdot W_\text{feat}}, \quad \hat{y}_j = \frac{\arg\max(\mathbf{p}^y_j)}{k \cdot H_\text{feat}},
-    \label{eq:simdr_decode}
+    \label{eq:simdr_decode1}
 \end{equation}
 where $\mathbf{p}^x_j$ and $\mathbf{p}^y_j$ are the softmax-normalized logit vectors for keypoint $j$ along the $x$- and $y$-axes, respectively. The resulting coordinates lie in $[0, 1]$ and are subsequently mapped to image coordinates using the bounding box geometry.
 
@@ -160,7 +160,49 @@ To validate the choice of SimDR, we implement and compare four additional pose e
 \section{Temporal Action Classification Head}
 \label{sec:action_head}
 
-The temporal action classification head is a lightweight GRU-based network that classifies fall events from skeleton keypoint sequences. We choose a recurrent architecture over graph convolutional approaches (e.g., ST-GCN~\cite{yan2018spatial}) because our reduced seven-keypoint skeleton has a simple spatial structure that does not warrant the additional complexity of graph-based modeling.
+The temporal action classification head is a lightweight GRU-based network that adopts a \emph{dual-task} design: it simultaneously performs four-class activity recognition and binary fall detection from skeleton keypoint sequences. We choose a recurrent architecture over graph convolutional approaches (e.g., ST-GCN~\cite{yan2018spatial}) because our reduced seven-keypoint skeleton has a simple spatial structure that does not warrant the additional complexity of graph-based modeling.
+
+\subsection{Dual-Task Motivation}
+\label{subsec:dual_task_motivation}
+
+A na\"ive approach to fall detection formulates it as a single binary classification problem. However, this fails to exploit the rich activity structure present in the data: falls are inherently \emph{transitions from} a specific activity state (e.g., falling while walking versus falling while standing). We hypothesize that jointly learning to recognize the underlying activity provides the model with a structured representation of normal body dynamics, against which abnormal fall patterns become easier to detect. Concretely, if the model understands what ``walking'' and ``sitting down'' look like, it can more reliably identify when a walking sequence degenerates into a fall versus a controlled sitting transition.
+
+Our dual-task formulation therefore comprises two output heads that share a common temporal encoder:
+\begin{itemize}
+    \item \textbf{Activity head:} four-class classification over coarse activity categories.
+    \item \textbf{Fall head:} binary classification for fall / non-fall detection.
+\end{itemize}
+
+\subsection{Activity Class Definition and Label Mapping}
+\label{subsec:activity_classes}
+
+The SenIR dataset provides 10 fine-grained activity labels (1A-1 through 1A-10). We consolidate these into four coarse activity classes that capture the principal body configurations relevant to fall disambiguation:
+
+\begin{table}[t]
+    \centering
+    \caption{Mapping from the 10 original SenIR activity labels to four coarse activity classes and the binary fall label used for dual-task training.}
+    \label{tab:label_mapping}
+    \small
+    \begin{tabular}{lcc}
+        \hline
+        \textbf{Original Label} & \textbf{Activity (4-cls)} & \textbf{Fall} \\
+        \hline
+        1A-1 Standing still        & 0: Standing  & 0 \\
+        1A-4 Standing up           & 0: Standing  & 0 \\
+        1A-6 Getting up            & 0: Standing  & 0 \\
+        1A-2 Walking               & 1: Walking   & 0 \\
+        1A-3 Sitting down          & 2: Transition & 0 \\
+        1A-5 Lying down            & 3: Lying     & 0 \\
+        \hline
+        1A-7 Falling while walking & 1: Walking   & 1 \\
+        1A-8 Falling while standing & 0: Standing & 1 \\
+        1A-9 Falling while sitting & 2: Transition & 1 \\
+        1A-10 Falling and standing up & 0: Standing & 1 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+The four activity classes are defined as: (0)~\textbf{Standing}---upright postures including standing still, standing up, and getting up; (1)~\textbf{Walking}---ambulatory motion; (2)~\textbf{Transition}---controlled postural changes such as sitting down; and (3)~\textbf{Lying}---recumbent postures including lying down. Notably, fall samples retain their \emph{pre-fall activity class} (e.g., ``falling while walking'' is labeled as Walking + Fall), enabling the model to learn activity-conditioned fall patterns. The binary fall label is derived independently: classes 1A-7 through 1A-10 are mapped to $y_\text{fall} = 1$, and all others to $y_\text{fall} = 0$.
 
 \subsection{Input Feature Representation}
 \label{subsec:action_input}
@@ -177,10 +219,10 @@ where $(x_j, y_j)$ are keypoint coordinates normalized to $[0, 1]$ relative to t
 
 Prior to encoding, we apply learned importance weights to each keypoint's feature block. The weight vector is defined as $\mathbf{w} = [1.5, 1.0, 0.5, 0.5, 1.5, 1.2, 1.2]$ for Head, Shoulder, Right hand, Left hand, Hip, Right foot, and Left foot, respectively. The Head and Hip keypoints receive the highest weights (1.5) as they are most discriminative for fall direction; the Feet receive moderate weights (1.2) for motion detection; and the Hands receive low weights (0.5) as they are least informative for fall classification.
 
-\subsection{Network Architecture}
+\subsection{Dual-Task Network Architecture}
 \label{subsec:action_arch}
 
-The temporal action classifier comprises three modules:
+The temporal action classifier comprises a shared encoder--GRU trunk and two task-specific output heads:
 
 \textbf{Per-frame encoder.} A two-layer MLP transforms the 35-dimensional input into a 64-dimensional per-frame representation:
 \begin{equation}
@@ -202,49 +244,64 @@ where $\mathbf{g}_T \in \mathbb{R}^{64}$ is the final hidden state.
     \label{eq:temporal_residual}
 \end{equation}
 
-\textbf{Binary classifier.} A linear layer maps the fused feature to a scalar logit, followed by sigmoid activation:
+\textbf{Activity head.} A linear layer maps the shared feature to four-class activity logits:
 \begin{equation}
-    p_\text{fall} = \sigma(\mathbf{w}_c^\top \mathbf{o} + b_c).
+    \mathbf{z}_\text{act} = \mathbf{W}_\text{act}\, \mathbf{o} + \mathbf{b}_\text{act} \;\in \mathbb{R}^{4},
+    \label{eq:activity_logits}
+\end{equation}
+with predicted class $\hat{c} = \arg\max(\mathbf{z}_\text{act})$.
+
+\textbf{Fall head.} A separate linear layer maps the same shared feature to a scalar fall logit:
+\begin{equation}
+    p_\text{fall} = \sigma(\mathbf{w}_\text{fall}^\top \mathbf{o} + b_\text{fall}),
     \label{eq:fall_prob}
 \end{equation}
+where $\sigma(\cdot)$ denotes the sigmoid function.
 
-To clarify the design of the temporal fall classifier, we visualise the complete data flow of the proposed GRU-based action head in Fig.~\ref{fig:action_head}. Given a per-track keypoint sequence, the model first applies per-keypoint importance weighting to emphasize discriminative joints (e.g., head and hip), then encodes each frame with a lightweight MLP before a GRU aggregates temporal dynamics across $T$ frames. Finally, a residual skip connection from the last-frame encoder output is added to the GRU feature to stabilise optimisation, and a linear classifier outputs the fall probability.
+\textbf{Design rationale.} The two heads share the encoder and GRU but maintain separate linear projections. This parameter-efficient design ensures that the shared temporal representation captures both activity-discriminative features (spatial pose patterns distinguishing standing from walking from lying) and fall-discriminative features (temporal dynamics of rapid descent and deceleration). The activity head provides an auxiliary learning signal that regularizes the shared representation, preventing it from collapsing to fall-only features. At inference time, the activity prediction provides an interpretable context for each fall alarm (e.g., ``fall detected during walking''), aiding clinical decision-making.
 
 \begin{figure}[!tbhp]
-\includegraphics[width=\columnwidth]{figures/action_head.pdf}
-\caption{Architecture of the GRU-based temporal action classification head. Per-frame keypoint features are first scaled by learned keypoint importance weights, then encoded by a two-layer MLP. A single-layer GRU captures temporal dynamics across $T$ frames. A residual connection from the last-frame encoder output stabilizes training. The final binary classifier outputs the fall probability.}
-\label{fig:action_head}
+    \includegraphics[width=\columnwidth]{figures/action_head.pdf}
+    \caption{Architecture of the dual-task GRU-based temporal action classification head. A shared per-frame encoder and GRU temporal model produce a fused feature $\mathbf{o}$, which is consumed by two task-specific heads: a four-class activity classifier and a binary fall detector. The shared trunk learns a joint representation that captures both normal activity patterns and abnormal fall dynamics.}
+    \label{fig:action_head}
 \end{figure}
 
-\subsection{Loss Function: Focal BCE with Hard Negative Weighting}
+\subsection{Dual-Task Loss Function}
 \label{subsec:action_loss}
 
-The action head is trained with Focal Binary Cross-Entropy loss~\cite{lin2017focal} to address class imbalance between fall and non-fall samples. The focal modulating factor $(1 - p_t)^\gamma$ down-weights easy, well-classified examples and concentrates learning on hard, ambiguous samples near the decision boundary:
+The dual-task action head is trained with a combined loss comprising an activity classification loss and a focal binary cross-entropy fall detection loss.
+
+\textbf{Activity classification loss.} The four-class activity head is supervised with label-smoothed cross-entropy loss:
+\begin{equation}
+    \mathcal{L}_\text{act} = -\frac{1}{N} \sum_{i=1}^{N} \sum_{c=0}^{3} \tilde{y}_{i,c} \log \frac{\exp(z_{i,c})}{\sum_{c'} \exp(z_{i,c'})},
+    \label{eq:activity_ce}
+\end{equation}
+where $\tilde{y}_{i,c} = (1 - \epsilon)\, y_{i,c} + \epsilon / 4$ denotes the label-smoothed target with smoothing factor $\epsilon = 0.1$. Label smoothing prevents overconfident activity predictions, which is beneficial given the inherent ambiguity between adjacent activity states (e.g., the transition boundary between standing and sitting).
+
+\textbf{Focal fall detection loss.} The binary fall head is trained with Focal Binary Cross-Entropy loss~\cite{lin2017focal} to address the severe class imbalance between fall and non-fall samples:
 \begin{equation}
     \mathcal{L}_\text{focal}(p, y) = -(1 - p_t)^\gamma \log(p_t),
     \label{eq:focal_bce}
 \end{equation}
-where $p_t = p$ if $y = 1$ (fall) and $p_t = 1 - p$ otherwise, with focusing parameter $\gamma = 2.0$.
+where $p_t = p$ if $y = 1$ (fall) and $p_t = 1 - p$ otherwise, with focusing parameter $\gamma = 2.0$. The focal modulating factor $(1 - p_t)^\gamma$ down-weights easy, well-classified examples and concentrates learning on hard, ambiguous cases near the decision boundary.
 
-\textbf{Per-sample importance weighting.} We further apply sample-dependent weights to address inter-class confusion:
+\textbf{Per-sample importance weighting for falls.} We apply sample-dependent weights based on the activity class to address inter-class confusion:
 \begin{equation}
     w_i = \begin{cases}
-        w_\text{pos} = 2.0 & \text{if } y_i = 1 \text{ (falling)}, \\
-        w_\text{hard} = 3.0 & \text{if } y_i = 0 \text{ and } c_i \in \{5, 6\}, \\
+        w_\text{pos} = 2.0 & \text{if } y_{\text{fall},i} = 1 \text{ (falling)}, \\
+        w_\text{hard} = 3.0 & \text{if } y_{\text{fall},i} = 0 \text{ and } \hat{c}_i \in \{2, 3\}, \\
         1.0 & \text{otherwise},
     \end{cases}
     \label{eq:sample_weight}
 \end{equation}
-where $c_i$ denotes the original 10-class action label. Classes 5 (lying down) and 6 (getting up from lying down) are designated as \emph{hard negatives} because they involve body configurations highly similar to falling but are not actual falls. Assigning them a weight of 3.0 forces the model to learn the subtle kinematic distinctions---primarily the speed of descent and limb dynamics---that differentiate controlled postural transitions from uncontrolled falls.
+where $\hat{c}_i$ is the activity class. Transition ($c=2$) and Lying ($c=3$) samples are designated as \emph{hard negatives} because they involve body configurations highly similar to falling but are not actual falls. Assigning them a weight of 3.0 forces the model to learn the subtle kinematic distinctions---primarily the speed of descent and limb dynamics---that differentiate controlled postural transitions from uncontrolled falls.
 
-\textbf{Label mapping.} The dataset provides 10 activity classes (1A-1 through 1A-10). For binary training, classes 1A-1 through 1A-6 (standing still, walking, sitting down, standing up, lying down, getting up) are mapped to $y = 0$ (non-fall), while classes 1A-7 through 1A-10 (falling while walking, falling while trying to stand, falling while trying to sit, falling and immediately standing up) are mapped to $y = 1$ (fall).
-
-The final action loss is:
+\textbf{Combined dual-task loss.} The final action loss balances the two objectives:
 \begin{equation}
-    \mathcal{L}_\text{action} = \frac{\lambda_\text{action}}{N} \sum_{i=1}^{N} w_i \cdot (1 - p_{t,i})^\gamma \cdot \text{BCE}(\hat{y}_i, y_i),
+    \mathcal{L}_\text{action} = \lambda_\text{fall} \cdot \frac{1}{N} \sum_{i=1}^{N} w_i (1 - p_{t,i})^\gamma \text{BCE}(\hat{y}_i, y_{\text{fall},i}) + \lambda_\text{act} \cdot \mathcal{L}_\text{act},
     \label{eq:action_loss_full}
 \end{equation}
-with $\lambda_\text{action} = 2.0$.
+with $\lambda_\text{fall} = 2.0$ and $\lambda_\text{act} = 1.0$. The fall loss receives a higher weight to ensure that fall detection---the primary clinical objective---remains the dominant learning signal, while the activity loss serves as a complementary regularizer that enriches the shared temporal representation.
 
 % -----------------------------------------------------------
 \section{Multi-Object Tracking: ByteTrack}
