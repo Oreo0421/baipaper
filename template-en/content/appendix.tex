@@ -1,0 +1,187 @@
+% -----------------------------------------------------------------------
+% Appendix: Source Code
+% -----------------------------------------------------------------------
+
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape\color{gray},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=6pt,
+  breaklines=true,
+  tabsize=4,
+  showstringspaces=false,
+  frame=single,
+  xleftmargin=12pt,
+  xrightmargin=4pt,
+}
+\lstset{style=pythonstyle}
+
+% -----------------------------------------------------------------------
+\section{Multi-Task Training Loss (RTMDetWithPose)}
+% -----------------------------------------------------------------------
+
+The \texttt{loss} method orchestrates the three training objectives:
+bounding-box detection, SimDR keypoint estimation, and dual-task action
+classification. All three heads share the same FPN feature pyramid; the
+pose and action heads additionally use RoI-aligned crops.
+
+\begin{lstlisting}[caption={RTMDetWithPose.loss -- three-task combined loss},
+                   label={lst:rtmdet-loss}]
+def loss(self, batch_inputs, batch_data_samples):
+    x = self.extract_feat(batch_inputs)   # shared FPN features [P3,P4,P5]
+    losses = dict()
+
+    # 1. Detection: bbox + classification losses
+    det_losses, det_results = self.bbox_head.loss_and_predict(
+        x, batch_data_samples, proposal_cfg=self.pose_det_cfg)
+    losses.update(det_losses)
+
+    # 2. Pose: RoI-align person crops, then SimDR keypoint loss
+    rois = (self._build_gt_rois(batch_data_samples)   # GT boxes + jitter
+            if self.pose_use_gt_box
+            else self._build_pose_rois(det_results, batch_data_samples)[0])
+    if rois.numel() > 0:
+        roi_feats = self.pose_roi_extractor(x, rois)  # (N, C, 48, 48)
+        losses.update(self.pose_head.loss(roi_feats, rois, batch_data_samples))
+
+    # 3. Action: temporal keypoint sequence -> dual-task GRU loss
+    if self.action_head is not None and rois.numel() > 0:
+        kpt_seq, gt_action = self._extract_temporal_action_data(
+            rois, batch_data_samples)                 # (N, T, 35), (N,)
+        if kpt_seq is not None:
+            losses.update(self.action_head.loss(kpt_seq, gt_action))
+
+    return losses
+\end{lstlisting}
+
+% -----------------------------------------------------------------------
+\section{SimDR Pose Head }
+% -----------------------------------------------------------------------
+
+\subsection*{Forward Pass}
+
+Axis-wise average pooling decomposes the shared $128 \times 48 \times 48$
+feature map into two 1-D sequences, each processed by an independent
+\texttt{Conv1d} head to produce per-keypoint probability distributions
+over 96 bins ($48 \times \text{scale}=2$).
+
+\begin{lstlisting}[caption={ SimDR axis-pooling},
+                   label={lst:simdr-forward}]
+def forward(self, feats):
+    """Return (x_logits [N,K,96], y_logits [N,K,96], vis_logits [N,K])."""
+    shared = self._extract_shared(feats)   # (N, 128, 48, 48) shared Conv stack
+
+    x_logits = self.x_head(shared.mean(dim=2))  # pool H -> (N,128,W) -> (N,K,96)
+    y_logits = self.y_head(shared.mean(dim=3))  # pool W -> (N,128,H) -> (N,K,96)
+
+    vis_logits = self.vis_fc(self.vis_gap(shared).flatten(1))  # (N, K)
+    return x_logits, y_logits, vis_logits
+\end{lstlisting}
+
+\subsection*{Loss}
+
+\begin{lstlisting}[caption={ KL divergence loss and 1-D Gaussian target},
+                   label={lst:simdr-loss}]
+def _loss_roi_v6(self, roi_feats, rois, batch_data_samples):
+    x_logits, y_logits, vis_logits = self.forward(roi_feats)
+    N, K, Lx = x_logits.shape;  Ly = y_logits.shape[-1]
+
+    gt_x_dist, gt_y_dist, loc_weights, vis_labels = self._build_targets_v6(
+        rois, batch_data_samples, Lx, Ly, x_logits.dtype, x_logits.device)
+
+    # KL(target || pred) summed over bins, weighted by keypoint visibility
+    kl_x = F.kl_div(F.log_softmax(x_logits, dim=-1),
+                     gt_x_dist, reduction='none').sum(-1)   # (N, K)
+    kl_y = F.kl_div(F.log_softmax(y_logits, dim=-1),
+                     gt_y_dist, reduction='none').sum(-1)
+    loss_simdr = ((kl_x + kl_y) * loc_weights).sum(1).div(K).mean()
+
+    loss_vis = F.binary_cross_entropy_with_logits(
+        vis_logits, vis_labels, reduction='mean')
+
+    return {"loss_keypoint": self.simdr_loss_weight * loss_simdr
+                           + self.vis_loss_weight   * loss_vis}
+
+def _gaussian_1d(self, length, center, device, dtype):
+    """Normalised 1-D Gaussian used as soft classification target."""
+    x = torch.arange(length, device=device, dtype=dtype)
+    g = torch.exp(-(x - center) ** 2 / (2 * self.sigma_1d ** 2))
+    return g / (g.sum() + 1e-8)
+\end{lstlisting}
+
+% -----------------------------------------------------------------------
+\section{Dual-Task GRU Action Head (ActionV14Head)}
+% -----------------------------------------------------------------------
+
+\subsection*{Shared Temporal Encoder}
+
+Per-keypoint importance weights scale each joint's features before the
+encoder. A temporal residual connection $\mathbf{o} = \mathbf{h}_T + \text{GRU}_T$
+stabilises training when the GRU is freshly initialised.
+
+\begin{lstlisting}[caption={ActionHead MLP + GRU + temporal residual},
+                   label={lst:action-encode}]
+def _encode(self, kpt_features):
+    """(N, T, 35) -> (N, 64)"""
+    N, T, D = kpt_features.shape
+
+    # Per-keypoint importance scaling: [1.5, 1.0, 0.5, 0.5, 1.5, 1.2, 1.2]
+    if self._kpt_weight is not None:
+        K, kd = self.num_keypoints, self.kpt_dim
+        kpt_part = (kpt_features[:, :, :K*kd].view(N, T, K, kd)
+                    * self._kpt_weight.view(1, 1, K, 1))
+        kpt_features = kpt_part.view(N, T, K * kd)
+
+    # Per-frame MLP: Linear(35->64) + ReLU + Dropout + Linear(64->64) + ReLU
+    encoded = self.encoder(kpt_features.reshape(N * T, D)).reshape(N, T, -1)
+
+    # Temporal GRU + LayerNorm
+    _, h_n  = self.gru(encoded)
+    gru_out = self.gru_norm(h_n[-1])        # (N, 64)
+
+    # Residual: last-frame encoder + GRU temporal context
+    return encoded[:, -1, :] + gru_out      # (N, 64)
+\end{lstlisting}
+
+\subsection*{Dual-Task Loss}
+
+\begin{lstlisting}[caption={ActionHead.loss -- 4-class CE and focal BCE with hard-negative weighting},
+                   label={lst:action-loss}]
+# Label mapping: original 10-class -> 4-class activity and binary fall
+ACTION_TO_ACTION4 = [0, 1, 2, 0, 3, 0, 3, 3, 3, 3]  # stand/walk/sit/lie
+ACTION_TO_FALL    = [0, 0, 0, 0, 0, 0, 1, 1, 1, 1]  # classes 6-9 are falls
+
+def loss(self, kpt_features, gt_labels):
+    """gt_labels: (N,) original 10-class labels, -1 = invalid."""
+    action_logits, fall_logits = self.forward(kpt_features)
+    valid    = gt_labels >= 0
+    gt_valid = gt_labels[valid].long()
+
+    # Map 10-class labels to 4-class activity and binary fall targets
+    gt_action4 = self._action_to_action4[gt_valid]
+    gt_fall    = self._action_to_fall[gt_valid]
+
+    # 1. Activity head: 4-class cross-entropy (label-smoothed)
+    loss_action = F.cross_entropy(action_logits[valid], gt_action4,
+                                  weight=self.class_weight)
+
+    # 2. Fall head: focal BCE
+    #    pos_weight=2 for falls; hard_neg_weight=3 for lying-down/getting-up
+    fv = fall_logits.squeeze(-1)[valid]
+    p  = torch.sigmoid(fv)
+    ce = F.binary_cross_entropy_with_logits(fv, gt_fall, reduction='none')
+    pt = p * gt_fall + (1 - p) * (1 - gt_fall)
+    focal = ((1 - pt) ** self.focal_gamma) * ce
+
+    sample_w = torch.ones_like(gt_fall)
+    sample_w[gt_fall == 1] = self.pos_weight[0]           # positive weight
+    for c in (self._hard_neg_classes or []):
+        sample_w[gt_valid == c] = self.hard_neg_weight    # hard-negative weight
+    loss_fall = (focal * sample_w).mean()
+
+    return {'loss_action': loss_action * self.loss_weight,
+            'loss_fall':   loss_fall   * self.fall_loss_weight}
+\end{lstlisting}

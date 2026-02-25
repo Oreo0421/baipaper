@@ -1,5 +1,37 @@
 \vspace*{0pt plus 1fill}
 \begin{tucsimplesection}{Abstract}
-\lipsum[1]\todo{to adjust}
+Falls represent a leading cause of injury-related mortality among older adults, motivating the
+need for continuous, automated fall detection in residential and clinical care settings.
+Conventional RGB camera systems raise fundamental privacy concerns and degrade under low-light
+conditions, while thermopile sensor arrays---such as the Heimann HTPA $60\times40$ employed in
+the SensIR project---offer an inherently privacy-preserving alternative that captures thermal
+body signatures at low spatial resolution without revealing identifiable visual features, and
+operates robustly in complete darkness.
+
+This thesis presents \textbf{RTMDetWithPose}, a unified end-to-end multi-task deep learning
+framework for real-time fall detection from thermopile thermal infrared imagery. The system
+jointly performs person detection, seven-keypoint body pose estimation, temporal fall
+classification, and multi-object tracking within a single architecture. A lightweight
+\textbf{MobileViT-S} backbone paired with a \textbf{CSPNeXtPAFPN} neck provides
+parameter-efficient multi-scale feature extraction from the fused dual-sensor input of
+approximately $114\times40$ pixels. An anchor-free \textbf{RTMDet} detection head localizes
+persons, after which \textbf{RoIAlign} extracts per-person features consumed by a
+\textbf{SimDR}-based pose head that decomposes 2D keypoint localization into two independent 1D
+classification tasks---eliminating the quantization errors of 2D heatmap decoding and achieving
+superior accuracy under extreme spatial resolution constraints. A dual-task \textbf{GRU} temporal
+action classifier jointly performs four-class posture recognition and binary fall detection,
+sharing a common temporal encoder so that posture understanding directly informs fall
+discrimination. \textbf{ByteTrack} maintains consistent person identities across frames to supply
+coherent keypoint sequences to the temporal head. The framework is trained with a two-stage
+strategy that independently optimizes detection--pose and temporal action components, enabling
+modular evaluation and replacement.
+
+Experiments on the SensIR thermal infrared dataset demonstrate that SimDR achieves a COCO
+Keypoint AP of \textbf{0.802}, outperforming 2D heatmap and direct regression baselines by
+approximately 40\% relative. The complete system attains a fall detection F1 of \textbf{0.776} with \textbf{precision of 0.951} and a bounding-box mAP of \textbf{0.866},
+while comprising only \textbf{9.3M parameters} and running at approximately \textbf{80~FPS} on a
+desktop GPU---well above the 20~FPS target for edge deployment. These results establish the
+viability of unified thermal infrared fall detection for privacy-preserving, real-time monitoring
+in resource-constrained environments.
 \end{tucsimplesection}
 \vspace*{0pt plus 2.5fill}

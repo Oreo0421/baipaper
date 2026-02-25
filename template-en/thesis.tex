@@ -41,6 +41,7 @@
 \usepackage{listings}		% source code listings
 \usepackage{listingsutf8}
 \usepackage{units}		% physical units
+\usepackage[nohyperlinks]{acronym}		% list of acronyms
 % TODO: caption
 % TODO: rotating
 % TODO: paralist
@@ -123,8 +124,18 @@
 % table of contents
 \tableofcontents
 
-% TODO: directories
-% TODO: abbreviations
+% list of figures
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+
+% list of tables
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+
+% list of acronyms
+\input{content/acronyms}
 
 
 
@@ -162,6 +173,7 @@
 %\addcontentsline{toc}{part}{Appendix}
 
 \chapter{Source Code}
+\input{content/appendix}
 
 
 

@@ -12,13 +12,13 @@ The proposed system, which we refer to as \textbf{RTMDetWithPose}, is a unified 
 
 \textbf{Stage~2 (Temporal Action Classification):} For each tracked person, the estimated keypoint coordinates are normalized relative to the bounding box and augmented with velocity features. The resulting temporal sequence is processed by a dual-task GRU classifier that simultaneously predicts 4-class activity and binary fall that produces a fall probability.
 
-\textbf{Stage~3 (Inference Pipeline):} ByteTrack associates detections across frames to maintain consistent person identities. Per-track keypoint buffers of up to 30~frames feed the temporal classifier. Rule-based post-processing leverages physical priors on head velocity, descent rate, and body motion to refine fall predictions and suppress false positives. Additionally, a rule-based action state estimator infers seven discrete activity states for visualization and clinical reporting.
+\textbf{Stage~3 (Inference Pipeline):} ByteTrack associates detections across frames to maintain consistent person identities. Per-track keypoint buffers of up to 30~frames feed the temporal classifier, which produces the final fall probability and activity classification output.
 
-An overview of the complete framework is illustrated in Fig.~\ref{fig:overall_architecture}, including the shared backbone--neck, the detection and pose heads, ByteTrack-based identity association, temporal keypoint buffering, and the GRU-based fall classifier with rule-based post-processing.
+An overview of the complete framework is illustrated in Fig.~\ref{fig:overall_architecture}, including the shared backbone--neck, the detection and pose heads, ByteTrack-based identity association, temporal keypoint buffering, and the GRU-based temporal action classifier.
 
 \begin{figure}[!tbhp]
     \includegraphics[width=\columnwidth]{figures/overall_architecture.pdf}
-    \caption{Overview of the proposed RTMDetWithPose framework. A shared MobileViT-S backbone and CSPNeXtPAFPN neck produce multi-scale features consumed by both the RTMDet detection head and the SimDR pose estimation head via RoI-aligned features. ByteTrack maintains cross-frame identity association, feeding per-track keypoint sequences to the GRU-based temporal action classifier. Rule-based post-processing refines fall predictions using physical motion priors.}
+    \caption[RTMDetWithPose framework overview]{Overview of the proposed RTMDetWithPose framework. A shared MobileViT-S backbone and CSPNeXtPAFPN neck produce multi-scale features consumed by both the RTMDet detection head and the SimDR pose estimation head via RoI-aligned features. ByteTrack maintains cross-frame identity association, feeding per-track keypoint sequences to the GRU-based temporal action classifier.}
     \label{fig:overall_architecture}
 \end{figure}
 
@@ -83,7 +83,7 @@ Given the low spatial resolution of thermal IR imagery, we define a reduced skel
 
 \begin{figure}[!tbhp]
     \includegraphics[width=0.9\columnwidth]{figures/keypoint.pdf}
-    \caption{Definition of the seven-keypoint skeleton for thermal IR pose estimation. (a)~Keypoint layout and bone connections on a representative thermal image. (b)~Skeleton configurations across different activity states: standing, sitting, lying, and falling. The reduced skeleton captures essential body structure while remaining estimable at the low resolution of thermopile arrays.}
+    \caption[Seven-keypoint skeleton definition]{Definition of the seven-keypoint skeleton for thermal IR pose estimation. (a)~Keypoint layout and bone connections on a representative thermal image. (b)~Skeleton configurations across different activity states: standing, sitting, lying, and falling. The reduced skeleton captures essential body structure while remaining estimable at the low resolution of thermopile arrays.}
     \label{fig:keypoint_definition}
 \end{figure}
 
@@ -115,7 +115,7 @@ To better illustrate the structural difference between conventional heatmap-base
 
 \begin{figure}[!tbhp]
     \includegraphics[width=\columnwidth]{figures/SimDRvsHeatmap.pdf}
-    \caption{Comparison of (a)~traditional 2D Gaussian heatmap decoding and (b)~the SimDR approach adopted in this work. SimDR decomposes 2D keypoint localization into two independent 1D classification problems along the $x$- and $y$-axes via axis-wise average pooling. This reduces the output dimensionality from $K \times H \times W$ to $2 \times K \times L$ while maintaining sub-pixel precision through the scale factor $k=2$.}
+    \caption[Heatmap vs.\ SimDR comparison]{Comparison of (a)~traditional 2D Gaussian heatmap decoding and (b)~the SimDR approach adopted in this work. SimDR decomposes 2D keypoint localization into two independent 1D classification problems along the $x$- and $y$-axes via axis-wise average pooling. This reduces the output dimensionality from $K \times H \times W$ to $2 \times K \times L$ while maintaining sub-pixel precision through the scale factor $k=2$.}
     \label{fig:simdr_vs_heatmap}
 \end{figure}
 
@@ -214,6 +214,8 @@ For each tracked person at frame $t$, we construct a 35-dimensional feature vect
 \end{equation}
 where $(x_j, y_j)$ are keypoint coordinates normalized to $[0, 1]$ relative to the bounding box, $v_j$ is the visibility score from the SimDR head, and $(\Delta x_j, \Delta y_j) = (x_j^{(t)} - x_j^{(t-1)}, y_j^{(t)} - y_j^{(t-1)})$ are frame-to-frame velocity features. Keypoints that lie outside the bounding box have their coordinates and visibility set to zero. The temporal input is a sequence $\mathbf{F} = [\mathbf{f}_1, \ldots, \mathbf{f}_T] \in \mathbb{R}^{T \times 35}$, where $T = 8$ during training and $T \leq 30$ during inference.
 
+\textbf{Sequence padding and cold-start.} During training, when a person's track has fewer than $T = 8$ frames of history, the sequence is padded to length 8 by repeating the first available frame. During inference, the GRU processes variable-length sequences from $T = 1$ without padding; for the first frame, velocity features are initialized to zero ($\Delta x_j = \Delta y_j = 0$), and the GRU updates its hidden state incrementally as new frames arrive.
+
 \subsection{Per-Keypoint Importance Weighting}
 \label{subsec:kpt_weight}
 
@@ -256,13 +258,13 @@ with predicted class $\hat{c} = \arg\max(\mathbf{z}_\text{act})$.
     p_\text{fall} = \sigma(\mathbf{w}_\text{fall}^\top \mathbf{o} + b_\text{fall}),
     \label{eq:fall_prob}
 \end{equation}
-where $\sigma(\cdot)$ denotes the sigmoid function.
+where $\sigma(\cdot)$ denotes the sigmoid function. During inference, a fall alarm is triggered when $p_\text{fall} \geq \tau$, with decision threshold $\tau = 0.5$.
 
 \textbf{Design rationale.} The two heads share the encoder and GRU but maintain separate linear projections. This parameter-efficient design ensures that the shared temporal representation captures both activity-discriminative features (spatial pose patterns distinguishing standing from walking from lying) and fall-discriminative features (temporal dynamics of rapid descent and deceleration). The activity head provides an auxiliary learning signal that regularizes the shared representation, preventing it from collapsing to fall-only features. At inference time, the activity prediction provides an interpretable context for each fall alarm (e.g., ``fall detected during walking''), aiding clinical decision-making.
 
 \begin{figure}[!tbhp]
     \includegraphics[width=\columnwidth]{figures/action_head.pdf}
-    \caption{Architecture of the dual-task GRU-based temporal action classification head. A shared per-frame encoder and GRU temporal model produce a fused feature $\mathbf{o}$, which is consumed by two task-specific heads: a four-class activity classifier and a binary fall detector. The shared trunk learns a joint representation that captures both normal activity patterns and abnormal fall dynamics.}
+    \caption[Dual-task GRU action head architecture]{Architecture of the dual-task GRU-based temporal action classification head. A shared per-frame encoder and GRU temporal model produce a fused feature $\mathbf{o}$, which is consumed by two task-specific heads: a four-class activity classifier and a binary fall detector. The shared trunk learns a joint representation that captures both normal activity patterns and abnormal fall dynamics.}
     \label{fig:action_head}
 \end{figure}
 
@@ -335,7 +337,7 @@ The model is trained in two sequential stages to ensure stable multi-task optimi
 \end{equation}
 Training uses the AdamW optimizer~\cite{loshchilov2019decoupled} with learning rate $2 \times 10^{-4}$, weight decay $10^{-4}$, and gradient clipping at 10. The learning rate is warmed up linearly over 1000 iterations (start factor $= 0.001$) and then decayed according to a cosine annealing schedule~\cite{loshchilov2017sgdr}. Training runs for approximately 75 epochs with batch size 4.
 
-\textbf{Stage~2: Action head training with frozen Stage~1.} All parameters trained in Stage~1 are frozen, and only the randomly initialized ActionTemporalHead is optimized. The loss is $\mathcal{L}_\text{stage2} = \mathcal{L}_\text{action}$. Training uses AdamW with learning rate $10^{-4}$, weight decay $10^{-3}$, linear warmup over 500 iterations, and cosine annealing. The best checkpoint is selected based on fall F1-score on a validation set. Training runs for 15 epochs.
+\textbf{Stage~2: Action head training with frozen Stage~1.} All parameters trained in Stage~1 are frozen, and only the randomly initialized ActionTemporalHead is optimized. The loss is $\mathcal{L}_\text{stage2} = \mathcal{L}_\text{action}$. Training uses AdamW with learning rate $10^{-4}$, weight decay $10^{-3}$, linear warmup over 500 iterations, and cosine annealing. The best checkpoint is selected based on fall F1-score on a validation set.
 
 The two-stage strategy is motivated by two considerations. First, the detection and pose estimation tasks require substantially more epochs to converge than the action head, which is a comparatively small network. Second, freezing the detection and pose parameters prevents catastrophic forgetting of well-learned visual features when the action head's gradients flow backward through the shared representation during joint optimization. During Stage~2, the action head receives clean keypoint inputs from the pre-trained pose estimator, ensuring stable and efficient training.
 
@@ -344,31 +346,3 @@ The two-stage strategy is motivated by two considerations. First, the detection 
 
 The training pipeline applies the following augmentations: random rotation ($\pm 20^\circ$, $p = 0.5$) with synchronized keypoint coordinate transformation; resize to $384 \times 384$ (without preserving aspect ratio); random horizontal flip ($p = 0.5$); and photometric distortion (brightness $\pm 32$, contrast in $[0.5, 1.5]$, saturation in $[0.5, 1.5]$, hue $\pm 18$). For the action head, temporal keypoint sequences of length $T = 8$ are provided as pre-computed fields in the dataset, with each frame's feature vector containing normalized coordinates, visibility scores, and velocity displacements.
 
-% -----------------------------------------------------------
-\section{Inference-Time Post-Processing}
-\label{sec:postprocessing}
-
-At inference time, the raw fall probability $p_\text{fall}$ produced by the GRU classifier is refined through rule-based post-processing that encodes physical priors about human motion during falls.
-
-\textbf{Head velocity computation.} The head velocity is estimated as a smoothed displacement over a short temporal window:
-\begin{equation}
-    v_\text{head}^{(t)} = \frac{y_\text{head}^{(t)} - y_\text{head}^{(t-2)}}{2}, \quad a_\text{head}^{(t)} = v_\text{head}^{(t)} - v_\text{head}^{(t-2)},
-    \label{eq:head_velocity}
-\end{equation}
-where $y_\text{head}$ is the normalized vertical position of the head keypoint (with increasing values indicating downward motion) and $a_\text{head}$ is the estimated acceleration.
-
-The following heuristic rules are applied:
-
-\textit{Rule~1 (Rapid head drop---boost):} If the head drops by more than 0.15 (normalized) over 3~frames and feet exhibit motion, $p_\text{fall}$ is boosted by up to 0.4.
-
-\textit{Rule~2 (Lying still---suppress):} If the head is in a low position ($y > 0.7$) and body motion is negligible for $\geq 5$ frames, $p_\text{fall}$ is multiplied by 0.3 (person is already lying, not actively falling).
-
-\textit{Rule~3 (Slow descent---suppress):} If the head drops slowly (per-frame displacement $< 0.06$) and feet remain stable, $p_\text{fall}$ is multiplied by 0.3 (controlled sitting or lying transition).
-
-\textit{Rule~4 (Getting up---suppress):} If the head is rising ($y$ decreasing by $> 0.1$) over recent frames, $p_\text{fall}$ is multiplied by 0.3.
-
-\textit{Rule~5 (Velocity gate---suppress):} If average body motion is below 0.02 for $\geq 3$ frames and the head is not dropping rapidly, $p_\text{fall}$ is multiplied by 0.2 (static person).
-
-\textit{Rule~6 (Direction and speed gate):} (a) If $v_\text{head} < -0.03$ (head moving upward), $p_\text{fall} \gets 0.15 \cdot p_\text{fall}$. (b) If $0 < v_\text{head} < 0.04$ (slow downward), $p_\text{fall} \gets 0.4 \cdot p_\text{fall}$. (c) If $v_\text{head} > 0.08$ and $a_\text{head} > 0.02$ (rapid acceleration downward), $p_\text{fall} \gets p_\text{fall} + 0.3$.
-
-\textbf{Action state classification.} Since the model produces only a binary fall probability, we infer seven discrete action states from keypoint kinematics during inference using a priority-based rule system (in descending priority): \emph{falling} ($p_\text{fall} \geq \tau$), \emph{getting\_up} ($v_\text{head} < -0.03$ and body motion $> 0.02$), \emph{sitting\_down} ($0.01 < v_\text{head} < 0.06$ and foot motion $< 0.03$), \emph{lying} (head $y > 0.7$ and body motion $< 0.03$), \emph{sitting} (head $y \in [0.4, 0.75]$ and minimal motion), \emph{walking} (foot and body motion $> 0.02$), and \emph{standing} (default). These states serve visualization and clinical reporting purposes, while the primary clinical output remains the binary fall probability for alerting.
