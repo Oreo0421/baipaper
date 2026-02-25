@@ -1,11 +1,7 @@
-% ============================================================
-% Section 1: Introduction
-% ============================================================
 \section{Background and Motivation}
 \label{sec:intro_background}
 
 Falls are a major health risk for older adults. The World Health Organization reports that falls are the second leading cause of accidental injury deaths worldwide, and people over 65 carry the highest burden~\cite{who2007falls}. Each year, about 37.3 million falls require medical attention, and 28\%--35\% of adults aged 65+ experience at least one fall annually (32\%--42\% for those over 70)~\cite{tinetti1988risk,lord2007falls}. Critically, delayed assistance after a fall (a ``long lie'') can cause severe secondary complications and markedly increased mortality risk~\cite{wild2004unintentional,Fleming2008inability}. This motivates automated fall detection that is fast, reliable, and suitable for residential deployment.
-
 
 Thermal infrared (IR) imaging has emerged as an exceptionally promising candidate that addresses this privacy--capability trade-off~\cite{vadivelu2016thermal, nogas2020fall}. Thermopile sensor arrays, such as the Heimann HTPA $60 \times 40$ module employed in the SensIR project~\cite{heimann2024htpa}, operate by measuring the far-infrared thermal radiation (wavelengths of approximately $8$--$14\,\mu$m) emitted by objects in the scene. Because the human body maintains a core temperature significantly above the ambient temperature of typical indoor environments, individuals appear as distinctive warm regions---thermal silhouettes---against a cooler background in the sensor output. Crucially, the low spatial resolution of thermopile arrays ($60 \times 40$ pixels) and the nature of far-infrared imaging together ensure that the captured data cannot reveal facial features, clothing patterns, skin color, or any other visually identifying information~\cite{mashiyama2015activity, tao2018real}. This inherent privacy protection constitutes a decisive advantage over both RGB cameras and higher-resolution thermal cameras. Furthermore, thermal sensors are entirely independent of ambient illumination conditions, enabling consistent monitoring in complete darkness---a critical capability for nighttime fall detection in bedrooms and hallways where falls are particularly dangerous. The low data bandwidth associated with the $60 \times 40$ pixel resolution (each frame comprising only 2,400 temperature values) additionally reduces computational load, network transmission requirements, and storage overhead, rendering thermopile arrays well-suited for continuous long-term monitoring in embedded and edge computing environments~\cite{heimann2024htpa}.
 
@@ -42,7 +38,6 @@ To date, no prior work integrates detection, keypoint estimation, temporal class
 
 \textbf{Gap 4: Lack of hardware-aware design.} 
 Despite the edge-deployment motivation of low-resolution thermal sensing, few works explicitly account for embedded hardware constraints~\cite{sze2017efficient}. Architectures such as standard ResNets or VGG-style networks often exceed the computational budget of FPGA-based devices operating at real-time frame rates. A hardware–algorithm co-design strategy tailored to latency, memory, and arithmetic constraints is largely absent in current thermal fall detection literature.
-
 
 \section{Problem Formulation}
 \label{sec:intro_formulation}
@@ -92,7 +87,6 @@ The overall training objective jointly optimizes detection, pose estimation, and
 \end{equation}
 where $\boldsymbol{\theta}_{\text{det}}$, $\boldsymbol{\theta}_{\text{pose}}$, and $\boldsymbol{\theta}_{\text{action}}$ are learnable parameters for detection, pose estimation, and action classification, respectively, with feature sharing through a common backbone/neck. The individual loss terms and training details are described in Chapter Method.
 
-
 \section{Rationale for Unified Multi-Task Learning}
 \label{sec:intro_multitask}
 
@@ -105,8 +99,6 @@ Second, joint optimization of detection, pose, and action provides a practical r
 Third, although our tracking module is not part of end-to-end training, joint training of detection and pose can still reduce error amplification within the perception front-end. More accurate person localization improves the RoI features used by the keypoint head, and better keypoint quality provides a cleaner input to the temporal action head. In this sense, the action loss can provide an additional learning signal that complements the pose loss, while we avoid claiming full cross-module optimality across tracking, which remains a post-processing component.
 
 Finally, this design simplifies deployment. Instead of maintaining separate detection and pose networks on the edge device, the main perception components are consolidated into a single model that can be exported and optimized as a unit (e.g., quantization and hardware mapping), while tracking remains a lightweight inference-time module. This reduces engineering overhead and potential synchronization issues compared with fully modular pipelines.
-
-
 
 \section{Approach Overview}
 \label{sec:intro_approach}
@@ -132,7 +124,6 @@ For pose estimation, we conduct a systematic investigation of five alternative h
 
 A lightweight \textbf{GRU-based temporal action classifier}~\cite{cho2014learning} consumes the sequence of bounding-box-normalized keypoint coordinates for each tracked individual, enabling the system to model the temporal dynamics of body motion and distinguish genuine falls from visually similar non-fall activities. The temporal sequences are maintained by a \textbf{ByteTrack multi-object tracker}~\cite{zhang2022bytetrack} that uses Kalman-filter-based motion prediction and a two-stage association strategy to preserve identity consistency even through temporary occlusions and low-confidence detections.
 
-
 \section{Contributions}
 \label{sec:intro_contributions}
 
@@ -147,7 +138,6 @@ The principal contributions of this thesis are as follows:
 
     \item \textbf{Validation on the SenIR thermal infrared dataset.} We validate the complete framework on the SenIR dataset, a thermal infrared dataset captured with Heimann HTPA $60 \times 40$ thermopile sensor arrays annotated with bounding boxes, seven-keypoint poses, and fall/non-fall labels. Our experiments demonstrate that the proposed system achieves competitive performance in detection, pose estimation, and fall classification while maintaining a model complexity compatible with real-time inference on edge hardware operating at $>$20 fps.
 \end{enumerate}
-
 
 \section{Thesis Organization}
 \label{sec:intro_organization}

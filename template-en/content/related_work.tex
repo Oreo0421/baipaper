@@ -1,14 +1,8 @@
-% ============================================================
-% Chapter: Related Work
-% ============================================================
 
 \label{sec:related_work}
 
 This chapter surveys the four main research areas that collectively form the foundation of the proposed fall detection framework: thermal infrared human detection (Section~\ref{sec:rw_thermal}), human pose estimation (Section~\ref{sec:rw_pose}), skeleton-based action recognition (Section~\ref{sec:rw_action}), and vision-based fall detection systems (Section~\ref{sec:rw_fall}). For each area, this chapter traces the evolution from classical approaches to modern deep learning methods, identifies remaining challenges, and positions the contributions of this thesis within the broader literature.
 
-% ------------------------------------------------------------
-% 2.1 Thermal Infrared Human Detection
-% ------------------------------------------------------------
 \section{Thermal Infrared Human Detection}
 \label{sec:rw_thermal}
 
@@ -32,9 +26,6 @@ Among recent architectures designed explicitly for real-time applications, RTMDe
 
 In the proposed framework, RTMDet is adopted as the detection architecture, but with the original CSPNeXt backbone replaced by MobileViT-S~\cite{mehta2022mobilevit}, a lightweight hybrid architecture that interleaves depthwise separable convolutions (inherited from MobileNetV2~\cite{sandler2018mobilenetv2}) with vision transformer blocks. MobileViT-S combines the local feature extraction efficiency of convolutional operations with the global contextual modeling capacity of self-attention, achieving a favorable accuracy--latency trade-off on mobile and edge hardware. The deployment target of the system---an FPGA-accelerated edge device running at $>$20~FPS---necessitates this lightweight backbone choice, as efficient neural network deployment on resource-constrained hardware remains a significant engineering challenge~\cite{sze2017efficient}.
 
-% ------------------------------------------------------------
-% 2.2 Human Pose Estimation
-% ------------------------------------------------------------
 \section{Human Pose Estimation}
 \label{sec:rw_pose}
 
@@ -68,9 +59,6 @@ A recent breakthrough that elegantly bridges the gap between heatmaps and regres
 
 In the proposed framework, the SimDR formulation is applied to $48 \times 48$ RoI features with scale factor $s = 2$ (yielding 96 bins per axis), enabling sub-pixel keypoint localization within the extremely limited spatial resolution of the thermal input images. An auxiliary visibility branch predicts per-keypoint occlusion flags via binary cross-entropy loss, following the three-level visibility weighting scheme of CrowdPose~\cite{li2019crowdpose} (invisible $\rightarrow$ ignored; occluded $\rightarrow$ reduced weight; visible $\rightarrow$ full weight). Through systematic ablation experiments (Chapter Experiments), this approach is compared against four alternative head designs---standard 2D Gaussian heatmap regression, foreground-weighted heatmap with visibility prediction, soft-argmax integral regression, and direct coordinate regression---demonstrating that SimDR achieves the best accuracy--efficiency trade-off for the low-resolution thermal input scenario.
 
-% ------------------------------------------------------------
-% 2.3 Skeleton-Based Action Recognition
-% ------------------------------------------------------------
 \section{Skeleton-Based Action Recognition}
 \label{sec:rw_action}
 
@@ -98,9 +86,6 @@ The NTU~RGB+D dataset~\cite{shahroudy2016ntu}, captured using Microsoft Kinect d
 
 The proposed framework adopts a lightweight GRU-based temporal classifier rather than a full graph convolutional network. This design choice is motivated by the observation that the skeleton in this work consists of only seven keypoints (head, left/right shoulders, left/right hands, hip, and lower body reference) with a simple, largely linear topology, for which the expressive power of graph convolutions offers diminishing returns relative to their computational overhead. For a 7-joint skeleton, the spatial graph has very limited structure---far less than the 25-joint Kinect skeleton for which ST-GCN was designed---and a GRU operating on the flattened joint feature vector can effectively capture the relevant temporal patterns. The feature representation evolves through several design iterations during development: from raw normalized keypoint coordinates, to velocity-augmented features that capture inter-frame motion dynamics, to bone-angle features that encode geometric relationships between limbs, and finally to a variant that fuses skeleton features with appearance-level RoI embeddings extracted from the detection backbone. This multi-task learning approach~\cite{caruana1997multitask} allows the action classifier to benefit from shared feature representations learned jointly with the detection and pose estimation tasks.
 
-% ------------------------------------------------------------
-% 2.4 Fall Detection Systems
-% ------------------------------------------------------------
 \section{Fall Detection Systems}
 \label{sec:rw_fall}
 

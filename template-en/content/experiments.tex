@@ -2,10 +2,8 @@
 
 This chapter presents a comprehensive experimental evaluation of the proposed thermal infrared fall detection system. We first describe the dataset and evaluation protocol (Sections~\ref{sec:dataset}--\ref{sec:metrics}), followed by implementation details (Section~\ref{sec:implementation}). We then conduct a series of ablation studies to validate our design choices: pose estimation representation (Section~\ref{sec:ablation_pose}), fall classification strategy (Section~\ref{sec:ablation_fall}), loss function design (Section~\ref{sec:ablation_loss}), and input feature representation (Section~\ref{sec:ablation_feature}). Finally, we present the full system comparison (Section~\ref{sec:full_system}), qualitative results (Section~\ref{sec:qualitative}), computational cost analysis (Section~\ref{sec:cost}), and a consolidated discussion (Section~\ref{sec:discussion}).
 
-%% ====================================================================
 \section{Dataset}
 \label{sec:dataset}
-%% ====================================================================
 
 The thermal infrared fall detection dataset used in this study was collected using a Heimann HTPA 60$\times$40 thermopile sensor array within the SensIR project. The dual-sensor configuration yields a combined input resolution of approximately $114 \times 40$ pixels, resized to $384 \times 384$ for training and inference. Annotations follow the COCO format and include: (i) bounding boxes for a single ``human'' class in $[x, y, w, h]$ format; (ii) seven keypoints per person---Head (0), Shoulder center (1), Right hand (2), Left hand (3), Hips center (4), Right foot (5), and Left foot (6)---each with a three-level visibility flag (0 = out-of-frame/unlabeled, 1 = occluded, 2 = visible); (iii) a ten-class action label per instance; and (iv) pre-computed temporal keypoint sequences of $T = 8$ frames with normalized keypoint features (five dimensions per keypoint: $x$, $y$, visibility, $\Delta x$, $\Delta y$).
 
@@ -33,17 +31,13 @@ All frame-level metrics are reported on the validation split. Additionally, a se
   \label{fig:qual_grid}
 \end{figure}
 
-%% ====================================================================
 \section{Evaluation Metrics}
 \label{sec:metrics}
-%% ====================================================================
 
 We evaluate the system at three levels. \textbf{Detection} performance is measured using the standard COCO bounding-box mAP@[.50:.95] and COCO Keypoint AP based on Object Keypoint Similarity (OKS). Since our keypoint set is non-standard (seven keypoints rather than the COCO 17), OKS sigmas are uniformly set to 0.25 for all keypoints. \textbf{Posture classification}, applicable only to the proposed dual-task method, is reported as four-class accuracy and per-class F1 for the posture categories \{standing, walking, sitting, lying\}. Instance-level matching employs an IoU threshold of 0.5 between predicted and ground-truth boxes. \textbf{Fall detection} is evaluated as a binary classification task: classes 6--9 constitute the positive (falling) class, while classes 0--5 form the negative class. We report binary precision, recall, F1-score, and Average Precision (AP). The primary metric for model selection is \textbf{Fall F1}, since the clinical application prioritizes correctly identifying falls. Fall AP provides a complementary threshold-independent assessment.
 
-%% ====================================================================
 \section{Implementation Details}
 \label{sec:implementation}
-%% ====================================================================
 
 All experiments were conducted on a single NVIDIA TITAN RTX GPU using the MMDetection 3.x framework~\cite{mmdetection}. Training proceeds in two stages.
 
@@ -56,10 +50,8 @@ All Stage 1 parameters (backbone, neck, detection head, pose head) are frozen, a
 \textbf{Inference Pipeline.}
 ByteTrack~\cite{zhang2022bytetrack} is employed for multi-object tracking with high-score threshold 0.6, low-score threshold 0.1, initialization threshold 0.7, and a retention window of 30 frames. Non-maximum suppression uses a score threshold of 0.3 and an IoU threshold of 0.45. A temporal buffer of up to 30 frames per tracked person feeds keypoint sequences into the GRU-based action classifier.
 
-%% ====================================================================
 \section{Ablation Study: Pose Estimation Representation}
 \label{sec:ablation_pose}
-%% ====================================================================
 
 This ablation compares three pose estimation approaches for the Stage 1 pose head. All variants share the same backbone (MobileViT-S), neck (CSPNeXtPAFPN), and RoI extraction ($48 \times 48$). The key difference lies in how the extracted RoI feature is decoded into keypoint coordinates.
 
@@ -144,10 +136,8 @@ As shown in Fig.~\ref{fig:pose_head_qual_4rows}, the SimDR head generally produc
 drift in low-contrast regions.This observation is consistent with the significant AP improvement reported in
 Table~\ref{tab:pose_comparison}.
 
-%% ====================================================================
 \section{Ablation Study: Fall Classification Strategy}
 \label{sec:ablation_fall}
-%% ====================================================================
 
 This ablation compares two action head designs for Stage 2, both using the same frozen Stage 1 backbone (SimDR pose head, bbox mAP = 0.866, Keypoint AP = 0.802).
 
@@ -220,11 +210,8 @@ Both methods were fundamentally constrained by the dataset size. With only 4{,}8
       \label{fig:confusion_matrix}
   \end{figure}
 
-
-%% ====================================================================
 \section{Ablation Study: Loss Function and Training Strategy}
 \label{sec:ablation_loss}
-%% ====================================================================
 
 This section evaluates the effect of different loss functions on the single-task binary GRU architecture with raw keypoint features, isolating the contribution of each component.
 
@@ -250,10 +237,8 @@ Introducing focal loss and hard negative mining slightly reduced overall F1 (0.6
 
 Over-regularization proved clearly detrimental. The anti-overfit variant---with increased weight decay and dropout---dramatically degraded performance (F1: 0.520), indicating that the baseline model was not actually overfitting with standard regularization. The mild regularization variant achieved perfect precision (1.000) but very low recall (0.498), symptomatic of an overly conservative decision boundary that classified most borderline cases as non-falls. These results confirm that the advanced loss components (focal loss, hard negative mining, per-keypoint weighting) represent architectural investments that will pay off with more training data, rather than universally beneficial modifications.
 
-%% ====================================================================
 \section{Ablation Study: Input Feature Representation}
 \label{sec:ablation_feature}
-%% ====================================================================
 
 This section compares different input feature representations for the temporal action head. All variants use the same GRU architecture and frozen SimDR backbone.
 
@@ -279,11 +264,8 @@ Adding appearance features to the bone representation actually degraded performa
 
 The Multi-task Auxiliary approach, which employed three competing heads (10-class action, 3-class state, and binary fall) sharing a single GRU encoder with bone features, suffered severe underfitting (F1: 0.249). Despite achieving high precision (0.917), its recall collapsed to 0.144, indicating that the three competing loss signals created conflicting gradients that prevented effective learning of any individual task. Combined with bone features that lack positional information, this configuration represented the worst combination of excessive task complexity and insufficiently informative inputs.
 
-
-%% ====================================================================
 \section{Full System Comparison}
 \label{sec:full_system}
-%% ====================================================================
 
 Table~\ref{tab:full_system} consolidates all experimental variants into a unified comparison, spanning the full pipeline from pose estimation through fall detection.
 
@@ -316,20 +298,15 @@ Third, \textbf{the proposed dual-task method achieved the highest precision} (1.
 
 Fourth, \textbf{synthetic data augmentation} is the anticipated pathway to unlocking the proposed architecture's full potential. The dual-task model possesses higher representational capacity that is currently underutilized due to data scarcity. With synthetically augmented training data, the proposed method achieves a Fall F1 of 0.776 (vs.\ 0.669 without augmentation, +16\% relative) and recall of 0.655 (vs.\ 0.502), surpassing the Binary-BCE baseline (F1: 0.748), validating the architectural choice.
 
-
-%% ====================================================================
 \section{Qualitative Results}
 \label{sec:qualitative}
-%% ====================================================================
 
 The system correctly handled the majority of common indoor monitoring scenarios, with fall detection typically triggering within 2--3 frames ($\sim$0.2--0.3 seconds at 10~FPS) of the fall onset. For standard walking and standing activities, the model consistently produced near-zero fall probabilities, demonstrating effective discrimination between routine activities and genuine falls. The proposed method's perfect precision meant that in practice, no false alarms were generated---when the system triggered an alert, clinical staff could trust the notification.
 
 The primary failure mode involved slow, controlled falls that kinematically resembled deliberate sitting or lying-down transitions. In these cases, the keypoint trajectories lacked the sudden acceleration that characterizes uncontrolled falls, causing the model to under-score the event. Occlusion represented a secondary failure mode: when a person's limbs were partially occluded by furniture, the pose head occasionally produced inaccurate keypoint predictions, which propagated errors to the temporal action classifier. Multi-person tracking generally functioned well in low-occupancy scenes (1--3 persons), but tracking accuracy degraded under heavy spatial overlap, particularly when multiple individuals occupied adjacent thermal signatures with indistinguishable appearance.
 
-%% ====================================================================
 \section{Computational Cost}
 \label{sec:cost}
-%% ====================================================================
 
 Table~\ref{tab:computational_cost} reports the model size and inference latency of each component, measured on a single NVIDIA TITAN RTX GPU.
 
@@ -355,10 +332,8 @@ Backbone + Neck & --- & 10.7 \\
 
 The complete model contained only 9.3 million parameters, with the MobileViT-S backbone accounting for the largest share (4.9M, 53\%). The temporal action head added negligible overhead: 31{,}617 parameters (0.3\% of the total) and 0.8~ms latency per frame. The full pipeline achieved approximately 80~FPS on the NVIDIA TITAN RTX (backbone + neck: 10.7~ms, action head: 0.8~ms), well above real-time requirements. ByteTrack added less than 0.5~ms per frame. The lightweight design---9.3M parameters total---makes the system suitable for deployment on edge devices equipped with FPGA acceleration in elderly care facilities, aligning with the SensIR project's target of $>$20~FPS on embedded hardware.
 
-%% ====================================================================
 \section{Discussion}
 \label{sec:discussion}
-%% ====================================================================
 
 The experimental results yield several insights that inform both the design of thermal infrared fall detection systems and the broader practice of multi-task learning on small datasets.
 

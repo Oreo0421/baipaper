@@ -1,8 +1,4 @@
-% ============================================================
-% Method Chapters
-% ============================================================
 
-% -----------------------------------------------------------
 \section{Overall Architecture}
 \label{sec:overall}
 
@@ -22,7 +18,6 @@ An overview of the complete framework is illustrated in Fig.~\ref{fig:overall_ar
     \label{fig:overall_architecture}
 \end{figure}
 
-% -----------------------------------------------------------
 \section{Backbone: MobileViT-S}
 \label{sec:backbone}
 
@@ -30,13 +25,11 @@ We employ MobileViT-S~\cite{mehta2022mobilevit} as the backbone feature extracto
 
 MobileViT-S is selected for its favorable accuracy--efficiency trade-off: it achieves competitive performance on ImageNet classification while requiring significantly fewer parameters and FLOPs than full Vision Transformers or heavy CNN backbones, making it well suited for edge deployment on FPGA-accelerated hardware. We initialize the backbone with ImageNet-pretrained weights from the \texttt{timm} library~\cite{rw2019timm} and extract multi-scale features from stages 2, 3, and 4, yielding feature maps with channel dimensions of 96, 128, and 640, respectively.
 
-% -----------------------------------------------------------
 \section{Neck: CSPNeXtPAFPN}
 \label{sec:neck}
 
 To fuse multi-scale features from the backbone, we adopt CSPNeXtPAFPN~\cite{lyu2022rtmdet}, a feature pyramid network that extends the Path Aggregation Feature Pyramid Network (PAFPN)~\cite{liu2018path} with Cross Stage Partial (CSP) blocks~\cite{wang2020cspnet} redesigned using the NeXt-style block from RTMDet. The neck receives feature maps with channel dimensions $[96, 128, 640]$ from backbone stages 2, 3, and 4, and produces three output feature maps $\{P_3, P_4, P_5\}$ at strides $\{8, 16, 32\}$, all with a unified channel dimension of 96. The top-down pathway aggregates semantic information from deep layers to shallow layers, while the bottom-up pathway propagates fine-grained spatial details back to deeper levels. We use a single CSP block per fusion stage (\texttt{num\_csp\_blocks}$=1$) to maintain computational efficiency. The resulting multi-scale feature maps are shared between the detection head and the RoI feature extractor for pose estimation.
 
-% -----------------------------------------------------------
 \section{Detection Head: RTMDet}
 \label{sec:detection_head}
 
@@ -65,7 +58,6 @@ where $\hat{\mathbf{b}}$ and $\mathbf{b}$ denote the predicted and ground-truth 
 
 \textbf{Test-time inference.} During inference, detections are filtered with a confidence threshold of 0.3 and refined through non-maximum suppression (NMS) with an IoU threshold of 0.45, retaining at most 100 detections per image.
 
-% -----------------------------------------------------------
 \section{Pose Estimation Head: SimDR}
 \label{sec:pose_head}
 
@@ -119,8 +111,6 @@ To better illustrate the structural difference between conventional heatmap-base
     \label{fig:simdr_vs_heatmap}
 \end{figure}
 
-
-
 \subsection{Pose Estimation Losses}
 \label{subsec:pose_losses}
 
@@ -156,7 +146,6 @@ To validate the choice of SimDR, we implement and compare four additional pose e
 
 \textbf{(E) Direct Coordinate Regression:} A regression baseline~\cite{toshev2014deeppose} that directly predicts $(x, y)$ coordinates from pooled RoI features via fully connected layers, without any intermediate heatmap representation.
 
-% -----------------------------------------------------------
 \section{Temporal Action Classification Head}
 \label{sec:action_head}
 
@@ -305,7 +294,6 @@ where $\hat{c}_i$ is the activity class. Transition ($c=2$) and Lying ($c=3$) sa
 \end{equation}
 with $\lambda_\text{fall} = 2.0$ and $\lambda_\text{act} = 1.0$. The fall loss receives a higher weight to ensure that fall detection---the primary clinical objective---remains the dominant learning signal, while the activity loss serves as a complementary regularizer that enriches the shared temporal representation.
 
-% -----------------------------------------------------------
 \section{Multi-Object Tracking: ByteTrack}
 \label{sec:tracking}
 
@@ -321,7 +309,6 @@ During video inference, we employ ByteTrack~\cite{zhang2022bytetrack} to associa
 
 \textbf{Track lifecycle.} New tracks are initialized from unmatched detections with confidence $> 0.7$ and remain tentative for 3~frames before confirmation. Tracks without matches for 30~consecutive frames are deleted. Each active track maintains a keypoint buffer of up to $T = 30$ frames, from which the temporal action classifier draws its input sequence.
 
-% -----------------------------------------------------------
 \section{Multi-Task Training Strategy}
 \label{sec:training}
 
