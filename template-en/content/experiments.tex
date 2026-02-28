@@ -252,7 +252,6 @@ Method & Feature Type & Input Dim & Fall F1 & Fall Prec & Fall Recall & Fall AP 
 \hline
 Skeleton-GRU & Bone vectors & 36 & 0.680 & 0.713 & 0.651 & 0.743 \\
 Skeleton+Appearance & Bone + RoI GAP & 132 & 0.641 & 0.577 & 0.721 & 0.683 \\
-Multi-task Auxiliary & Bone, 3-head & 36 & 0.249 & 0.917 & 0.144 & 0.675 \\
 \textbf{Binary-BCE (keypoint)} & \textbf{Raw keypoints} & \textbf{35} & \textbf{0.748} & \textbf{0.923} & 0.629 & \textbf{0.780} \\
 \hline
 \end{tabular}
@@ -281,8 +280,6 @@ Method & Pose & Classifier & Feature & Fall F1 & Fall Prec  & Fall AP & bbox mAP
 Skel.-GRU & SimDR & 10-cls CE & Bone (36d) & 0.680 & 0.713  & 0.743 & 0.933 & 0.736 \\
 Skel.+App. & SimDR & 10-cls CE & Bone+RoI & 0.641 & 0.577  & 0.683 & 0.934 & 0.746 \\
 Bin.-BCE & SimDR & Bin.\ BCE & Kpt (35d) & \textbf{0.748} & 0.923  & \textbf{0.780} & 0.933 & 0.741 \\
-Multi-task & SimDR & 3-head & Bone (36d) & 0.249 & 0.917  & 0.675 & 0.931 & 0.735 \\
-Single-task & SimDR & Bin.\ Focal & Kpt (35d) & 0.667 & 0.808  & 0.744 & 0.931 & 0.740 \\
 \textbf{Proposed} & \textbf{SimDR} & \textbf{4-cls+bin.} & \textbf{Kpt (35d)} & 0.669 & \textbf{1.000} & 0.725 & 0.931 & 0.734 \\
 Prop.+Synth. & SimDR & 4-cls+bin. & Kpt (35d) & \textbf{0.776} & 0.951  & \textbf{0.834} & 0.931 & 0.734 \\
 \hline
