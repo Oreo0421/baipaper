@@ -55,7 +55,7 @@
 % See section 9 in the package documentation: https://ctan.org/pkg/hyperref
 %
 
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}   
 
 
 %
@@ -111,13 +111,13 @@
 \input{content/titlepage}
 
 % short presentation
-\clearpage
+\cleardoublepage
 \input{content/abstract}
 
-\clearpage
+\cleardoublepage
 \input{content/acknowledgment}
-\clearpage
-\input{content/declaration}
+%\cleardoublepage
+%\input{content/declaration}
 
 
 
@@ -125,12 +125,12 @@
 \tableofcontents
 
 % list of figures
-\clearpage
+\cleardoublepage
 \addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
 
 % list of tables
-\clearpage
+\cleardoublepage
 \addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
 
