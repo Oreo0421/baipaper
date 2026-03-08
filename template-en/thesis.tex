@@ -55,7 +55,7 @@
 % See section 9 in the package documentation: https://ctan.org/pkg/hyperref
 %
 
-\usepackage[hidelinks]{hyperref}   
+\usepackage[hidelinks]{hyperref} 
 
 
 %
@@ -126,11 +126,13 @@
 
 % list of figures
 \cleardoublepage
+\phantomsection
 \addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
 
 % list of tables
 \cleardoublepage
+\phantomsection
 \addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
 
@@ -177,7 +179,7 @@
 
 
 %% Bibliography
-\printbibliography
+\printbibliography[heading=bibintoc]
 
 % TODO: Index
 % TODO: Glossar
