@@ -5,7 +5,7 @@ This chapter presents a comprehensive experimental evaluation of the proposed th
 \section{Dataset}
 \label{sec:dataset}
 
-The thermal infrared fall detection dataset used in this study was collected using a Heimann HTPA 60$\times$40 thermopile sensor array within the SensIR project. The dual-sensor configuration yields a combined input resolution of approximately $114 \times 40$ pixels, resized to $384 \times 384$ for training and inference. Annotations follow the COCO format and include: (i) bounding boxes for a single ``human'' class in $[x, y, w, h]$ format; (ii) seven keypoints per person---Head (0), Shoulder center (1), Right hand (2), Left hand (3), Hips center (4), Right foot (5), and Left foot (6)---each with a three-level visibility flag (0 = out-of-frame/unlabeled, 1 = occluded, 2 = visible); (iii) a ten-class action label per instance; and (iv) pre-computed temporal keypoint sequences of $T = 8$ frames with normalized keypoint features (five dimensions per keypoint: $x$, $y$, visibility, $\Delta x$, $\Delta y$).
+The thermal infrared fall detection dataset used in this study was collected using a Heimann HTPA 60$\times$40 thermopile sensor array within the SensIR project. The dual-sensor configuration yields a combined input resolution of $114 \times 40$ pixels, resized to $384 \times 384$ for training and inference. Annotations follow the COCO format and include: (i) bounding boxes for a single ``human'' class in $[x, y, w, h]$ format; (ii) seven keypoints per person---Head (0), Shoulder center (1), Right hand (2), Left hand (3), Hips center (4), Right foot (5), and Left foot (6)---each with a three-level visibility flag (0 = out-of-frame/unlabeled, 1 = occluded, 2 = visible); (iii) a ten-class action label per instance; and (iv) pre-computed temporal keypoint sequences of $T = 8$ frames with normalized keypoint features (five dimensions per keypoint: $x$, $y$, visibility, $\Delta x$, $\Delta y$).
 
 The ten action classes comprise six non-falling categories (Standing still, Walking, Sitting down, Standing up, Lying down, Getting up) and four falling categories (Falling while walking, Falling while standing, Falling while sitting, Falling while standing up). For binary fall detection evaluation, classes 6--9 are grouped as ``falling'' (positive) and classes 0--5 as ``not falling'' (negative). Table~\ref{tab:dataset_stats} summarizes the dataset statistics. The training split contains 5{,}104 images with 4{,}838 annotated instances, of which 1{,}482 (30.6\%) are falling events. This relatively modest dataset size---combined with a $\sim$70:30 non-falling to falling class imbalance---imposes important constraints on model capacity, generally favoring simpler architectures over high-capacity designs. Moreover, several non-falling actions, particularly ``Lying down'' and ``Getting up,'' share highly similar body configurations with actual falling events. This visual ambiguity motivates our hard negative mining strategy, which assigns elevated loss weights to these confusable classes during training. Finally, compared to RGB imagery, thermal infrared images exhibit substantially lower spatial resolution and contrast, which renders fine-grained keypoint localization more challenging.
 
@@ -13,6 +13,7 @@ The ten action classes comprise six non-falling categories (Standing still, Walk
 \centering
 \caption{Dataset statistics.}
 \label{tab:dataset_stats}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|c|c|c|c|c|}
 \hline
 Split & Images & Instances & Falling (cls 6--9) & Non-falling (cls 0--5) & Fall Ratio \\
@@ -20,7 +21,8 @@ Split & Images & Instances & Falling (cls 6--9) & Non-falling (cls 0--5) & Fall 
 Train & 5{,}104 & 4{,}838 & 1{,}482 & 3{,}356 & 30.6\% \\
 Val   & 866    & 861     & 229     & 632     & 26.6\% \\
 \hline
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 All frame-level metrics are reported on the validation split. Additionally, a separate sequence-level test set comprising 38 video sequences (18 fall, 20 non-fall) from six activity scenarios is used to evaluate end-to-end detection performance at the event level.
 
@@ -96,6 +98,7 @@ Table~\ref{tab:pose_comparison} presents the quantitative comparison across all 
 \centering
 \caption{Comparison of pose estimation methods (Stage 1, 75--80 training epochs).}
 \label{tab:pose_comparison}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|c|c|c|c|c|c|}
 \hline
 Method & Loss & Kpt AP  & bbox mAP & bbox AP@0.5 \\
@@ -104,7 +107,8 @@ Method & Loss & Kpt AP  & bbox mAP & bbox AP@0.5 \\
 Direct Regression & SmoothL1 + vis BCE & 0.570  & 0.875 & 0.979 \\
 \textbf{SimDR (Adopted)} & \textbf{KL div + vis BCE} & \textbf{0.802} & 0.866 & 0.989 \\
 \hline
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 SimDR dramatically outperformed both alternative approaches on the primary Keypoint AP metric, achieving 0.802 compared to 0.573 for the 2D Heatmap and 0.570 for Direct Regression---a relative improvement of approximately 40\%. The advantage became even more pronounced at stricter OKS thresholds: SimDR attained an AP@0.75 of 0.874, compared to 0.574 and 0.595 for the 2D Heatmap and Direct Regression methods, respectively. This substantial gap demonstrates that SimDR produces more precisely localized keypoints, not merely more frequently detected ones.
@@ -139,7 +143,7 @@ and fall from standing.
   \label{fig:pose_head_qual_4rows}
 \end{figure}
 
-As shown in Fig.~\ref{fig:pose_head_qual_4rows}, the SimDR head generally produces more spatially consistent and anatomically plausible keypoint layouts,particularly in fall-related frames where body contours are less distinct.In contrast, the heatmap and regression variants exhibit increased localization
+As shown in Fig.~\ref{fig:pose_head_qual_4rows}, the SimDR head generally produces more spatially consistent and anatomically plausible keypoint layouts,particularly in fall-related frames where body contours are less distinct. In contrast, the heatmap and regression variants exhibit increased localization
 drift in low-contrast regions.This observation is consistent with the significant AP improvement reported in
 Table~\ref{tab:pose_comparison}.
 
@@ -172,6 +176,7 @@ Table~\ref{tab:fall_comparison} compares the two classification strategies, and 
 \centering
 \caption{Comparison of fall classification strategies (Stage 2, frozen SimDR backbone).}
 \label{tab:fall_comparison}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|l|c|c|c|c|c|}
 \hline
 Method & Architecture & Fall F1 & Fall Prec & Fall Recall & Fall AP  \\
@@ -179,7 +184,8 @@ Method & Architecture & Fall F1 & Fall Prec & Fall Recall & Fall AP  \\
 \textbf{Proposed (Dual-task)} & \textbf{4-class + binary} & \textbf{0.669} & \textbf{1.000} & 0.502 & 0.725 \\
 Single-task Binary & Binary only & 0.667 & 0.808 & \textbf{0.568} & \textbf{0.744} \\
 \hline
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \begin{table}[t]
@@ -200,11 +206,11 @@ Macro-F1 & --- & --- & 0.284 & 861 \\
 \end{tabular}
 \end{table}
 
-The proposed dual-task method achieved comparable Fall F1 (0.669) to the single-task binary variant (0.667), while additionally providing interpretable posture classification output. Most notably, the proposed method achieved \emph{perfect fall precision} (1.000), indicating that every predicted fall was a true fall---there were zero false alarms. The trade-off manifested in recall (0.502 vs.\ 0.568), suggesting the model adopted a conservative decision boundary. From a clinical deployment perspective, the absence of false positives is highly desirable: when the system triggers a fall alert, care staff can fully trust it.
+The proposed dual-task method achieved comparable Fall F1 (0.669) to the single-task binary variant (0.667), while additionally providing interpretable posture classification output. Most notably, the proposed method achieved \emph{perfect fall precision} (1.000), indicating that every predicted fall was a true fall---there were zero false alarms. The trade-off manifested in recall (0.502 vs.\ 0.568), suggesting the model adopted a conservative decision boundary. From a clinical deployment perspective, however, the lower recall is the more critical concern: a missed fall (false negative) leaves the patient without timely assistance and can lead to severe secondary complications, whereas a false alarm can be cancelled through a voice confirmation step before dispatching care staff.
 
 Examining the posture head in detail, the ``lying'' class achieved the highest F1 (0.516) with strong precision (0.864), meaning the system could reliably detect when a person was in a lying position---a capability critical for post-fall monitoring. The remaining posture classes exhibited lower performance (macro-F1 = 0.284), limited by the small training set and the inherent confusion between standing/walking transitions and between sitting/lying in low-resolution thermal imagery. Nevertheless, the posture output represents clinically valuable information that single-task approaches entirely lack.
 
-Both methods were fundamentally constrained by the dataset size. With only 4{,}838 training instances, the dual-task model's higher capacity could not be fully utilized. We anticipate that with synthetic data augmentation (Section~\ref{sec:full_system}), the proposed method's richer representation will yield a clearer advantage.
+Both methods were fundamentally constrained by the dataset size. With only 4{,}838 training instances, the dual-task model's higher capacity could not be fully utilized. The effect of supplementing training with synthetic data provided by a colleague within the SensIR project is reported in Section~\ref{sec:full_system}.
 
   \begin{figure}[t]
       \centering
@@ -226,6 +232,7 @@ This section evaluates the effect of different loss functions on the single-task
 \centering
 \caption{Loss function comparison (binary fall detection, single-task).}
 \label{tab:loss_comparison}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|c|c|c|c|c|c|c|}
 \hline
 Method & Focal & Hard Neg & Kpt Wt & Fall F1 & Fall Prec  & Fall AP \\
@@ -235,7 +242,8 @@ Binary-BCE + anti-overfit & No & No & No & 0.520 & 0.529  & 0.657 \\
 Binary-BCE + mild reg. & No & No & No & 0.665 & \textbf{1.000}  & 0.666 \\
 Binary-Focal (full) & Yes ($\gamma$=2) & Yes ($3\times$) & Yes & 0.667 & 0.808  & 0.744 \\
 \hline
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 Table~\ref{tab:loss_comparison} reveals that the straightforward Binary-BCE baseline achieved the highest Fall F1 (0.748) on the current dataset, with strong precision (0.923) and the best recall (0.629). This suggests that on a small dataset, simple BCE with a positive weight ($\text{pos\_weight} = 3.0$) provides effective class-imbalance handling without overcomplicating the optimization landscape.
@@ -253,6 +261,7 @@ This section compares different input feature representations for the temporal a
 \centering
 \caption{Feature representation comparison (all using GRU architecture, frozen SimDR backbone).}
 \label{tab:feature_comparison}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|l|c|c|c|c|c|}
 \hline
 Method & Feature Type & Input Dim & Fall F1 & Fall Prec & Fall Recall & Fall AP \\
@@ -261,7 +270,8 @@ Skeleton-GRU & Bone vectors & 36 & 0.680 & 0.713 & 0.651 & 0.743 \\
 Skeleton+Appearance & Bone + RoI GAP & 132 & 0.641 & 0.577 & 0.721 & 0.683 \\
 \textbf{Binary-BCE (keypoint)} & \textbf{Raw keypoints} & \textbf{35} & \textbf{0.748} & \textbf{0.923} & 0.629 & \textbf{0.780} \\
 \hline
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 Table~\ref{tab:feature_comparison} demonstrates that raw keypoint features decisively outperformed bone skeleton features (Fall F1: 0.748 vs.\ 0.680). This result reflects the importance of \emph{absolute position information} for fall detection. A person's head being located in the lower portion of their bounding box ($y > 0.7$) constitutes a strong fall signal, and this spatial cue is lost when using translation-invariant bone vectors that encode only relative joint displacements. While bone representations offer theoretical advantages for pose-invariant action recognition in RGB settings, the fall detection task fundamentally depends on the body's spatial configuration relative to the ground plane.
@@ -279,7 +289,7 @@ Table~\ref{tab:full_system} consolidates all experimental variants into a unifie
 \centering
 \caption{Complete system comparison. bbox mAP and Kpt AP are evaluated on the frozen Stage~1 checkpoint integrated into the full pipeline and therefore differ from the standalone Stage~1 results in Table~\ref{tab:pose_comparison}.}
 \label{tab:full_system}
-{\small
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|l|l|l|c|c|c|c|c|}
 \hline
 Method & Pose & Classifier & Feature & Fall F1 & Fall Prec  & Fall AP & bbox mAP & Kpt AP \\
@@ -290,7 +300,7 @@ Bin.-BCE & SimDR & Bin.\ BCE & Kpt (35d) & \textbf{0.748} & 0.923  & \textbf{0.7
 \textbf{Proposed} & \textbf{SimDR} & \textbf{4-cls+bin.} & \textbf{Kpt (35d)} & 0.669 & \textbf{1.000} & 0.725 & 0.931 & 0.734 \\
 Prop.+Synth. & SimDR & 4-cls+bin. & Kpt (35d) & \textbf{0.776} & 0.951  & \textbf{0.834} & 0.931 & 0.734 \\
 \hline
-\end{tabular}
+\end{tabular}%
 }
 \end{table}
 
@@ -298,14 +308,14 @@ Four key findings emerge from the consolidated results. First, \textbf{the pose 
 
 Second, \textbf{raw keypoints consistently outperformed bone features}. Transitioning from bone skeleton vectors (36 dimensions) to raw keypoint features (35 dimensions) improved Fall F1 from 0.680 (Skeleton-GRU) to 0.748 (Binary-BCE), confirming that absolute positional information---specifically the vertical location of the head relative to the bounding box---is the most discriminative cue for fall detection in thermal imagery.
 
-Third, \textbf{the proposed dual-task method achieved the highest precision} (1.000) among all methods, producing zero false positives on the validation set. This characteristic makes it the most clinically safe option: when the system triggers a fall alert, care staff can fully trust it. The lower recall (0.502) compared to the Binary-BCE baseline (0.629) reflects the inherent challenge of jointly optimizing posture classification and fall detection with limited training data. The Binary-BCE baseline achieved the highest Fall F1 (0.748) by concentrating all model capacity on a single task with a simple loss---a well-established advantage of parsimonious models on small datasets.
+Third, \textbf{the proposed dual-task method achieved the highest precision} (1.000) among all methods, producing zero false positives on the validation set. While high precision reduces alarm fatigue for care staff, it is important to note that in clinical fall detection, false negatives are the more serious failure mode: a missed fall leaves the patient without assistance, whereas a false alarm can be cancelled through a voice confirmation step. The lower recall (0.502) compared to the Binary-BCE baseline (0.629) therefore represents the primary limitation of the dual-task model on the current dataset, reflecting the inherent challenge of jointly optimizing posture classification and fall detection with limited training data. The Binary-BCE baseline achieved the highest Fall F1 (0.748) by concentrating all model capacity on a single task with a simple loss---a well-established advantage of parsimonious models on small datasets.
 
-Fourth, \textbf{synthetic data augmentation} is the anticipated pathway to unlocking the proposed architecture's full potential. The dual-task model possesses higher representational capacity that is currently underutilized due to data scarcity. With synthetically augmented training data, the proposed method achieves a Fall F1 of 0.776 (vs.\ 0.669 without augmentation, +16\% relative) and recall of 0.655 (vs.\ 0.502), surpassing the Binary-BCE baseline (F1: 0.748), validating the architectural choice.
+Fourth, \textbf{supplementing with synthetic data} improves the proposed architecture's performance substantially. Additional synthetic training samples were provided by a colleague within the SensIR project. Training the proposed dual-task model with this supplementary data (row ``Prop.+Synth.'') raises Fall F1 from 0.669 to 0.776 (+16\% relative) and recall from 0.502 to 0.655, surpassing the Binary-BCE baseline (F1: 0.748). This confirms that the dual-task architecture's higher representational capacity is underutilized on the original dataset alone and scales favorably with additional data.
 
 \section{Qualitative Results}
 \label{sec:qualitative}
 
-The system correctly handled the majority of common indoor monitoring scenarios, with fall detection typically triggering within 2--3 frames ($\sim$0.2--0.3 seconds at 10~FPS) of the fall onset. For standard walking and standing activities, the model consistently produced near-zero fall probabilities, demonstrating effective discrimination between routine activities and genuine falls. The proposed method's perfect precision meant that in practice, no false alarms were generated---when the system triggered an alert, clinical staff could trust the notification.
+The system correctly handled the majority of common indoor monitoring scenarios, with fall detection typically triggering within 2--3 frames ($\sim$0.2--0.3 seconds at 10~FPS) of the fall onset. For standard walking and standing activities, the model consistently produced near-zero fall probabilities, demonstrating effective discrimination between routine activities and genuine falls. The proposed method's perfect precision meant that no false alarms were generated in this evaluation; in practice, however, the missed falls (low recall) represent the more critical risk, as undetected falls cannot be caught by downstream confirmation mechanisms.
 
 The primary failure mode involved slow, controlled falls that kinematically resembled deliberate sitting or lying-down transitions. In these cases, the keypoint trajectories lacked the sudden acceleration that characterizes uncontrolled falls, causing the model to under-score the event. Occlusion represented a secondary failure mode: when a person's limbs were partially occluded by furniture, the pose head occasionally produced inaccurate keypoint predictions, which propagated errors to the temporal action classifier. Multi-person tracking generally functioned well in low-occupancy scenes (1--3 persons), but tracking accuracy degraded under heavy spatial overlap, particularly when multiple individuals occupied adjacent thermal signatures with indistinguishable appearance.
 
@@ -343,8 +353,8 @@ The experimental results yield several insights that inform both the design of t
 
 \textbf{Pose representation is the most impactful design choice.} SimDR's disentangled 1D classification approach achieved a Keypoint AP of 0.802, dramatically outperforming the 2D Heatmap (0.573) and Direct Regression (0.570) alternatives. This +40\% relative improvement established the foundation for all downstream tasks, as keypoint feature quality directly determines the action classifier's input signal quality. The KL divergence loss with soft Gaussian targets proved particularly well-suited for the small RoI sizes ($48 \times 48$) typical of thermal infrared images, where 2D heatmap quantization errors are proportionally larger than in standard RGB pose estimation settings.
 
-\textbf{Dual-task learning provides the most architecturally complete system.} While the simpler Binary-BCE baseline achieved the highest Fall F1 (0.748), the proposed dual-task method offered a more architecturally sound solution by: (a) providing clinically valuable posture classification output that single-task approaches entirely lack; (b) achieving perfect fall precision (1.000), guaranteeing zero false alarms; and (c) possessing higher representational capacity that will benefit from additional training data. The performance gap was a direct consequence of the limited dataset size (4{,}838 instances) rather than an architectural limitation---a conclusion supported by our preliminary synthetic data augmentation results.
+\textbf{Dual-task learning provides the most architecturally complete system.} While the simpler Binary-BCE baseline achieved the highest Fall F1 (0.748), the proposed dual-task method offered a more architecturally sound solution by: (a) providing clinically valuable posture classification output that single-task approaches entirely lack; (b) achieving perfect fall precision (1.000), reducing alarm fatigue for care staff (though at the cost of lower recall, which remains the primary clinical concern since false negatives are more dangerous than false positives in fall monitoring); and (c) possessing higher representational capacity that will benefit from additional training data. The performance gap was a direct consequence of the limited dataset size (4{,}838 instances) rather than an architectural limitation---a conclusion supported by the results obtained with synthetic data provided by a colleague.
 
-\textbf{Simple approaches excel on small data, but complex architectures scale better.} The consistent ranking across our experiments---Binary-BCE $>$ Binary-Focal $>$ Dual-task on Fall F1---reflects the well-known bias-variance trade-off. Models with fewer optimization objectives and simpler loss functions generalize more readily with limited training examples. However, this advantage is expected to diminish as training data grows, at which point the richer representations learned by the dual-task architecture should yield superior performance. Indeed, with synthetic data augmentation, the proposed dual-task method achieves a Fall F1 of 0.776, surpassing the Binary-BCE baseline (0.748) and confirming that the architecture's higher representational capacity becomes advantageous with sufficient training data.
+\textbf{Simple approaches excel on small data, but complex architectures scale better.} The consistent ranking across our experiments---Binary-BCE $>$ Binary-Focal $>$ Dual-task on Fall F1---reflects the well-known bias-variance trade-off. Models with fewer optimization objectives and simpler loss functions generalize more readily with limited training examples. However, this advantage is expected to diminish as training data grows, at which point the richer representations learned by the dual-task architecture should yield superior performance. Indeed, supplementing training with synthetic data provided by a colleague raises the proposed dual-task method's Fall F1 to 0.776, surpassing the Binary-BCE baseline (0.748) and confirming that the architecture's higher representational capacity becomes advantageous with sufficient training data.
 
 \textbf{The system is practical for real-world deployment.} At 9.3M parameters and approximately 80~FPS on a single GPU, the system meets the real-time requirements for clinical monitoring with substantial headroom. The two-stage training strategy further enables modular development: the Stage 1 detection-plus-pose checkpoint can be shared across different downstream tasks (e.g., activity recognition, gait analysis) without retraining. The privacy-preserving nature of thermal infrared imagery, combined with the system's lightweight architecture and end-to-end design, positions it as a practical solution for autonomous fall detection in elderly care facilities.

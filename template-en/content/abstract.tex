@@ -8,33 +8,35 @@ the SensIR project---offer an inherently privacy-preserving alternative that cap
 body signatures at low spatial resolution without revealing identifiable visual features, and
 operates robustly in complete darkness.
 
-This thesis presents \textbf{RTMDetWithPose}, a unified end-to-end multi-task deep learning
+This thesis presents a unified end-to-end multi-task deep learning
 framework for real-time fall detection from thermopile thermal infrared imagery. The system
 jointly performs person detection, seven-keypoint body pose estimation, temporal fall
 classification, and multi-object tracking within a single architecture. A lightweight
-\textbf{MobileViT-S} backbone paired with a \textbf{CSPNeXtPAFPN} neck provides
+MobileViT-S backbone paired with a CSPNeXtPAFPN neck provides
 parameter-efficient multi-scale feature extraction from the fused dual-sensor input of
-approximately $114\times40$ pixels. An anchor-free \textbf{RTMDet} detection head localizes
-persons, after which \textbf{RoIAlign} extracts per-person features consumed by a
-\textbf{SimDR}-based pose head that decomposes 2D keypoint localization into two independent 1D
+$114\times40$ pixels. An anchor-free RTMDet detection head localizes
+persons, after which RoIAlign extracts per-person features consumed by a
+SimDR-based pose head that decomposes 2D keypoint localization into two independent 1D
 classification tasks---eliminating the quantization errors of 2D heatmap decoding and achieving
-superior accuracy under extreme spatial resolution constraints. A dual-task \textbf{GRU} temporal
+superior accuracy under extreme spatial resolution constraints. A dual-task GRU temporal
 action classifier jointly performs four-class posture recognition and binary fall detection,
 sharing a common temporal encoder so that posture understanding directly informs fall
-discrimination. \textbf{ByteTrack} maintains consistent person identities across frames to supply
-coherent keypoint sequences to the temporal head. The framework is trained with a two-stage
+discrimination. ByteTrack provides per-frame identity association to supply
+keypoint sequences to the temporal head. The framework is trained with a two-stage
 strategy that independently optimizes detection--pose and temporal action components, enabling
 modular evaluation and replacement.
 
-Experiments on the SensIR thermal infrared dataset demonstrate that SimDR achieves a COCO
-Keypoint AP of \textbf{0.802}, outperforming 2D heatmap and direct regression baselines by
-approximately 40\% relative. The complete system attains a fall detection F1 of \textbf{0.776} with \textbf{precision of 0.951} and a bounding-box mAP of \textbf{0.866},
-while comprising only \textbf{9.3M parameters} and running at approximately \textbf{80~FPS} on a
-desktop GPU---well above the 20~FPS target for edge deployment. These results establish the
+Experiments on the SensIR thermal infrared dataset demonstrate that the proposed framework
+achieves a bounding-box mAP of 0.866, and SimDR achieves a keypoint
+AP of 0.802 (computed using the COCO evaluation protocol applied to the seven annotated
+keypoints), outperforming the 2D heatmap (AP 0.573) and direct coordinate regression (AP 0.570) pose head variants by
+approximately 40\% relative. The complete system attains a fall detection F1 of 0.776 with precision of 0.951,
+while comprising only 9.3M parameters and running at approximately 80~FPS on a
+desktop GPU---suggesting that the 20~FPS real-time requirement may be achievable on FPGA-accelerated edge hardware. These results establish the
 viability of unified thermal infrared fall detection for privacy-preserving, real-time monitoring
 in resource-constrained environments.
 
 \medskip
-\noindent\textbf{Keywords:} Fall Detection, Thermopile Thermal Infrared, Pose Estimation, SimDR, RTMDet
+\noindent Keywords: Fall Detection, Thermopile Thermal Infrared, Pose Estimation, SimDR, RTMDet
 \end{tucsimplesection}
 \vspace*{0pt plus 2.5fill}

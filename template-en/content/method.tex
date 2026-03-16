@@ -4,11 +4,14 @@
 
 The proposed system, which we refer to as \textbf{RTMDetWithPose}, is a unified multi-task framework that jointly performs human detection, seven-keypoint pose estimation, temporal fall classification, and multi-object tracking within a single architecture. The framework is organized into three functional stages:
 
-\textbf{Stage~1 (Detection + Pose Estimation):} A single-frame thermal IR image, resized to $384 \times 384$ pixels, is processed by a shared MobileViT-S backbone and CSPNeXtPAFPN neck to produce multi-scale feature maps at strides $\{8, 16, 32\}$. An anchor-free RTMDet detection head localizes human subjects, producing bounding boxes and confidence scores. For each detected person, RoI-aligned features of size $48 \times 48$ are extracted from the multi-scale feature pyramid and fed to a SimDR-based pose estimation head, which predicts seven keypoint coordinates along with per-keypoint visibility scores.
+\textbf{Stage~1 (Detection + Pose Estimation):} A single-frame thermal IR image, resized to $384 \times 384$ pixels (see below), is processed by a shared MobileViT-S backbone and CSPNeXtPAFPN neck to produce multi-scale feature maps at strides $\{8, 16, 32\}$. An anchor-free RTMDet detection head localizes human subjects, producing bounding boxes and confidence scores. For each detected person, RoI-aligned features of size $48 \times 48$ are extracted from the multi-scale feature pyramid and fed to a SimDR-based pose estimation head, which predicts seven keypoint coordinates along with per-keypoint visibility scores.
 
 \textbf{Stage~2 (Temporal Action Classification):} For each tracked person, the estimated keypoint coordinates are normalized relative to the bounding box and augmented with velocity features. The resulting temporal sequence is processed by a dual-task GRU classifier that simultaneously predicts 4-class activity and binary fall that produces a fall probability.
 
 \textbf{Stage~3 (Inference Pipeline):} ByteTrack associates detections across frames to maintain consistent person identities. Per-track keypoint buffers of up to 30~frames feed the temporal classifier, which produces the final fall probability and activity classification output.
+
+\textbf{Input resolution choice.}
+The raw fused sensor output measures only $114 \times 40$ pixels, yet the network input is resized to $384 \times 384$. This upsampling does not introduce new image detail---bilinear interpolation merely redistributes existing pixel values onto a larger grid. The rationale is purely engineering: (1)~the backbone applies successive stride-8/16/32 downsampling, and a $40 \times 114$ input would reduce the stride-32 feature map to roughly $1 \times 4$ pixels, insufficient for reliable detection and keypoint localization; (2)~enlarging the input gives RoIAlign more grid points to interpolate from, reducing quantization error when mapping bounding-box coordinates back to feature-map positions; and (3)~a square input unifies batch dimensions and simplifies data augmentation. The chosen size of $384 \times 384$ ensures that the coarsest feature map ($384/32 = 12$ pixels per side) retains enough spatial resolution for the detection and pose heads to operate correctly.
 
 An overview of the complete framework is illustrated in Fig.~\ref{fig:overall_architecture}, including the shared backbone--neck, the detection and pose heads, ByteTrack-based identity association, temporal keypoint buffering, and the GRU-based temporal action classifier.
 
@@ -40,7 +43,7 @@ We employ the RTMDet detection head~\cite{lyu2022rtmdet}, an anchor-free single-
     (x_1, y_1, x_2, y_2) = (c_x - l,\; c_y - t,\; c_x + r,\; c_y + b).
 \end{equation}
 
-\textbf{Label assignment.} We use the DynamicSoftLabelAssigner with $\text{topk}=13$, which dynamically assigns positive samples based on a combination of classification confidence and localization quality, replacing the need for fixed IoU-based assignment rules.
+\textbf{Label assignment.} During training, each spatial location on the feature map is a candidate prediction point, but only a small subset should be responsible for predicting a given ground-truth box. Label assignment determines which locations are treated as positive samples (supervised against a specific ground-truth box) and which are treated as negatives. We use the DynamicSoftLabelAssigner with $\text{topk}=13$: for each ground-truth box, it selects the top-13 candidate locations ranked by a joint score of classification confidence and localization quality (IoU), rather than relying on a fixed IoU threshold. The resulting soft targets---where positive samples receive a continuous label equal to their predicted IoU rather than a hard 1---are consumed directly by the Quality Focal Loss described below.
 
 \textbf{Classification loss.} The classification branch is trained with Quality Focal Loss (QFL)~\cite{li2020generalized}, which jointly models classification confidence and localization quality:
 \begin{equation}
@@ -71,7 +74,7 @@ For each detected person, we extract a fixed-size feature representation using R
 \subsection{Keypoint Definition}
 \label{subsec:keypoint_def}
 
-Given the low spatial resolution of thermal IR imagery, we define a reduced skeleton with seven keypoints: (0)~Head, (1)~Shoulder center, (2)~Right hand, (3)~Left hand, (4)~Hip center, (5)~Right foot, and (6)~Left foot. This coarse skeleton captures the essential body configuration for fall detection while remaining feasible to estimate from the limited thermal resolution. Each keypoint annotation includes a visibility flag: $v=0$ (not labeled), $v=1$ (occluded), and $v \geq 2$ (visible).
+Given the low spatial resolution of thermal IR imagery, we define a reduced skeleton with seven keypoints: (0)~Head, (1)~Shoulder center, (2)~Right hand, (3)~Left hand, (4)~Hip center, (5)~Right foot, and (6)~Left foot. This coarse skeleton captures the essential body configuration for fall detection while remaining feasible to estimate from the limited thermal resolution. Each keypoint annotation includes a visibility flag: $v=0$ (not labeled), $v=1$ (occluded), and $v=2$ (visible).
 
 \begin{figure}[!tbhp]
     \includegraphics[width=0.9\columnwidth]{figures/keypoint.pdf}
@@ -121,12 +124,12 @@ To better illustrate the structural difference between conventional heatmap-base
 \end{equation}
 where $\hat{i}^x_j = \text{round}(x_j^\text{gt} \cdot k \cdot W_\text{feat})$ is the ground-truth bin index for keypoint $j$ along the $x$-axis. An analogous target $q^y_j$ is constructed for the $y$-axis. The SimDR loss is the Kullback--Leibler divergence between the predicted and target distributions, averaged over all visible keypoints:
 \begin{equation}
-    \mathcal{L}_\text{simdr} = \frac{1}{K_\text{vis}} \sum_{j=1}^{K} \mathbb{1}[v_j \geq 2] \left[ \text{KL}(q^x_j \| p^x_j) + \text{KL}(q^y_j \| p^y_j) \right],
+    \mathcal{L}_\text{simdr} = \frac{1}{K_\text{vis}} \sum_{j=1}^{K} \mathbb{1}[v_j = 2] \left[ \text{KL}(q^x_j \| p^x_j) + \text{KL}(q^y_j \| p^y_j) \right],
     \label{eq:kl_loss}
 \end{equation}
 where $K = 7$ is the number of keypoints, $K_\text{vis}$ is the count of visible keypoints, and $\mathbb{1}[\cdot]$ is the indicator function.
 
-\textbf{Visibility loss.} The visibility branch is trained with binary cross-entropy loss using three-level weighting: invisible keypoints ($v = 0$) are ignored, occluded keypoints ($v = 1$) receive weight $0.3$, and visible keypoints ($v \geq 2$) receive weight $1.0$:
+\textbf{Visibility loss.} The visibility branch is trained with binary cross-entropy loss using three-level weighting: invisible keypoints ($v = 0$) are ignored, occluded keypoints ($v = 1$) receive weight $0.3$, and visible keypoints ($v = 2$) receive weight $1.0$:
 \begin{equation}
     \mathcal{L}_\text{vis} = -\frac{1}{K} \sum_{j=1}^{K} w_j^v \left[ \bar{v}_j \log \sigma(\hat{v}_j) + (1 - \bar{v}_j) \log (1 - \sigma(\hat{v}_j)) \right],
     \label{eq:vis_loss}
@@ -161,6 +164,13 @@ Our dual-task formulation therefore comprises two output heads that share a comm
     \item \textbf{Activity head:} four-class classification over coarse activity categories.
     \item \textbf{Fall head:} binary classification for fall / non-fall detection.
 \end{itemize}
+
+\subsection{Fall Detection Formulation}
+\label{subsec:fall_formulation}
+
+Fall detection is formulated as a binary temporal classification task, directly predicting a fall probability from a sequence of normalized skeleton keypoints using the GRU-based classifier. Through ablation experiments in Chapter Experiments, it is demonstrated that this direct binary formulation outperforms indirect inference from the 10-class activity taxonomy available in the SensIR dataset when evaluated on fall-specific metrics (precision, recall, and F1-score). To address the inherent class imbalance---fall events are substantially rarer than normal activities in any realistic monitoring scenario---a weighted binary cross-entropy loss with positive class weighting is employed, following standard practices for imbalanced classification in safety-critical domains.
+
+ByteTrack~\cite{zhang2022bytetrack} supplies variable-length keypoint sequences (1--30 frames), allowing the GRU to observe the dynamic transition pattern---the rapid downward displacement of the head, the rotation of the body axis from vertical to horizontal, the deceleration following impact---that distinguishes genuine falls from similar static configurations such as a person lying in bed.
 
 \subsection{Activity Class Definition and Label Mapping}
 \label{subsec:activity_classes}
@@ -202,6 +212,8 @@ For each tracked person at frame $t$, we construct a 35-dimensional feature vect
     \label{eq:action_feature}
 \end{equation}
 where $(x_j, y_j)$ are keypoint coordinates normalized to $[0, 1]$ relative to the bounding box, $v_j$ is the visibility score from the SimDR head, and $(\Delta x_j, \Delta y_j) = (x_j^{(t)} - x_j^{(t-1)}, y_j^{(t)} - y_j^{(t-1)})$ are frame-to-frame velocity features. Keypoints that lie outside the bounding box have their coordinates and visibility set to zero. The temporal input is a sequence $\mathbf{F} = [\mathbf{f}_1, \ldots, \mathbf{f}_T] \in \mathbb{R}^{T \times 35}$, where $T = 8$ during training and $T \leq 30$ during inference.
+
+The input feature representation was arrived at through several design iterations: starting from raw normalized keypoint coordinates, then adding frame-to-frame velocity features to capture motion dynamics, then exploring bone-angle features encoding geometric limb relationships, and finally evaluating a variant that fuses skeleton features with appearance-level RoI embeddings from the detection backbone. The ablation study in Chapter Experiments compares these representations; the velocity-augmented coordinate formulation above was selected as the best trade-off between expressiveness and dimensionality given the 7-keypoint skeleton.
 
 \textbf{Sequence padding and cold-start.} During training, when a person's track has fewer than $T = 8$ frames of history, the sequence is padded to length 8 by repeating the first available frame. During inference, the GRU processes variable-length sequences from $T = 1$ without padding; for the first frame, velocity features are initialized to zero ($\Delta x_j = \Delta y_j = 0$), and the GRU updates its hidden state incrementally as new frames arrive.
 
@@ -331,5 +343,11 @@ The two-stage strategy is motivated by two considerations. First, the detection 
 \subsection{Data Augmentation}
 \label{subsec:augmentation}
 
-The training pipeline applies the following augmentations: random rotation ($\pm 20^\circ$, $p = 0.5$) with synchronized keypoint coordinate transformation; resize to $384 \times 384$ (without preserving aspect ratio); random horizontal flip ($p = 0.5$); and photometric distortion (brightness $\pm 32$, contrast in $[0.5, 1.5]$, saturation in $[0.5, 1.5]$, hue $\pm 18$). For the action head, temporal keypoint sequences of length $T = 8$ are provided as pre-computed fields in the dataset, with each frame's feature vector containing normalized coordinates, visibility scores, and velocity displacements.
+The training pipeline for Stage~1 (detection and pose estimation) applies the following image-level augmentations: random rotation ($\pm 20^\circ$, $p = 0.5$) with synchronized keypoint coordinate transformation; resize to $384 \times 384$ (without preserving aspect ratio); random horizontal flip ($p = 0.5$); and photometric distortion (brightness $\pm 32$, contrast in $[0.5, 1.5]$, saturation in $[0.5, 1.5]$, hue $\pm 18$).
+
+It is important to note the asymmetric effect of these augmentations on the two stages. Geometric augmentations (rotation, flip) affect the action head \emph{indirectly}: the pose estimator produces transformed keypoint coordinates from the augmented image, so the action head effectively receives skeleton sequences with varied body orientations---equivalent to implicit skeleton-level augmentation. Photometric distortions, however, alter only pixel intensities and have no effect on the normalized keypoint coordinates consumed by the action head; they serve solely to improve the robustness of the Stage~1 image encoder.
+
+For Stage~2, the action head takes as input purely numerical sequences: temporal keypoint sequences of length $T = 8$, where each frame's feature vector contains bounding-box-normalized coordinates, visibility scores, and frame-to-frame velocity displacements. No direct augmentation is applied to these numerical sequences during training.
+
+In addition to the above pipeline augmentations, one experimental variant (``Prop.+Synth.'' in Table~\ref{tab:full_system}) incorporates supplementary synthetic training data provided by a colleague within the SensIR project. The effect of this additional data on fall detection performance is reported in Section~\ref{sec:full_system}.
 

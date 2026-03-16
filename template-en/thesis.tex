@@ -25,6 +25,7 @@
 \usepackage{parskip}		% no indentation
 \usepackage{emptypage}		% no page numbers on empty pages
 \usepackage{array}		% table extension
+\usepackage{longtable}		% tables spanning multiple pages
 \usepackage{graphicx}		% integration of graphics
 \usepackage{float}		% adjustment of floating environments
 \usepackage{fancyhdr}		% customization of headers and footers
@@ -100,6 +101,8 @@
 
 
 
+\raggedbottom
+
 \begin{document}
 %
 % preamble and directories
@@ -139,6 +142,9 @@
 % list of acronyms
 \input{content/acronyms}
 
+% list of symbols
+\input{content/symbols}
+
 
 
 %
@@ -152,7 +158,7 @@
 \chapter{Introduction}
 \input{content/introduction}
 
-\chapter{Relative Work}
+\chapter{Related Work}
 \input{content/related_work}
 
 \chapter{Method}

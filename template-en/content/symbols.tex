@@ -1,0 +1,37 @@
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Symbols}
+\chapter*{List of Symbols}
+
+\renewcommand{\arraystretch}{1.8}
+\begin{longtable}{@{}p{3.2cm}p{9.5cm}@{}}
+\textbf{Symbol} & \textbf{Description} \\
+\hline\endhead
+
+$\mathbf{I}_t$        & Single-channel thermal infrared image at time step $t$ \\
+$H,\,W$               & Fused sensor resolution: height $H=40$, width $W=114$ \\
+$H',\,W'$             & Canonical network input size ($384\times384$) \\
+$t$                   & Discrete time step \\
+$N_t$                 & Number of detected persons at time $t$ \\
+$\mathbf{b}_t^{(i)}$  & Bounding box $(x^{(i)},y^{(i)},w^{(i)},h^{(i)})$ for person $i$ at time $t$ \\
+$s_t^{(i)}$           & Detection confidence score for person $i$, $s_t^{(i)}\in[0,1]$ \\
+$J$                   & Number of body keypoints ($J=7$) \\
+$\mathbf{K}_t^{(i)}$  & Set of $J$ keypoints for person $i$ at time $t$ \\
+$\hat{x}_j^{(i)},\,\hat{y}_j^{(i)}$ & Predicted 2D coordinates of keypoint $j$ \\
+$v_j^{(i)}$           & Visibility state of keypoint $j$: 0 (unlabeled), 1 (occluded), 2 (visible) \\
+$s$                   & SimDR scale factor ($s=2$, yielding 96 bins per axis) \\
+$\sigma_{1\text{d}}$  & Standard deviation of the 1D Gaussian soft target ($\sigma_{1\text{d}}=1.5$) \\
+$\mathbf{k}_t^{(i)}$  & Bounding-box-normalized keypoint feature vector, $\mathbf{k}_t^{(i)}\in\mathbb{R}^{3J}$ \\
+$T$                   & Length of the temporal keypoint buffer (up to 30 frames) \\
+$p_t^{(i)}$           & Fall probability for person $i$ at time $t$, $p_t^{(i)}\in[0,1]$ \\
+$\mathrm{id}_t^{(i)}$ & Persistent tracking identity assigned to person $i$ at time $t$ \\
+$\boldsymbol{\theta}_{\text{det}}$    & Learnable parameters of the detection head \\
+$\boldsymbol{\theta}_{\text{pose}}$   & Learnable parameters of the pose estimation head \\
+$\boldsymbol{\theta}_{\text{action}}$ & Learnable parameters of the temporal action head \\
+$\mathcal{L}_{\text{total}}$          & Combined multi-task training loss \\
+$\mathcal{L}_{\text{det}}$            & Detection loss (QFL + GIoU) \\
+$\mathcal{L}_{\text{pose}}$           & Pose estimation loss (KL divergence + visibility BCE) \\
+$\mathcal{L}_{\text{action}}$         & Action classification loss (4-class CE + focal BCE) \\
+$\sigma(\cdot)$                       & Sigmoid activation function \\
+\end{longtable}
+\renewcommand{\arraystretch}{1}
